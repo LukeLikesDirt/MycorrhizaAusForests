@@ -1,3 +1,15 @@
+# Test code
+*Test_code/
+
+# Notes
+notes/
+
+# Data files
+data/
+
+# R packages
+envs/R-packages/
+
 # History files
 .Rhistory
 .Rapp.history

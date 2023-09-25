@@ -1,0 +1,33 @@
+name: R
+# Tell Conda where to look for software that you want to install
+channels:
+    - conda-forge
+    - base
+    - R
+# Tell Conda the software that you want to install
+dependencies:
+    - r-essentials=4.3
+    - r-languageserver
+    - r-devtools
+    - r-BiocManager
+    # Ecology packages
+    - r-vegan
+    # Spatial analysis packages
+    - r-adespatial
+    - r-terra
+    - r-raster
+    - r-sf
+    - r-rgdal
+    # Linear models packages
+    - r-lme4
+    - r-car
+    - r-DHARMa
+    - r-performance
+    # Random forest packages
+    - r-randomForest
+    - r-VSURF
+    # GGPLOT2 packages
+    - r-ggpubr
+    - r-ggspatial
+    - r-patchwork
+    - r-paletteer

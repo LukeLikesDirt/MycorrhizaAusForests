@@ -1,0 +1,1024 @@
+Starting at: Sun Sep 17 18:22:53 AEST 2023
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run2’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run3’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run4’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run5’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run6’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run7’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run1’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run2’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run3’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run4’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run5’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run6’: File exists
+mkdir: cannot create directory ‘/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/03.Quality_trimmed/run7’: File exists
+
+Run 1: Extract ITS1 and quality truncate reads
+2023-09-17 18:22:56,185: INFO     Verifying the input sequences.
+2023-09-17 18:23:00,634: INFO     Sequences are assumed to be single-end.
+2023-09-17 18:23:00,635: INFO     Temporary directory is: /tmp/itsxpress_rv9ne2gw
+2023-09-17 18:23:00,635: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 18:23:01,674: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file MockCommunity1J9TWH_GCTTCGGT-ACGACGTG_S1_L001_R1.fastq.gz 100%
+53196088 nt in 177303 seqs, min 295, max 301, avg 300
+Sorting 100%
+61353 unique sequences, avg cluster 2.9, median 1, max 21779
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 18:23:01,674: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 18:43:47,587: INFO     Parsing HMM results.
+2023-09-17 18:44:33,135: INFO     Counting reads after trimming.
+2023-09-17 18:44:33,733: INFO     Total number of reads in file MockCommunity1J9TWH_GCTTCGGT-ACGACGTG_S1_L001_R1.fastq.gz is 177303.
+2023-09-17 18:44:34,078: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/MockCommunity1J9TWH_GCTTCGGT-ACGACGTG_S1_L001_R1.fastq.gz is 175600.
+2023-09-17 18:44:34,079: INFO     ITSxpress ran in 00:21:37
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 18:44:36,169: INFO     Verifying the input sequences.
+2023-09-17 18:44:40,494: INFO     Sequences are assumed to be single-end.
+2023-09-17 18:44:40,495: INFO     Temporary directory is: /tmp/itsxpress_ib7if9hq
+2023-09-17 18:44:40,495: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 18:44:41,450: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file MockCommunity2J9TWH_TCTGTTGC-ACGACGTG_S2_L001_R1.fastq.gz 100%
+56043959 nt in 186787 seqs, min 294, max 301, avg 300
+Sorting 100%
+65609 unique sequences, avg cluster 2.8, median 1, max 21970
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 18:44:41,451: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 19:06:13,438: INFO     Parsing HMM results.
+2023-09-17 19:07:05,424: INFO     Counting reads after trimming.
+2023-09-17 19:07:06,082: INFO     Total number of reads in file MockCommunity2J9TWH_TCTGTTGC-ACGACGTG_S2_L001_R1.fastq.gz is 186787.
+2023-09-17 19:07:06,442: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/MockCommunity2J9TWH_TCTGTTGC-ACGACGTG_S2_L001_R1.fastq.gz is 184603.
+2023-09-17 19:07:06,442: INFO     ITSxpress ran in 00:22:30
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 19:07:08,211: INFO     Verifying the input sequences.
+2023-09-17 19:07:08,256: INFO     Sequences are assumed to be single-end.
+2023-09-17 19:07:08,256: INFO     Temporary directory is: /tmp/itsxpress_6t6yazc7
+2023-09-17 19:07:08,256: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 19:07:08,273: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file NegativeControl1J9TWH_GCTTCGGT-CGTCGCTA_S5_L001_R1.fastq.gz 100%
+59470 nt in 198 seqs, min 298, max 301, avg 300
+Sorting 100%
+173 unique sequences, avg cluster 1.1, median 1, max 8
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 19:07:08,273: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 19:07:13,295: INFO     Parsing HMM results.
+2023-09-17 19:07:13,392: INFO     Counting reads after trimming.
+2023-09-17 19:07:13,395: INFO     Total number of reads in file NegativeControl1J9TWH_GCTTCGGT-CGTCGCTA_S5_L001_R1.fastq.gz is 198.
+2023-09-17 19:07:13,398: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/NegativeControl1J9TWH_GCTTCGGT-CGTCGCTA_S5_L001_R1.fastq.gz is 162.
+2023-09-17 19:07:13,398: INFO     ITSxpress ran in 00:00:05
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 19:07:14,847: INFO     Verifying the input sequences.
+2023-09-17 19:07:14,899: INFO     Sequences are assumed to be single-end.
+2023-09-17 19:07:14,900: INFO     Temporary directory is: /tmp/itsxpress_n7c2e6wi
+2023-09-17 19:07:14,900: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 19:07:14,920: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file NegativeControl2J9TWH_TCTGTTGC-CGTCGCTA_S6_L001_R1.fastq.gz 100%
+117207 nt in 390 seqs, min 297, max 301, avg 301
+Sorting 100%
+341 unique sequences, avg cluster 1.1, median 1, max 10
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 19:07:14,920: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 19:07:24,154: INFO     Parsing HMM results.
+2023-09-17 19:07:24,333: INFO     Counting reads after trimming.
+2023-09-17 19:07:24,337: INFO     Total number of reads in file NegativeControl2J9TWH_TCTGTTGC-CGTCGCTA_S6_L001_R1.fastq.gz is 390.
+2023-09-17 19:07:24,339: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/NegativeControl2J9TWH_TCTGTTGC-CGTCGCTA_S6_L001_R1.fastq.gz is 315.
+2023-09-17 19:07:24,339: INFO     ITSxpress ran in 00:00:09
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 19:07:25,524: INFO     Verifying the input sequences.
+2023-09-17 19:07:29,600: INFO     Sequences are assumed to be single-end.
+2023-09-17 19:07:29,601: INFO     Temporary directory is: /tmp/itsxpress_rqllm0j2
+2023-09-17 19:07:29,601: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 19:07:30,532: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file PositiveControl1J9TWH_GCTTCGGT-ATATACAC_S3_L001_R1.fastq.gz 100%
+47481913 nt in 157988 seqs, min 293, max 301, avg 301
+Sorting 100%
+82555 unique sequences, avg cluster 1.9, median 1, max 6333
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 19:07:30,532: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 19:31:53,910: INFO     Parsing HMM results.
+2023-09-17 19:32:51,426: INFO     Counting reads after trimming.
+2023-09-17 19:32:52,055: INFO     Total number of reads in file PositiveControl1J9TWH_GCTTCGGT-ATATACAC_S3_L001_R1.fastq.gz is 157988.
+2023-09-17 19:32:52,355: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/PositiveControl1J9TWH_GCTTCGGT-ATATACAC_S3_L001_R1.fastq.gz is 116019.
+2023-09-17 19:32:52,355: INFO     ITSxpress ran in 00:25:26
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 19:32:54,152: INFO     Verifying the input sequences.
+2023-09-17 19:32:58,855: INFO     Sequences are assumed to be single-end.
+2023-09-17 19:32:58,856: INFO     Temporary directory is: /tmp/itsxpress_llm6mnw_
+2023-09-17 19:32:58,856: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 19:33:00,002: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file PositiveControl2J9TWH_TCTGTTGC-ATATACAC_S4_L001_R1.fastq.gz 100%
+55379534 nt in 184264 seqs, min 290, max 301, avg 301
+Sorting 100%
+96476 unique sequences, avg cluster 1.9, median 1, max 6370
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 19:33:00,002: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 20:01:25,115: INFO     Parsing HMM results.
+2023-09-17 20:02:30,276: INFO     Counting reads after trimming.
+2023-09-17 20:02:31,006: INFO     Total number of reads in file PositiveControl2J9TWH_TCTGTTGC-ATATACAC_S4_L001_R1.fastq.gz is 184264.
+2023-09-17 20:02:31,322: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/PositiveControl2J9TWH_TCTGTTGC-ATATACAC_S4_L001_R1.fastq.gz is 132140.
+2023-09-17 20:02:31,323: INFO     ITSxpress ran in 00:29:37
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 20:02:34,286: INFO     Verifying the input sequences.
+2023-09-17 20:02:37,748: INFO     Sequences are assumed to be single-end.
+2023-09-17 20:02:37,748: INFO     Temporary directory is: /tmp/itsxpress_x26m0_sn
+2023-09-17 20:02:37,748: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 20:02:38,470: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137694_ITS_J9TWH_TCGTCGAT-ACGACGTG_S15_L001_R1.fastq.gz 100%
+38948092 nt in 129703 seqs, min 295, max 301, avg 300
+Sorting 100%
+57532 unique sequences, avg cluster 2.3, median 1, max 13149
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 20:02:38,470: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 20:22:16,424: INFO     Parsing HMM results.
+2023-09-17 20:23:00,715: INFO     Counting reads after trimming.
+2023-09-17 20:23:01,193: INFO     Total number of reads in file s137694_ITS_J9TWH_TCGTCGAT-ACGACGTG_S15_L001_R1.fastq.gz is 129703.
+2023-09-17 20:23:01,479: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137694_ITS_J9TWH_TCGTCGAT-ACGACGTG_S15_L001_R1.fastq.gz is 125858.
+2023-09-17 20:23:01,479: INFO     ITSxpress ran in 00:20:27
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 20:23:03,573: INFO     Verifying the input sequences.
+2023-09-17 20:23:09,526: INFO     Sequences are assumed to be single-end.
+2023-09-17 20:23:09,527: INFO     Temporary directory is: /tmp/itsxpress__k7d4w__
+2023-09-17 20:23:09,527: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 20:23:10,330: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137695_ITS_J9TWH_TCGTCGAT-ATATACAC_S16_L001_R1.fastq.gz 100%
+41583230 nt in 138349 seqs, min 295, max 301, avg 301
+Sorting 100%
+66161 unique sequences, avg cluster 2.1, median 1, max 7799
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 20:23:10,330: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 20:45:17,482: INFO     Parsing HMM results.
+2023-09-17 20:46:07,627: INFO     Counting reads after trimming.
+2023-09-17 20:46:08,141: INFO     Total number of reads in file s137695_ITS_J9TWH_TCGTCGAT-ATATACAC_S16_L001_R1.fastq.gz is 138349.
+2023-09-17 20:46:08,439: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137695_ITS_J9TWH_TCGTCGAT-ATATACAC_S16_L001_R1.fastq.gz is 132863.
+2023-09-17 20:46:08,439: INFO     ITSxpress ran in 00:23:04
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 20:46:10,251: INFO     Verifying the input sequences.
+2023-09-17 20:46:13,495: INFO     Sequences are assumed to be single-end.
+2023-09-17 20:46:13,496: INFO     Temporary directory is: /tmp/itsxpress_feiy8pvd
+2023-09-17 20:46:13,496: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 20:46:14,173: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137696_ITS_J9TWH_TCGTCGAT-CGTCGCTA_S17_L001_R1.fastq.gz 100%
+36348327 nt in 120899 seqs, min 296, max 301, avg 301
+Sorting 100%
+56742 unique sequences, avg cluster 2.1, median 1, max 13853
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 20:46:14,173: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 21:05:18,057: INFO     Parsing HMM results.
+2023-09-17 21:06:00,085: INFO     Counting reads after trimming.
+2023-09-17 21:06:00,517: INFO     Total number of reads in file s137696_ITS_J9TWH_TCGTCGAT-CGTCGCTA_S17_L001_R1.fastq.gz is 120899.
+2023-09-17 21:06:00,766: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137696_ITS_J9TWH_TCGTCGAT-CGTCGCTA_S17_L001_R1.fastq.gz is 114499.
+2023-09-17 21:06:00,766: INFO     ITSxpress ran in 00:19:50
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 21:06:02,591: INFO     Verifying the input sequences.
+2023-09-17 21:06:05,556: INFO     Sequences are assumed to be single-end.
+2023-09-17 21:06:05,557: INFO     Temporary directory is: /tmp/itsxpress_jef_i0b1
+2023-09-17 21:06:05,557: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 21:06:06,220: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137697_ITS_J9TWH_TCGTCGAT-CTAGAGCT_S19_L001_R1.fastq.gz 100%
+36006973 nt in 119807 seqs, min 296, max 301, avg 301
+Sorting 100%
+56383 unique sequences, avg cluster 2.1, median 1, max 4743
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 21:06:06,220: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 21:25:21,387: INFO     Parsing HMM results.
+2023-09-17 21:26:07,269: INFO     Counting reads after trimming.
+2023-09-17 21:26:07,731: INFO     Total number of reads in file s137697_ITS_J9TWH_TCGTCGAT-CTAGAGCT_S19_L001_R1.fastq.gz is 119807.
+2023-09-17 21:26:07,986: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137697_ITS_J9TWH_TCGTCGAT-CTAGAGCT_S19_L001_R1.fastq.gz is 115195.
+2023-09-17 21:26:07,987: INFO     ITSxpress ran in 00:20:05
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 21:26:09,864: INFO     Verifying the input sequences.
+2023-09-17 21:26:12,897: INFO     Sequences are assumed to be single-end.
+2023-09-17 21:26:12,897: INFO     Temporary directory is: /tmp/itsxpress_ybtfy7gh
+2023-09-17 21:26:12,898: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 21:26:13,566: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137698_ITS_J9TWH_TCGTCGAT-GCTCTAGT_S20_L001_R1.fastq.gz 100%
+34208615 nt in 113810 seqs, min 295, max 301, avg 301
+Sorting 100%
+52832 unique sequences, avg cluster 2.2, median 1, max 5641
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 21:26:13,566: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 21:43:47,859: INFO     Parsing HMM results.
+2023-09-17 21:44:29,004: INFO     Counting reads after trimming.
+2023-09-17 21:44:29,443: INFO     Total number of reads in file s137698_ITS_J9TWH_TCGTCGAT-GCTCTAGT_S20_L001_R1.fastq.gz is 113810.
+2023-09-17 21:44:29,685: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137698_ITS_J9TWH_TCGTCGAT-GCTCTAGT_S20_L001_R1.fastq.gz is 99382.
+2023-09-17 21:44:29,685: INFO     ITSxpress ran in 00:18:19
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 21:44:31,456: INFO     Verifying the input sequences.
+2023-09-17 21:44:34,984: INFO     Sequences are assumed to be single-end.
+2023-09-17 21:44:34,985: INFO     Temporary directory is: /tmp/itsxpress_9kyzmupo
+2023-09-17 21:44:34,985: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 21:44:35,835: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137699_ITS_J9TWH_TCGTCGAT-GACACTGA_S21_L001_R1.fastq.gz 100%
+41476015 nt in 137990 seqs, min 295, max 301, avg 301
+Sorting 100%
+67001 unique sequences, avg cluster 2.1, median 1, max 4353
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 21:44:35,836: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 22:06:45,217: INFO     Parsing HMM results.
+2023-09-17 22:07:34,745: INFO     Counting reads after trimming.
+2023-09-17 22:07:35,277: INFO     Total number of reads in file s137699_ITS_J9TWH_TCGTCGAT-GACACTGA_S21_L001_R1.fastq.gz is 137990.
+2023-09-17 22:07:35,564: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137699_ITS_J9TWH_TCGTCGAT-GACACTGA_S21_L001_R1.fastq.gz is 125507.
+2023-09-17 22:07:35,564: INFO     ITSxpress ran in 00:23:04
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 22:07:37,651: INFO     Verifying the input sequences.
+2023-09-17 22:07:40,889: INFO     Sequences are assumed to be single-end.
+2023-09-17 22:07:40,889: INFO     Temporary directory is: /tmp/itsxpress_z_scw45w
+2023-09-17 22:07:40,889: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 22:07:41,605: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137700_ITS_J9TWH_TCGTCGAT-TGCGTACG_S22_L001_R1.fastq.gz 100%
+37832624 nt in 125913 seqs, min 295, max 301, avg 300
+Sorting 100%
+60545 unique sequences, avg cluster 2.1, median 1, max 5141
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 22:07:41,605: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 22:27:18,817: INFO     Parsing HMM results.
+2023-09-17 22:28:01,919: INFO     Counting reads after trimming.
+2023-09-17 22:28:02,406: INFO     Total number of reads in file s137700_ITS_J9TWH_TCGTCGAT-TGCGTACG_S22_L001_R1.fastq.gz is 125913.
+2023-09-17 22:28:02,648: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137700_ITS_J9TWH_TCGTCGAT-TGCGTACG_S22_L001_R1.fastq.gz is 106768.
+2023-09-17 22:28:02,648: INFO     ITSxpress ran in 00:20:25
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 22:28:04,693: INFO     Verifying the input sequences.
+2023-09-17 22:28:07,721: INFO     Sequences are assumed to be single-end.
+2023-09-17 22:28:07,721: INFO     Temporary directory is: /tmp/itsxpress_9f_qxg94
+2023-09-17 22:28:07,721: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 22:28:08,379: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137701_ITS_J9TWH_TCGTCGAT-TAGTGTAG_S23_L001_R1.fastq.gz 100%
+34834221 nt in 115867 seqs, min 295, max 301, avg 301
+Sorting 100%
+53946 unique sequences, avg cluster 2.1, median 1, max 8649
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 22:28:08,379: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 22:45:41,966: INFO     Parsing HMM results.
+2023-09-17 22:46:21,254: INFO     Counting reads after trimming.
+2023-09-17 22:46:21,682: INFO     Total number of reads in file s137701_ITS_J9TWH_TCGTCGAT-TAGTGTAG_S23_L001_R1.fastq.gz is 115867.
+2023-09-17 22:46:21,903: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137701_ITS_J9TWH_TCGTCGAT-TAGTGTAG_S23_L001_R1.fastq.gz is 102467.
+2023-09-17 22:46:21,903: INFO     ITSxpress ran in 00:18:17
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 22:46:23,496: INFO     Verifying the input sequences.
+2023-09-17 22:46:25,873: INFO     Sequences are assumed to be single-end.
+2023-09-17 22:46:25,873: INFO     Temporary directory is: /tmp/itsxpress_g2qt0flb
+2023-09-17 22:46:25,873: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 22:46:26,430: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137702_ITS_J9TWH_ATTGGGCT-ACGACGTG_S24_L001_R1.fastq.gz 100%
+28337546 nt in 94338 seqs, min 291, max 301, avg 300
+Sorting 100%
+48073 unique sequences, avg cluster 2.0, median 1, max 5228
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 22:46:26,430: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-17 23:02:36,984: INFO     Parsing HMM results.
+2023-09-17 23:03:12,357: INFO     Counting reads after trimming.
+2023-09-17 23:03:12,726: INFO     Total number of reads in file s137702_ITS_J9TWH_ATTGGGCT-ACGACGTG_S24_L001_R1.fastq.gz is 94338.
+2023-09-17 23:03:12,942: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137702_ITS_J9TWH_ATTGGGCT-ACGACGTG_S24_L001_R1.fastq.gz is 88471.
+2023-09-17 23:03:12,942: INFO     ITSxpress ran in 00:16:49
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-17 23:03:14,873: INFO     Verifying the input sequences.
+2023-09-17 23:03:25,692: INFO     Sequences are assumed to be single-end.
+2023-09-17 23:03:25,693: INFO     Temporary directory is: /tmp/itsxpress_pl71lfkq
+2023-09-17 23:03:25,693: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-17 23:03:28,256: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137703_ITS_J9TWH_ATTGGGCT-ATATACAC_S25_L001_R1.fastq.gz 100%
+131811739 nt in 438766 seqs, min 295, max 301, avg 300
+Sorting 100%
+179382 unique sequences, avg cluster 2.4, median 1, max 54831
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-17 23:03:28,256: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 00:03:31,652: INFO     Parsing HMM results.
+2023-09-18 00:06:01,761: INFO     Counting reads after trimming.
+2023-09-18 00:06:03,470: INFO     Total number of reads in file s137703_ITS_J9TWH_ATTGGGCT-ATATACAC_S25_L001_R1.fastq.gz is 438766.
+2023-09-18 00:06:04,439: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137703_ITS_J9TWH_ATTGGGCT-ATATACAC_S25_L001_R1.fastq.gz is 421775.
+2023-09-18 00:06:04,439: INFO     ITSxpress ran in 01:02:49
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 00:06:07,682: INFO     Verifying the input sequences.
+2023-09-18 00:06:10,809: INFO     Sequences are assumed to be single-end.
+2023-09-18 00:06:10,809: INFO     Temporary directory is: /tmp/itsxpress_d5v7zb3x
+2023-09-18 00:06:10,809: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 00:06:11,491: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137704_ITS_J9TWH_ATTGGGCT-CGTCGCTA_S26_L001_R1.fastq.gz 100%
+35392651 nt in 117712 seqs, min 295, max 301, avg 301
+Sorting 100%
+56890 unique sequences, avg cluster 2.1, median 1, max 6478
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 00:06:11,491: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 00:25:19,017: INFO     Parsing HMM results.
+2023-09-18 00:26:04,034: INFO     Counting reads after trimming.
+2023-09-18 00:26:04,481: INFO     Total number of reads in file s137704_ITS_J9TWH_ATTGGGCT-CGTCGCTA_S26_L001_R1.fastq.gz is 117712.
+2023-09-18 00:26:04,759: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137704_ITS_J9TWH_ATTGGGCT-CGTCGCTA_S26_L001_R1.fastq.gz is 112672.
+2023-09-18 00:26:04,760: INFO     ITSxpress ran in 00:19:57
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 00:26:06,849: INFO     Verifying the input sequences.
+2023-09-18 00:26:14,866: INFO     Sequences are assumed to be single-end.
+2023-09-18 00:26:14,867: INFO     Temporary directory is: /tmp/itsxpress_64tadyus
+2023-09-18 00:26:14,867: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 00:26:16,853: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137705_ITS_J9TWH_ATTGGGCT-CTAGAGCT_S27_L001_R1.fastq.gz 100%
+97438419 nt in 324284 seqs, min 295, max 301, avg 300
+Sorting 100%
+149645 unique sequences, avg cluster 2.2, median 1, max 13834
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 00:26:16,853: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 01:17:38,044: INFO     Parsing HMM results.
+2023-09-18 01:19:43,967: INFO     Counting reads after trimming.
+2023-09-18 01:19:45,284: INFO     Total number of reads in file s137705_ITS_J9TWH_ATTGGGCT-CTAGAGCT_S27_L001_R1.fastq.gz is 324284.
+2023-09-18 01:19:45,962: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137705_ITS_J9TWH_ATTGGGCT-CTAGAGCT_S27_L001_R1.fastq.gz is 309068.
+2023-09-18 01:19:45,963: INFO     ITSxpress ran in 00:53:39
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 01:19:48,345: INFO     Verifying the input sequences.
+2023-09-18 01:19:49,745: INFO     Sequences are assumed to be single-end.
+2023-09-18 01:19:49,745: INFO     Temporary directory is: /tmp/itsxpress_omaw10o3
+2023-09-18 01:19:49,745: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 01:19:50,062: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137706_ITS_J9TWH_AATGTCCG-GCTCTAGT_S55_L001_R1.fastq.gz 100%
+16574917 nt in 55136 seqs, min 294, max 301, avg 301
+Sorting 100%
+25618 unique sequences, avg cluster 2.2, median 1, max 4423
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 01:19:50,062: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 01:28:55,137: INFO     Parsing HMM results.
+2023-09-18 01:29:15,037: INFO     Counting reads after trimming.
+2023-09-18 01:29:15,246: INFO     Total number of reads in file s137706_ITS_J9TWH_AATGTCCG-GCTCTAGT_S55_L001_R1.fastq.gz is 55136.
+2023-09-18 01:29:15,366: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137706_ITS_J9TWH_AATGTCCG-GCTCTAGT_S55_L001_R1.fastq.gz is 53916.
+2023-09-18 01:29:15,366: INFO     ITSxpress ran in 00:09:27
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 01:29:17,245: INFO     Verifying the input sequences.
+2023-09-18 01:29:19,570: INFO     Sequences are assumed to be single-end.
+2023-09-18 01:29:19,570: INFO     Temporary directory is: /tmp/itsxpress_pdm9bnzy
+2023-09-18 01:29:19,571: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 01:29:20,106: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137707_ITS_J9TWH_AATGTCCG-GACACTGA_S56_L001_R1.fastq.gz 100%
+26629017 nt in 88596 seqs, min 294, max 301, avg 301
+Sorting 100%
+44106 unique sequences, avg cluster 2.0, median 1, max 3106
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 01:29:20,106: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 01:44:52,480: INFO     Parsing HMM results.
+2023-09-18 01:45:28,108: INFO     Counting reads after trimming.
+2023-09-18 01:45:28,459: INFO     Total number of reads in file s137707_ITS_J9TWH_AATGTCCG-GACACTGA_S56_L001_R1.fastq.gz is 88596.
+2023-09-18 01:45:28,652: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137707_ITS_J9TWH_AATGTCCG-GACACTGA_S56_L001_R1.fastq.gz is 85782.
+2023-09-18 01:45:28,652: INFO     ITSxpress ran in 00:16:11
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 01:45:31,255: INFO     Verifying the input sequences.
+2023-09-18 01:45:33,211: INFO     Sequences are assumed to be single-end.
+2023-09-18 01:45:33,211: INFO     Temporary directory is: /tmp/itsxpress_1fzwj606
+2023-09-18 01:45:33,211: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 01:45:33,650: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137708_ITS_J9TWH_AATGTCCG-TGCGTACG_S57_L001_R1.fastq.gz 100%
+22383466 nt in 74455 seqs, min 295, max 301, avg 301
+Sorting 100%
+36762 unique sequences, avg cluster 2.0, median 1, max 3997
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 01:45:33,651: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 01:58:35,633: INFO     Parsing HMM results.
+2023-09-18 01:59:05,451: INFO     Counting reads after trimming.
+2023-09-18 01:59:05,734: INFO     Total number of reads in file s137708_ITS_J9TWH_AATGTCCG-TGCGTACG_S57_L001_R1.fastq.gz is 74455.
+2023-09-18 01:59:05,887: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137708_ITS_J9TWH_AATGTCCG-TGCGTACG_S57_L001_R1.fastq.gz is 71433.
+2023-09-18 01:59:05,887: INFO     ITSxpress ran in 00:13:34
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 01:59:07,739: INFO     Verifying the input sequences.
+2023-09-18 01:59:09,944: INFO     Sequences are assumed to be single-end.
+2023-09-18 01:59:09,945: INFO     Temporary directory is: /tmp/itsxpress_jbztef98
+2023-09-18 01:59:09,945: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 01:59:10,420: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137709_ITS_J9TWH_AATGTCCG-TAGTGTAG_S58_L001_R1.fastq.gz 100%
+24278128 nt in 80753 seqs, min 295, max 301, avg 301
+Sorting 100%
+40739 unique sequences, avg cluster 2.0, median 1, max 1959
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 01:59:10,420: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 02:13:28,866: INFO     Parsing HMM results.
+2023-09-18 02:13:59,933: INFO     Counting reads after trimming.
+2023-09-18 02:14:00,245: INFO     Total number of reads in file s137709_ITS_J9TWH_AATGTCCG-TAGTGTAG_S58_L001_R1.fastq.gz is 80753.
+2023-09-18 02:14:00,424: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137709_ITS_J9TWH_AATGTCCG-TAGTGTAG_S58_L001_R1.fastq.gz is 77112.
+2023-09-18 02:14:00,424: INFO     ITSxpress ran in 00:14:52
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 02:14:02,309: INFO     Verifying the input sequences.
+2023-09-18 02:14:04,471: INFO     Sequences are assumed to be single-end.
+2023-09-18 02:14:04,471: INFO     Temporary directory is: /tmp/itsxpress_zxjn9nd6
+2023-09-18 02:14:04,471: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 02:14:04,958: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137710_ITS_J9TWH_ACCACATA-GCTCTAGT_S37_L001_R1.fastq.gz 100%
+25455026 nt in 84686 seqs, min 295, max 301, avg 301
+Sorting 100%
+44092 unique sequences, avg cluster 1.9, median 1, max 2496
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 02:14:04,958: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 02:28:35,793: INFO     Parsing HMM results.
+2023-09-18 02:29:05,346: INFO     Counting reads after trimming.
+2023-09-18 02:29:05,672: INFO     Total number of reads in file s137710_ITS_J9TWH_ACCACATA-GCTCTAGT_S37_L001_R1.fastq.gz is 84686.
+2023-09-18 02:29:05,847: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137710_ITS_J9TWH_ACCACATA-GCTCTAGT_S37_L001_R1.fastq.gz is 76906.
+2023-09-18 02:29:05,847: INFO     ITSxpress ran in 00:15:03
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 02:29:07,731: INFO     Verifying the input sequences.
+2023-09-18 02:29:09,528: INFO     Sequences are assumed to be single-end.
+2023-09-18 02:29:09,528: INFO     Temporary directory is: /tmp/itsxpress_6j8l5r40
+2023-09-18 02:29:09,528: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 02:29:09,947: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137711_ITS_J9TWH_ACCACATA-GACACTGA_S38_L001_R1.fastq.gz 100%
+21425325 nt in 71286 seqs, min 296, max 301, avg 301
+Sorting 100%
+35898 unique sequences, avg cluster 2.0, median 1, max 2752
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 02:29:09,947: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 02:40:50,433: INFO     Parsing HMM results.
+2023-09-18 02:41:14,237: INFO     Counting reads after trimming.
+2023-09-18 02:41:14,510: INFO     Total number of reads in file s137711_ITS_J9TWH_ACCACATA-GACACTGA_S38_L001_R1.fastq.gz is 71286.
+2023-09-18 02:41:14,658: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137711_ITS_J9TWH_ACCACATA-GACACTGA_S38_L001_R1.fastq.gz is 64439.
+2023-09-18 02:41:14,658: INFO     ITSxpress ran in 00:12:06
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 02:41:16,531: INFO     Verifying the input sequences.
+2023-09-18 02:41:18,240: INFO     Sequences are assumed to be single-end.
+2023-09-18 02:41:18,241: INFO     Temporary directory is: /tmp/itsxpress_yvrzdxuh
+2023-09-18 02:41:18,241: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 02:41:18,604: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137712_ITS_J9TWH_ACCACATA-TGCGTACG_S39_L001_R1.fastq.gz 100%
+18764467 nt in 62454 seqs, min 294, max 301, avg 300
+Sorting 100%
+30678 unique sequences, avg cluster 2.0, median 1, max 2909
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 02:41:18,605: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 02:51:36,366: INFO     Parsing HMM results.
+2023-09-18 02:51:57,843: INFO     Counting reads after trimming.
+2023-09-18 02:51:58,081: INFO     Total number of reads in file s137712_ITS_J9TWH_ACCACATA-TGCGTACG_S39_L001_R1.fastq.gz is 62454.
+2023-09-18 02:51:58,217: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137712_ITS_J9TWH_ACCACATA-TGCGTACG_S39_L001_R1.fastq.gz is 59740.
+2023-09-18 02:51:58,217: INFO     ITSxpress ran in 00:10:41
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 02:52:00,058: INFO     Verifying the input sequences.
+2023-09-18 02:52:02,054: INFO     Sequences are assumed to be single-end.
+2023-09-18 02:52:02,055: INFO     Temporary directory is: /tmp/itsxpress_x88_8pzx
+2023-09-18 02:52:02,055: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 02:52:02,512: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137713_ITS_J9TWH_ACCACATA-TAGTGTAG_S41_L001_R1.fastq.gz 100%
+23652963 nt in 78739 seqs, min 297, max 301, avg 300
+Sorting 100%
+38178 unique sequences, avg cluster 2.1, median 1, max 6016
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 02:52:02,512: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 03:04:24,606: INFO     Parsing HMM results.
+2023-09-18 03:04:51,404: INFO     Counting reads after trimming.
+2023-09-18 03:04:51,701: INFO     Total number of reads in file s137713_ITS_J9TWH_ACCACATA-TAGTGTAG_S41_L001_R1.fastq.gz is 78739.
+2023-09-18 03:04:51,859: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137713_ITS_J9TWH_ACCACATA-TAGTGTAG_S41_L001_R1.fastq.gz is 70954.
+2023-09-18 03:04:51,860: INFO     ITSxpress ran in 00:12:51
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 03:04:53,644: INFO     Verifying the input sequences.
+2023-09-18 03:04:57,747: INFO     Sequences are assumed to be single-end.
+2023-09-18 03:04:57,747: INFO     Temporary directory is: /tmp/itsxpress_s6bj5gcs
+2023-09-18 03:04:57,747: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 03:04:58,728: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137714_ITS_J9TWH_AACACAAG-GCTCTAGT_S46_L001_R1.fastq.gz 100%
+48741313 nt in 162054 seqs, min 295, max 301, avg 301
+Sorting 100%
+80298 unique sequences, avg cluster 2.0, median 1, max 5201
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 03:04:58,729: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 03:33:16,953: INFO     Parsing HMM results.
+2023-09-18 03:34:19,627: INFO     Counting reads after trimming.
+2023-09-18 03:34:20,281: INFO     Total number of reads in file s137714_ITS_J9TWH_AACACAAG-GCTCTAGT_S46_L001_R1.fastq.gz is 162054.
+2023-09-18 03:34:20,630: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137714_ITS_J9TWH_AACACAAG-GCTCTAGT_S46_L001_R1.fastq.gz is 149072.
+2023-09-18 03:34:20,630: INFO     ITSxpress ran in 00:29:26
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 03:34:22,585: INFO     Verifying the input sequences.
+2023-09-18 03:34:28,781: INFO     Sequences are assumed to be single-end.
+2023-09-18 03:34:28,781: INFO     Temporary directory is: /tmp/itsxpress_3pgst8x0
+2023-09-18 03:34:28,781: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 03:34:30,184: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137715_ITS_J9TWH_AACACAAG-GACACTGA_S47_L001_R1.fastq.gz 100%
+76408637 nt in 253995 seqs, min 295, max 301, avg 301
+Sorting 100%
+111723 unique sequences, avg cluster 2.3, median 1, max 38194
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 03:34:30,185: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 04:12:19,592: INFO     Parsing HMM results.
+2023-09-18 04:13:50,843: INFO     Counting reads after trimming.
+2023-09-18 04:13:51,805: INFO     Total number of reads in file s137715_ITS_J9TWH_AACACAAG-GACACTGA_S47_L001_R1.fastq.gz is 253995.
+2023-09-18 04:13:52,362: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137715_ITS_J9TWH_AACACAAG-GACACTGA_S47_L001_R1.fastq.gz is 244185.
+2023-09-18 04:13:52,362: INFO     ITSxpress ran in 00:39:29
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 04:13:54,516: INFO     Verifying the input sequences.
+2023-09-18 04:14:01,179: INFO     Sequences are assumed to be single-end.
+2023-09-18 04:14:01,179: INFO     Temporary directory is: /tmp/itsxpress_9i0lwaa6
+2023-09-18 04:14:01,179: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 04:14:02,700: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137716_ITS_J9TWH_AACACAAG-TGCGTACG_S48_L001_R1.fastq.gz 100%
+80792474 nt in 268605 seqs, min 295, max 301, avg 301
+Sorting 100%
+120263 unique sequences, avg cluster 2.2, median 1, max 17556
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 04:14:02,700: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 04:56:03,704: INFO     Parsing HMM results.
+2023-09-18 04:57:44,202: INFO     Counting reads after trimming.
+2023-09-18 04:57:45,235: INFO     Total number of reads in file s137716_ITS_J9TWH_AACACAAG-TGCGTACG_S48_L001_R1.fastq.gz is 268605.
+2023-09-18 04:57:45,824: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137716_ITS_J9TWH_AACACAAG-TGCGTACG_S48_L001_R1.fastq.gz is 256174.
+2023-09-18 04:57:45,824: INFO     ITSxpress ran in 00:43:51
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 04:57:48,085: INFO     Verifying the input sequences.
+2023-09-18 04:58:01,059: INFO     Sequences are assumed to be single-end.
+2023-09-18 04:58:01,060: INFO     Temporary directory is: /tmp/itsxpress_79zic15j
+2023-09-18 04:58:01,060: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 04:58:04,164: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137717_ITS_J9TWH_AACACAAG-TAGTGTAG_S49_L001_R1.fastq.gz 100%
+157705503 nt in 524385 seqs, min 295, max 301, avg 301
+Sorting 100%
+215786 unique sequences, avg cluster 2.4, median 1, max 23739
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 04:58:04,164: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 06:13:37,119: INFO     Parsing HMM results.
+2023-09-18 06:16:41,651: INFO     Counting reads after trimming.
+2023-09-18 06:16:43,674: INFO     Total number of reads in file s137717_ITS_J9TWH_AACACAAG-TAGTGTAG_S49_L001_R1.fastq.gz is 524385.
+2023-09-18 06:16:44,770: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137717_ITS_J9TWH_AACACAAG-TAGTGTAG_S49_L001_R1.fastq.gz is 503953.
+2023-09-18 06:16:44,770: INFO     ITSxpress ran in 01:18:56
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 06:16:47,265: INFO     Verifying the input sequences.
+2023-09-18 06:16:49,206: INFO     Sequences are assumed to be single-end.
+2023-09-18 06:16:49,207: INFO     Temporary directory is: /tmp/itsxpress_5ptbygur
+2023-09-18 06:16:49,207: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 06:16:49,649: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137718_ITS_J9TWH_TACTTCGC-ACGACGTG_S59_L001_R1.fastq.gz 100%
+23114440 nt in 76923 seqs, min 295, max 301, avg 300
+Sorting 100%
+38964 unique sequences, avg cluster 2.0, median 1, max 1930
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 06:16:49,649: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 06:30:06,104: INFO     Parsing HMM results.
+2023-09-18 06:30:33,203: INFO     Counting reads after trimming.
+2023-09-18 06:30:33,496: INFO     Total number of reads in file s137718_ITS_J9TWH_TACTTCGC-ACGACGTG_S59_L001_R1.fastq.gz is 76923.
+2023-09-18 06:30:33,660: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137718_ITS_J9TWH_TACTTCGC-ACGACGTG_S59_L001_R1.fastq.gz is 74446.
+2023-09-18 06:30:33,660: INFO     ITSxpress ran in 00:13:46
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 06:30:35,463: INFO     Verifying the input sequences.
+2023-09-18 06:30:38,939: INFO     Sequences are assumed to be single-end.
+2023-09-18 06:30:38,940: INFO     Temporary directory is: /tmp/itsxpress_nu7s21i1
+2023-09-18 06:30:38,940: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 06:30:39,719: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137719_ITS_J9TWH_TACTTCGC-ATATACAC_S60_L001_R1.fastq.gz 100%
+42805975 nt in 142322 seqs, min 295, max 301, avg 301
+Sorting 100%
+63832 unique sequences, avg cluster 2.2, median 1, max 22003
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 06:30:39,719: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 06:51:17,304: INFO     Parsing HMM results.
+2023-09-18 06:52:07,626: INFO     Counting reads after trimming.
+2023-09-18 06:52:08,149: INFO     Total number of reads in file s137719_ITS_J9TWH_TACTTCGC-ATATACAC_S60_L001_R1.fastq.gz is 142322.
+2023-09-18 06:52:08,453: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137719_ITS_J9TWH_TACTTCGC-ATATACAC_S60_L001_R1.fastq.gz is 135514.
+2023-09-18 06:52:08,453: INFO     ITSxpress ran in 00:21:32
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 06:52:10,379: INFO     Verifying the input sequences.
+2023-09-18 06:52:12,232: INFO     Sequences are assumed to be single-end.
+2023-09-18 06:52:12,233: INFO     Temporary directory is: /tmp/itsxpress_5z1un6wp
+2023-09-18 06:52:12,233: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 06:52:12,649: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137720_ITS_J9TWH_TACTTCGC-CGTCGCTA_S61_L001_R1.fastq.gz 100%
+21632293 nt in 72000 seqs, min 296, max 301, avg 300
+Sorting 100%
+34554 unique sequences, avg cluster 2.1, median 1, max 2568
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 06:52:12,649: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 07:03:16,102: INFO     Parsing HMM results.
+2023-09-18 07:03:38,319: INFO     Counting reads after trimming.
+2023-09-18 07:03:38,592: INFO     Total number of reads in file s137720_ITS_J9TWH_TACTTCGC-CGTCGCTA_S61_L001_R1.fastq.gz is 72000.
+2023-09-18 07:03:38,723: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137720_ITS_J9TWH_TACTTCGC-CGTCGCTA_S61_L001_R1.fastq.gz is 59384.
+2023-09-18 07:03:38,723: INFO     ITSxpress ran in 00:11:28
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 07:03:40,562: INFO     Verifying the input sequences.
+2023-09-18 07:03:42,706: INFO     Sequences are assumed to be single-end.
+2023-09-18 07:03:42,706: INFO     Temporary directory is: /tmp/itsxpress_1zpntnw3
+2023-09-18 07:03:42,706: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 07:03:43,197: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137721_ITS_J9TWH_TACTTCGC-CTAGAGCT_S63_L001_R1.fastq.gz 100%
+25616078 nt in 85226 seqs, min 295, max 301, avg 301
+Sorting 100%
+42812 unique sequences, avg cluster 2.0, median 1, max 3098
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 07:03:43,197: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 07:18:23,592: INFO     Parsing HMM results.
+2023-09-18 07:18:55,841: INFO     Counting reads after trimming.
+2023-09-18 07:18:56,165: INFO     Total number of reads in file s137721_ITS_J9TWH_TACTTCGC-CTAGAGCT_S63_L001_R1.fastq.gz is 85226.
+2023-09-18 07:18:56,350: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137721_ITS_J9TWH_TACTTCGC-CTAGAGCT_S63_L001_R1.fastq.gz is 82382.
+2023-09-18 07:18:56,350: INFO     ITSxpress ran in 00:15:15
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 07:18:58,192: INFO     Verifying the input sequences.
+2023-09-18 07:18:59,715: INFO     Sequences are assumed to be single-end.
+2023-09-18 07:18:59,716: INFO     Temporary directory is: /tmp/itsxpress_8w93m_d3
+2023-09-18 07:18:59,716: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 07:19:00,075: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137722_ITS_J9TWH_AATGTCCG-ACGACGTG_S50_L001_R1.fastq.gz 100%
+18287356 nt in 60822 seqs, min 295, max 301, avg 301
+Sorting 100%
+30876 unique sequences, avg cluster 2.0, median 1, max 4219
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 07:19:00,075: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 07:28:55,039: INFO     Parsing HMM results.
+2023-09-18 07:29:14,684: INFO     Counting reads after trimming.
+2023-09-18 07:29:14,920: INFO     Total number of reads in file s137722_ITS_J9TWH_AATGTCCG-ACGACGTG_S50_L001_R1.fastq.gz is 60822.
+2023-09-18 07:29:15,031: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137722_ITS_J9TWH_AATGTCCG-ACGACGTG_S50_L001_R1.fastq.gz is 47596.
+2023-09-18 07:29:15,031: INFO     ITSxpress ran in 00:10:16
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 07:29:16,749: INFO     Verifying the input sequences.
+2023-09-18 07:29:19,569: INFO     Sequences are assumed to be single-end.
+2023-09-18 07:29:19,570: INFO     Temporary directory is: /tmp/itsxpress_x8cdku71
+2023-09-18 07:29:19,570: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 07:29:20,219: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137723_ITS_J9TWH_AATGTCCG-ATATACAC_S52_L001_R1.fastq.gz 100%
+33324328 nt in 110825 seqs, min 295, max 301, avg 301
+Sorting 100%
+55186 unique sequences, avg cluster 2.0, median 1, max 8389
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 07:29:20,219: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 07:46:55,966: INFO     Parsing HMM results.
+2023-09-18 07:47:32,689: INFO     Counting reads after trimming.
+2023-09-18 07:47:33,104: INFO     Total number of reads in file s137723_ITS_J9TWH_AATGTCCG-ATATACAC_S52_L001_R1.fastq.gz is 110825.
+2023-09-18 07:47:33,303: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137723_ITS_J9TWH_AATGTCCG-ATATACAC_S52_L001_R1.fastq.gz is 84633.
+2023-09-18 07:47:33,303: INFO     ITSxpress ran in 00:18:16
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 07:47:35,080: INFO     Verifying the input sequences.
+2023-09-18 07:47:36,886: INFO     Sequences are assumed to be single-end.
+2023-09-18 07:47:36,886: INFO     Temporary directory is: /tmp/itsxpress_xem38d32
+2023-09-18 07:47:36,886: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 07:47:37,304: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137724_ITS_J9TWH_AATGTCCG-CGTCGCTA_S53_L001_R1.fastq.gz 100%
+20872051 nt in 69434 seqs, min 296, max 301, avg 301
+Sorting 100%
+36569 unique sequences, avg cluster 1.9, median 1, max 1521
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 07:47:37,304: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 08:00:04,442: INFO     Parsing HMM results.
+2023-09-18 08:00:29,886: INFO     Counting reads after trimming.
+2023-09-18 08:00:30,142: INFO     Total number of reads in file s137724_ITS_J9TWH_AATGTCCG-CGTCGCTA_S53_L001_R1.fastq.gz is 69434.
+2023-09-18 08:00:30,290: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137724_ITS_J9TWH_AATGTCCG-CGTCGCTA_S53_L001_R1.fastq.gz is 65764.
+2023-09-18 08:00:30,290: INFO     ITSxpress ran in 00:12:55
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 08:00:32,142: INFO     Verifying the input sequences.
+2023-09-18 08:00:33,834: INFO     Sequences are assumed to be single-end.
+2023-09-18 08:00:33,835: INFO     Temporary directory is: /tmp/itsxpress_na39todx
+2023-09-18 08:00:33,835: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 08:00:34,213: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137725_ITS_J9TWH_AATGTCCG-CTAGAGCT_S54_L001_R1.fastq.gz 100%
+19743103 nt in 65668 seqs, min 296, max 301, avg 301
+Sorting 100%
+33193 unique sequences, avg cluster 2.0, median 1, max 3450
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 08:00:34,213: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 08:11:28,366: INFO     Parsing HMM results.
+2023-09-18 08:11:50,619: INFO     Counting reads after trimming.
+2023-09-18 08:11:50,873: INFO     Total number of reads in file s137725_ITS_J9TWH_AATGTCCG-CTAGAGCT_S54_L001_R1.fastq.gz is 65668.
+2023-09-18 08:11:51,001: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137725_ITS_J9TWH_AATGTCCG-CTAGAGCT_S54_L001_R1.fastq.gz is 53979.
+2023-09-18 08:11:51,001: INFO     ITSxpress ran in 00:11:18
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 08:11:52,696: INFO     Verifying the input sequences.
+2023-09-18 08:11:55,553: INFO     Sequences are assumed to be single-end.
+2023-09-18 08:11:55,553: INFO     Temporary directory is: /tmp/itsxpress_ltnlmmqi
+2023-09-18 08:11:55,554: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 08:11:56,213: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137726_ITS_J9TWH_TACTTCGC-GCTCTAGT_S64_L001_R1.fastq.gz 100%
+34229640 nt in 113820 seqs, min 296, max 301, avg 301
+Sorting 100%
+56927 unique sequences, avg cluster 2.0, median 1, max 3808
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 08:11:56,213: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 08:31:30,999: INFO     Parsing HMM results.
+2023-09-18 08:32:13,634: INFO     Counting reads after trimming.
+2023-09-18 08:32:14,072: INFO     Total number of reads in file s137726_ITS_J9TWH_TACTTCGC-GCTCTAGT_S64_L001_R1.fastq.gz is 113820.
+2023-09-18 08:32:14,324: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137726_ITS_J9TWH_TACTTCGC-GCTCTAGT_S64_L001_R1.fastq.gz is 107486.
+2023-09-18 08:32:14,324: INFO     ITSxpress ran in 00:20:21
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 08:32:16,107: INFO     Verifying the input sequences.
+2023-09-18 08:32:24,043: INFO     Sequences are assumed to be single-end.
+2023-09-18 08:32:24,044: INFO     Temporary directory is: /tmp/itsxpress_q_gl6pxb
+2023-09-18 08:32:24,044: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 08:32:25,803: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137727_ITS_J9TWH_TACTTCGC-GACACTGA_S65_L001_R1.fastq.gz 100%
+89542594 nt in 297789 seqs, min 294, max 301, avg 301
+Sorting 100%
+136219 unique sequences, avg cluster 2.2, median 1, max 9859
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 08:32:25,804: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 09:17:31,681: INFO     Parsing HMM results.
+2023-09-18 09:19:21,311: INFO     Counting reads after trimming.
+2023-09-18 09:19:22,516: INFO     Total number of reads in file s137727_ITS_J9TWH_TACTTCGC-GACACTGA_S65_L001_R1.fastq.gz is 297789.
+2023-09-18 09:19:23,157: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137727_ITS_J9TWH_TACTTCGC-GACACTGA_S65_L001_R1.fastq.gz is 272910.
+2023-09-18 09:19:23,157: INFO     ITSxpress ran in 00:47:07
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 09:19:25,235: INFO     Verifying the input sequences.
+2023-09-18 09:19:30,488: INFO     Sequences are assumed to be single-end.
+2023-09-18 09:19:30,489: INFO     Temporary directory is: /tmp/itsxpress_65u8h44b
+2023-09-18 09:19:30,489: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 09:19:31,680: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137728_ITS_J9TWH_TACTTCGC-TGCGTACG_S66_L001_R1.fastq.gz 100%
+62473697 nt in 207847 seqs, min 291, max 301, avg 301
+Sorting 100%
+95511 unique sequences, avg cluster 2.2, median 1, max 11857
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 09:19:31,680: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 09:52:17,724: INFO     Parsing HMM results.
+2023-09-18 09:53:35,074: INFO     Counting reads after trimming.
+2023-09-18 09:53:35,852: INFO     Total number of reads in file s137728_ITS_J9TWH_TACTTCGC-TGCGTACG_S66_L001_R1.fastq.gz is 207847.
+2023-09-18 09:53:36,297: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137728_ITS_J9TWH_TACTTCGC-TGCGTACG_S66_L001_R1.fastq.gz is 199025.
+2023-09-18 09:53:36,297: INFO     ITSxpress ran in 00:34:11
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 09:53:38,212: INFO     Verifying the input sequences.
+2023-09-18 09:53:42,178: INFO     Sequences are assumed to be single-end.
+2023-09-18 09:53:42,178: INFO     Temporary directory is: /tmp/itsxpress_yy8xlgko
+2023-09-18 09:53:42,178: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 09:53:43,108: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137729_ITS_J9TWH_TACTTCGC-TAGTGTAG_S67_L001_R1.fastq.gz 100%
+47896948 nt in 159256 seqs, min 294, max 301, avg 301
+Sorting 100%
+77278 unique sequences, avg cluster 2.1, median 1, max 5954
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 09:53:43,109: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 10:20:28,210: INFO     Parsing HMM results.
+2023-09-18 10:21:33,742: INFO     Counting reads after trimming.
+2023-09-18 10:21:34,368: INFO     Total number of reads in file s137729_ITS_J9TWH_TACTTCGC-TAGTGTAG_S67_L001_R1.fastq.gz is 159256.
+2023-09-18 10:21:34,725: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137729_ITS_J9TWH_TACTTCGC-TAGTGTAG_S67_L001_R1.fastq.gz is 150044.
+2023-09-18 10:21:34,725: INFO     ITSxpress ran in 00:27:56
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 10:21:36,617: INFO     Verifying the input sequences.
+2023-09-18 10:21:44,085: INFO     Sequences are assumed to be single-end.
+2023-09-18 10:21:44,085: INFO     Temporary directory is: /tmp/itsxpress_5ua2ngcb
+2023-09-18 10:21:44,085: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 10:21:45,761: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137730_ITS_J9TWH_AACACAAG-ACGACGTG_S42_L001_R1.fastq.gz 100%
+87967206 nt in 292595 seqs, min 290, max 301, avg 301
+Sorting 100%
+122687 unique sequences, avg cluster 2.4, median 1, max 11917
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 10:21:45,761: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.
+2023-09-18 11:04:28,963: INFO     Parsing HMM results.
+2023-09-18 11:06:13,033: INFO     Counting reads after trimming.
+2023-09-18 11:06:14,147: INFO     Total number of reads in file s137730_ITS_J9TWH_AACACAAG-ACGACGTG_S42_L001_R1.fastq.gz is 292595.
+2023-09-18 11:06:14,781: INFO     Total number of reads in file /data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/ITS/02.ITS_extracted/run1/s137730_ITS_J9TWH_AACACAAG-ACGACGTG_S42_L001_R1.fastq.gz is 282148.
+2023-09-18 11:06:14,781: INFO     ITSxpress ran in 00:44:38
+No module named 'q2_types'.Could not initialize the Qiime plugin portion of ITSxpress. Command line ITSxpress will still work normally. If you wish to use the Qiime2 ITSxpress plugin, you need to install Qiime2 first into your environment.
+
+2023-09-18 11:06:16,828: INFO     Verifying the input sequences.
+2023-09-18 11:06:21,042: INFO     Sequences are assumed to be single-end.
+2023-09-18 11:06:21,043: INFO     Temporary directory is: /tmp/itsxpress_k7bcad1_
+2023-09-18 11:06:21,043: INFO     Unique sequences are being written to a temporary FASTA file with Vsearch.
+2023-09-18 11:06:22,012: INFO     vsearch v2.22.1_linux_x86_64, 376.1GB RAM, 96 cores
+https://github.com/torognes/vsearch
+
+Dereplicating file s137731_ITS_J9TWH_AACACAAG-ATATACAC_S43_L001_R1.fastq.gz 100%
+49948367 nt in 166112 seqs, min 295, max 301, avg 301
+Sorting 100%
+78316 unique sequences, avg cluster 2.1, median 1, max 5588
+Writing FASTA output file 100%
+Writing uc file, first part 100%
+Writing uc file, second part 100%
+
+2023-09-18 11:06:22,012: INFO     Searching for ITS start and stop sites using HMMSearch. This step takes a while.

@@ -1,0 +1,11 @@
+
+# Install packages to .libPaths('/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/envs/R-packages') 
+# after creating an R environment so that the HPC can access tha packages
+lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/envs/R-packages'
+install.packages('BiocManager', version = '3.17', lib = lib.loc)
+BiocManager::install('dada2', version = '3.17', lib = lib.loc)
+install.packages('tidyverse', version = '2.0.0', lib = lib.loc)
+install.packages('seqinr', version = '4.2.30', lib = lib.loc)
+
+BiocManager::install('phyloseq', version = )
+devtools::install_github('vmikk/metagMisc')
