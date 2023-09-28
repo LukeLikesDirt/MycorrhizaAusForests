@@ -1,16 +1,17 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=168:00:00
-#SBATCH --partition=week
+#SBATCH --time=720:00:00
+#SBATCH --partition=month
+#SBATCH --mem-per-cpu=32G
 
-echo "Starting at: $(date)"
+printf "Starting at: $(date)"
 
 ## Prepare Illumina forward and reverse reads for denoising with DADA2 by
 ## quality truncating reads using Trimmomatic. The Australian Microbiome
 ## 16S amplicon covers the V1-V3 region, which is approximately 490 bases long,
 ## but varies from 450 to 600 bases. In the current SILVA reference dataset 
-## used in this worklflow, ~95% of V1-V3 amplicons are shorter than 510 bases.
+## used in this worklflow, ~95% of V1-V3 amplicons are shorter than 500 bases.
 ## Therefore, I aim to retain good sequencing depth (>10,000 reads per sample) 
 ## using a 512 base threshold, which equals 500 bases when accounting the 12 
 ## base overlap required by DADA2. General overview the '02.Quality_trim.sh'
@@ -33,38 +34,42 @@ echo "Starting at: $(date)"
 source /data/group/frankslab/home/21258990/mambaforge/etc/profile.d/conda.sh
 conda activate shell
 
+# The number of runs to be processed
+readonly num_runs=43
+
+# Take advantage of all the available threads
+readonly THREADS=8
+
+## Define trimmomatic parameters:
+readonly qual=10                     # The Q-score cut off
+readonly headcrop_fwd=30             # The number of bases to be trimmed from the 5' of the 'fwd' (R1) reads: This is being used because the primers could not found for most reads - 18 bases for the primer, 10 bases for the linker and 2 bases for the pad
+readonly minlen_fwd=270              # Minimum length cut off
+readonly crop_rev=270                # Remove from the distal end of the rev reads, which corrisponds to the poor quality data
+readonly headcrop_rev=28             # The number of bases to be trimmed from the 5' of the 'rev' (R2) read: This is being used because the primers could not found for most reads - 16 bases for the primer, 10 bases for the linker and 2 bases for the pad
+readonly minlen_rev=242              # Minimum length cut off
+
 ## Organize directories:
 ## Path to the main data directory
-path="/data/group/frankslab/project/LFlorence/MycorrhizasAustralianForests/data/AusMicrobiome/16S"
+readonly path="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/data/AusMicrobiome/16S"
 ## Create subdirectories for each run and for both fwd (R1) and rev (R2) reads
 for dir in "02.Quality_trimmed"; do
-  for run in {1..4}; do
-    mkdir -p "$path/$dir/run$run/fwd"
-    mkdir -p "$path/$dir/run$run/rev"
-  done
+    for run in $(seq 1 $num_runs); do
+        mkdir -p "$path/$dir/run$run/fwd"
+        mkdir -p "$path/$dir/run$run/rev"
+    done
 done
 
 ## Define paths to subdirectory:
-raw_data="$path/01.Raw_data"
-trimmed="$path/02.Quality_trimmed"
-
-## Define trimmomatic parameters:
-num_runs=43                 # The number of runs to be processed
-qual=10                     # The Q-score cut off
-headcrop_fwd=30             # The number of bases to be trimmed from the 5' of the 'fwd' (R1) reads.
-minlen_fwd=270              # Minimum length cut off
-crop_rev=270                # Remove the available bases to remove from the distal end of the rev reads
-headcrop_rev=28             # The number of bases to be trimmed from the 5' of the 'rev' (R2) read: This is being used because the primers were not found for most reads
-minlen_rev=242              # Minimum length cut off
-THREADS=$SLURM_CPUS_ON_NODE # Take advantage of all the available threads
+readonly raw_data="$path/01.Raw_data"
+readonly trimmed="$path/02.Quality_trimmed"
 
 ###############################################################################
 ## Run trimmomatic and calculate run performance statistics ###################
 ###############################################################################
 
 for run_number in $(seq 1 $num_runs); do
-    echo
-    echo "Run $run_number: Quality truncate reads"
+    
+    printf "Run $run_number: Quality truncate reads"
 
     cd "$raw_data/run$run_number"
 
@@ -80,8 +85,7 @@ for run_number in $(seq 1 $num_runs); do
             -threads "$THREADS"
     done
 
-    echo
-    echo "Run $run_number: Generating quality report"
+    printf "Run $run_number: Generating quality report"
 
     ## Generate quality report for R1 (fwd) and R2 (rev) separately
     fastqc "$trimmed/run$run_number/fwd"/*R1.fastq.gz -o "$trimmed/run$run_number/fwd"
@@ -97,8 +101,7 @@ for run_number in $(seq 1 $num_runs); do
     rmdir "$trimmed/run$run_number"/rev/multiqc_data
     
     # Calculate number and percentage of retained reads after trimming, along with additional statistics
-    echo
-    echo "Run $run_number: Generating trim statitics report"
+    printf "Run $run_number: Generating trim statitics report"
     
     results_file_fwd="$trimmed/trim_summary_fwd.txt"
     results_file_rev="$trimmed/trim_summary_rev.txt"
@@ -206,9 +209,9 @@ for run_number in $(seq 1 $num_runs); do
     done
     
     # Append the results to the respective files
-    echo -e "$run_number\t$input_reads_count_fwd\t$surviving_read_count_fwd\t$percentage_retained_fwd\t$dropped_reads_count_fwd\t$percentage_dropped_fwd\t$mean_reads_per_sample_fwd\t$min_reads_in_sample_fwd\t$max_reads_in_sample_fwd\t$samples_less_than_10k_fwd\t$samples_10K_to_20K_fwd\t$samples_more_than_20k_fwd" >> "$results_file_fwd"
+    printf "$run_number\t$input_reads_count_fwd\t$surviving_read_count_fwd\t$percentage_retained_fwd\t$dropped_reads_count_fwd\t$percentage_dropped_fwd\t$mean_reads_per_sample_fwd\t$min_reads_in_sample_fwd\t$max_reads_in_sample_fwd\t$samples_less_than_10k_fwd\t$samples_10K_to_20K_fwd\t$samples_more_than_20k_fwd" >> "$results_file_fwd"
     
-    echo -e "$run_number\t$input_reads_count_rev\t$surviving_read_count_rev\t$percentage_retained_rev\t$dropped_reads_count_rev\t$percentage_dropped_rev\t$mean_reads_per_sample_rev\t$min_reads_in_sample_rev\t$max_reads_in_sample_rev\t$samples_less_than_10k_rev\t$samples_10K_to_20K_rev\t$samples_more_than_20k_rev" >> "$results_file_rev"
+    printf "$run_number\t$input_reads_count_rev\t$surviving_read_count_rev\t$percentage_retained_rev\t$dropped_reads_count_rev\t$percentage_dropped_rev\t$mean_reads_per_sample_rev\t$min_reads_in_sample_rev\t$max_reads_in_sample_rev\t$samples_less_than_10k_rev\t$samples_10K_to_20K_rev\t$samples_more_than_20k_rev" >> "$results_file_rev"
 done
 
 echo "Ending at: $(date)"
