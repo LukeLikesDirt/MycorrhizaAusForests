@@ -1,5 +1,8 @@
 # Test code
-*Test_code/
+*Test_code/.
+
+# Slurm scripts
+*slurm/.
 
 # Notes
 notes/
