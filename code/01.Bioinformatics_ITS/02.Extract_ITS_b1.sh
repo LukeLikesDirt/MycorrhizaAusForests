@@ -72,7 +72,22 @@ for run_number in $(seq "$first_run" "$last_run"); do
 
     cd "$raw_data/run$run_number"
 
-    for f in *_R1.fastq.gz; do
+## Loop through each run: (1) extract the ITS1 with ITSxpress, (2) quality
+## truncate reads with trimmomatic, (3) qulatity check trimmed reads with 
+## fastQC, and (4) calculate read tracking statistics for each run, as follows:
+## input reads, reads retained, percentage retained, percentage dropped, mean 
+## reads per sample, minimum reads in a sample, maximum reads in a sample,
+## number of samples with <10,000 reads, number of samples with 10,000-20,000 
+## and number of samples with >20,000 reads.
+
+for run_number in $(seq "$first_run" "$last_run"); do
+
+    ## (1) Extract ITS1
+    printf '\nRun %d: Extracting ITS1 with ITSxpress\n' "$run_number"
+
+    cd "$raw_data/run$run_number"
+
+    for f in *.fastq.gz; do
         itsxpress \
             --single_end \
             --fastq "${f}" \
@@ -109,8 +124,13 @@ for run_number in $(seq "$first_run" "$last_run"); do
     ##  - Divide reads by 4 because each read occupies four lines in a fastq file
     ##    When counting reads across a fasrtq file, I need to divide by 4 because
     ##    each read occupies four lines in a fastq file. 
+<<<<<<< HEAD
     ##  - I have appended "s" to the start of each file seach to only include
     ##    test samples and exclude the negative controls, which have very few
+=======
+    ##  - I have appended "s" to the start of each file to only include test samples
+    ##    and exclude the negative controls, which have very few
+>>>>>>> refs/remotes/origin/main
     ##    reads and will skew the results.
     printf '\nRun %d: Calculating trimming statistics\n' "$run_number"
 
