@@ -4,6 +4,7 @@
 #SBATCH --time=168:00:00
 #SBATCH --partition=week
 #SBATCH --mem=150G
+#SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/01.Bioinformatics_16S/slurm/%x.%j.out
 
 printf "Starting at: $(date)"
 
