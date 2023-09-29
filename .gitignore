@@ -1,8 +1,8 @@
 # Test code
-*Test_code/.
+code/./00.Test_code/
 
 # Slurm scripts
-*slurm/.
+code/./slurm/
 
 # Notes
 notes/
