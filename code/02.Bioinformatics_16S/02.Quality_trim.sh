@@ -4,6 +4,7 @@
 #SBATCH --time=720:00:00
 #SBATCH --partition=month
 #SBATCH --mem-per-cpu=32G
+#SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/01.Bioinformatics_16S/slurm/%x.%j.out
 
 printf "Starting at: $(date)"
 
