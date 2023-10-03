@@ -169,7 +169,7 @@ fasta.tab <- as.data.frame(all.seqtab) %>%
     filter(size > 0) %>%
     ungroup() %>%
     mutate(seq.name = paste0(sample.names, '.fasta', '.', row_number(), ';size=', size)) %>%
-    select(seq.name, seq = seq)
+    select(seq.name, seq)
 
 ## Save the rds file for the merged sequence table
 saveRDS(all.seqtab, file.path(path, '05.Denoised/all_seqtab.rds'))
