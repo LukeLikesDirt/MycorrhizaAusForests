@@ -1,4 +1,23 @@
-# This script performs quality filtering, denoising, and sequence table construction for paired-end 16S rRNA gene amplicon data using DADA2.
+# This script is adapted from: https://benjjneb.github.io/dada2/bigdata_paired.html
+#
+# Script Purpose:
+# ---------------
+# This R script is designed for the quality filtering and denoising of
+# paired-end 16S rRNA gene amplicons using DADA2. The script is designed
+# for "big data" projects, and therefore, performs quality filtering and
+# denoising on sequencing run subsets. The data are subset by sequencing run
+# to improve error rate estimations, as each sequencing run has a unique error
+# profile. The script also converts the DADA2 'rds' sequence table to a 'fasta'
+# file formatted for VESEARCH for subsequent chimera detection and removal in
+# VSEARCH.
+#
+# Script Overview:
+# ---------------
+# This script (1) quality filters reads, (2) denoises the quality-filtered
+# reads, (3) merges the denoised sequence tables, and (4) converts the merged
+# sequence table to a fasta file for chimera detection and removal in VSEARCH.
+# Note that the reads have already been trimmed and quality truncated using
+# Trimmomatic.
 
 # Load DADA2
 require(dada2, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')

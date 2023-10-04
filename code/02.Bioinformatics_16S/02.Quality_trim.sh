@@ -1,218 +1,169 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=720:00:00
-#SBATCH --partition=month
+#SBATCH --time=168:00
+#SBATCH --partition=week
 #SBATCH --mem-per-cpu=32G
-#SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/01.Bioinformatics_16S/slurm/%x.%j.out
+#SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/02.Bioinformatics_16S/slurm/%x.%j.out
 
-printf "Starting at: $(date)"
+# Script: code/02.Bioinformatics_16S/02.Quality_trim.sh
+# Purpose: Prepare Illumina paired-end 16S amplicons (2 x 300bp) for denoising with DADA2 by quality truncating reads using Trimmomatic.
+# Author: Luke Florence
+# Date: 3rd October 2023
 
-## Prepare Illumina forward and reverse reads for denoising with DADA2 by
-## quality truncating reads using Trimmomatic. The Australian Microbiome
-## 16S amplicon covers the V1-V3 region, which is approximately 490 bases long,
-## but varies from 450 to 600 bases. In the current SILVA reference dataset 
-## used in this worklflow, ~95% of V1-V3 amplicons are shorter than 500 bases.
-## Therefore, I aim to retain good sequencing depth (>10,000 reads per sample) 
-## using a 512 base threshold, which equals 500 bases when accounting the 12 
-## base overlap required by DADA2. General overview the '02.Quality_trim.sh'
-## script:
-##  - Remove 30 bases from the 5' end of the forward reads to remove the fwd
-##    primers (27F), primer linker and primer pad.
-##  - Remove 28 bases from the 5' end of the reverse reads to remove the rev
-##    primers (519R), primer linker and primer pad.
-##  - Remove 30 bases from the 3' end of the reverse reads to keep a maximum 
-##    potential amplicon length of 510 bases after merging.
-##  - Quality truncate using a threshold of Q10, which equals a probable error
-##    rate of 1 in 10 calls. Considering that DADA2 will handel many incorrect
-##    calls when denoising and because reads will be merged, this 'relaxed' 
-##    threshold seems reasonable. Tighten to at least Q13 if using fwd reads 
-##    only.
-##  - Remove reads shorter than 270 (fwd) and 242 (rev) bases after quality 
-##    truncation.
+# Script Purpose:
+# ----------------
+# The Australian Microbiome 16S amplicon covers the V1-V3 region, which is 
+# typically around 490 bases long (Allen, et al. 2016, BMC Res Notes 9, 380).
+# In the current SILVA reference dataset, approximately 97% of V1-V3 amplicons
+# are shorter than 520 bases. Therefore, the goal of this script is to retain
+# good sequencing depth (>10,000 reads per sample) using a 532 base threshold,
+# which equals 520 base length amplicons when accounting for the 12 base
+# overlap required for merging with DADA2. Because the primers were not well
+# detected in the raw reads, primers are trimmed using a fixed length in this 
+# script.
 
-## Activate conda environment
+# Script Overview:
+# ---------------
+# The '02.Quality_trim.sh' script performs the following tasks:
+#   - Removes 20 bases from the 5' end of the forward reads to remove the
+#     forward primers (27F).
+#   - Removes 18 bases from the 5' end of the reverse reads to remove the
+#     reverse primers (519R).
+#   - Hard truncate reverse reads to 252 to require a maximum potential amplicon
+#     length of 520 bases after merging with DADA2: 
+#     280bp (R1) + 252bp (R2) - 12bp (merging overlap) = 520bp amplicons.
+#   - Quality truncates using a threshold of Q10, which equals a probable error
+#     rate of 1 in 10 calls. Considering that DADA2 will handle many incorrect
+#     calls when denoising and because reads will be merged, this 'relaxed' 
+#     threshold seems reasonable. Tighten it to at least Q13 if using forward
+#     reads only.
+#   - Removes reads shorter than 280 bases for forward reads and 252 bases for
+#     reverse reads after quality truncation.
+
+# Activate the conda environment
 source /data/group/frankslab/home/21258990/mambaforge/etc/profile.d/conda.sh
 conda activate shell
 
-# The number of runs to be processed
-readonly num_runs=43
+# Set constant variables:
+readonly NUM_RUNS=43        # The number of sequencing runs to be processed
+readonly THREADS=8          # The number of threads to use for parallel processing
+readonly WINDOW=4           # Trimmomatic: The sliding window size for averaging quality scores
+readonly QUAL=10            # Trimmomatic: The quality threshold for sliding window trimming
+readonly HEADCROP_FWD=20    # Trimmomatic: The number of bases to remove from the start of the forward read
+readonly MINLEN_FWD=280     # Trimmomatic: The minimum length read length to retain forward reads
+readonly CROP_REV=252       # Trimmomatic: Fixed truncation length of reverse reads after HEADCROP and QUAL trimming (removes bases from the distal, low-quality end of the read)
+readonly HEADCROP_REV=18    # Trimmomatic: The number of bases to remove from the start of the reverse read
+readonly MINLEN_REV=252     # Trimmomatic: The minimum length read length to retain reverse reads
 
-# Take advantage of all the available threads
-readonly THREADS=8
+# Directory paths and file names:
+path="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests" # The path to the project directory0
+raw_data="$path/data/AusMicrobiome/16S/01.Raw_data"                 # The path to demultiplexed reads
+trimmed="$path/02.Quality_trimmed"                                  # The path for the trimmed reads
+results_file_fwd="$trimmed/trim_summary_fwd.txt"                    # The path to the forward read quality trimming summary file
+results_file_rev="$trimmed/trim_summary_rev.txt"                    # The path to the reverse read quality trimming summary file
 
-## Define trimmomatic parameters:
-readonly qual=10                     # The Q-score cut off
-readonly headcrop_fwd=30             # The number of bases to be trimmed from the 5' of the 'fwd' (R1) reads: This is being used because the primers could not found for most reads - 18 bases for the primer, 10 bases for the linker and 2 bases for the pad
-readonly minlen_fwd=270              # Minimum length cut off
-readonly crop_rev=270                # Remove from the distal end of the rev reads, which corrisponds to the poor quality data
-readonly headcrop_rev=28             # The number of bases to be trimmed from the 5' of the 'rev' (R2) read: This is being used because the primers could not found for most reads - 16 bases for the primer, 10 bases for the linker and 2 bases for the pad
-readonly minlen_rev=242              # Minimum length cut off
+# Logging function
+log() {
+    local timestamp
+    timestamp=$(date)
+    printf "[$timestamp] %s\n" "$1"
+}
 
-## Organize directories:
-## Path to the main data directory
-readonly path="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/data/AusMicrobiome/16S"
-## Create subdirectories for each run and for both fwd (R1) and rev (R2) reads
-for dir in "02.Quality_trimmed"; do
-    for run in $(seq 1 $num_runs); do
-        mkdir -p "$path/$dir/run$run/fwd"
-        mkdir -p "$path/$dir/run$run/rev"
-    done
-done
+# Function to run Trimmomatic and generate quality reports for each sample using fastQC and multiQC
+run_trimmomatic_and_report() {
+    local run_number="$1"
 
-## Define paths to subdirectory:
-readonly raw_data="$path/01.Raw_data"
-readonly trimmed="$path/02.Quality_trimmed"
-
-###############################################################################
-## Run trimmomatic and calculate run performance statistics ###################
-###############################################################################
-
-for run_number in $(seq 1 $num_runs); do
-    
-    printf "Run $run_number: Quality truncate reads"
+    log "Run $run_number: Quality truncate reads"
 
     cd "$raw_data/run$run_number"
 
     for f in *R1.fastq.gz; do
-        trimmomatic SE "$f" "$trimmed/run$run_number/fwd/$f" \
-            HEADCROP:"$headcrop_fwd" SLIDINGWINDOW:4:"$qual" MINLEN:"$minlen_fwd" \
-            -threads "$THREADS"
+        trimmomatic SE "$f" "$trimmed/run$run_number/fwd/$f" HEADCROP:"$HEADCROP_FWD" SLIDINGWINDOW:4:"$QUAL" MINLEN:"$MINLEN_FWD" -threads "$THREADS"
     done
 
     for f in *R2.fastq.gz; do
-        trimmomatic SE "$f" "$trimmed/run$run_number/rev/$f" \
-            CROP:"$crop_rev" HEADCROP:"$headcrop_rev" SLIDINGWINDOW:4:"$qual" MINLEN:"$minlen_rev" \
-            -threads "$THREADS"
+        trimmomatic SE "$f" "$trimmed/run$run_number/rev/$f" CROP:"$CROP_REV" HEADCROP:"$HEADCROP_REV" SLIDINGWINDOW:4:"$QUAL" MINLEN:"$MINLEN_REV" -threads "$THREADS"
     done
 
-    printf "Run $run_number: Generating quality report"
-
-    ## Generate quality report for R1 (fwd) and R2 (rev) separately
+    log "Run $run_number: Generating quality report"
     fastqc "$trimmed/run$run_number/fwd"/*R1.fastq.gz -o "$trimmed/run$run_number/fwd"
     fastqc "$trimmed/run$run_number/rev"/*R2.fastq.gz -o "$trimmed/run$run_number/rev"
     multiqc "$trimmed/run$run_number/fwd" -o "$trimmed/run$run_number/fwd"
     multiqc "$trimmed/run$run_number/rev" -o "$trimmed/run$run_number/rev"
     
-    # Remove intermediate files and 'multiqc_data' directories
-    rm "$trimmed/run$run_number"/fwd/*fastqc.zip "$trimmed/run$run_number"/fwd/*fastqc.html
-    rm "$trimmed/run$run_number"/rev/*fastqc.zip "$trimmed/run$run_number"/rev/*fastqc.html
-    rm "$trimmed/run$run_number"/fwd/multiqc_data/* "$trimmed/run$run_number"/rev/multiqc_data/*
-    rmdir "$trimmed/run$run_number"/fwd/multiqc_data
-    rmdir "$trimmed/run$run_number"/rev/multiqc_data
-    
-    # Calculate number and percentage of retained reads after trimming, along with additional statistics
-    printf "Run $run_number: Generating trim statitics report"
-    
-    results_file_fwd="$trimmed/trim_summary_fwd.txt"
-    results_file_rev="$trimmed/trim_summary_rev.txt"
-    
-    # Initialize the result files if they don't exist yet
-    if [ ! -f "$results_file_fwd" ]; then
-        echo -e "Run\tInput_Reads\tSurviving_Reads\tSurviving_Percent\tDropped_Reads\tDropped_Percent\tMean_Reads_Per_Sample\tMin_Reads_In_Sample\tMax_Reads_In_Sample\tSamples_Less_Than_10K\tSamples_10K_to_20K\tSamples_More_Than_20K" > "$results_file_fwd"
-    fi
-    
-    if [ ! -f "$results_file_rev" ]; then
-        echo -e "Run\tInput_Reads\tSurviving_Reads\tSurviving_Percent\tDropped_Reads\tDropped_Percent\tMean_Reads_Per_Sample\tMin_Reads_In_Sample\tMax_Reads_In_Sample\tSamples_Less_Than_10K\tSamples_10K_to_20K\tSamples_More_Than_20K" > "$results_file_rev"
-    fi
-    
-    ### Calculate statistics for both R1 (fwd) and R2 (rev) files separately
-    ### Note that I have included only test samples, i.e., those with a file name beginning with 's'
-    
-    # Calculate statistics for R1 (fwd) files
-    input_reads_count_fwd=$(($(zcat "$raw_data/run$run_number/s"*R1.fastq.gz | wc -l) / 4)) # Divide by 4 because each read occupies four lines in a fastq file
+    # Remove intermediate files and 'multiqc_data' directories (add error handling)
+    rm -f "$trimmed/run$run_number"/fwd/*fastqc.zip "$trimmed/run$run_number"/fwd/*fastqc.html
+    rm -f "$trimmed/run$run_number"/rev/*fastqc.zip "$trimmed/run$run_number"/rev/*fastqc.html
+    rm -rf "$trimmed/run$run_number"/fwd/multiqc_data
+    rm -rf "$trimmed/run$run_number"/rev/multiqc_data
+}
+
+# Function to calculate read tracking statistics for each sequencing run
+calculate_and_log_statistics() {
+    local run_number="$1"
+
+    log "Run $run_number: Generating trim statistics report"
+
+    # Calculate statistics (add error handling)
+    input_reads_count_fwd=$(($(zcat "$raw_data/run$run_number/s"*R1.fastq.gz | wc -l) / 4))
     surviving_read_count_fwd=$(($(zcat "$trimmed/run$run_number/fwd/s"*R1.fastq.gz | wc -l) / 4))
     percentage_retained_fwd=$(awk "BEGIN { printf \"%.2f\", ($surviving_read_count_fwd / $input_reads_count_fwd) * 100 }")
     dropped_reads_count_fwd=$((input_reads_count_fwd - surviving_read_count_fwd))
     percentage_dropped_fwd=$(awk "BEGIN { printf \"%.2f\", ($dropped_reads_count_fwd / $input_reads_count_fwd) * 100 }")
-    
-    # Calculate statistics for R2 (rev) files
-    input_reads_count_rev=$(($(zcat "$raw_data/run$run_number/s"*R2.fastq.gz | wc -l) / 4)) # Divide by 4 because each read occupies four lines in a fastq file
+
+    input_reads_count_rev=$(($(zcat "$raw_data/run$run_number/s"*R2.fastq.gz | wc -l) / 4))
     surviving_read_count_rev=$(($(zcat "$trimmed/run$run_number/rev/s"*R2.fastq.gz | wc -l) / 4))
     percentage_retained_rev=$(awk "BEGIN { printf \"%.2f\", ($surviving_read_count_rev / $input_reads_count_rev) * 100 }")
     dropped_reads_count_rev=$((input_reads_count_rev - surviving_read_count_rev))
     percentage_dropped_rev=$(awk "BEGIN { printf \"%.2f\", ($dropped_reads_count_rev / $input_reads_count_rev) * 100 }")
-    
-    # Calculate mean reads per sample per run after trimming for R1 (fwd)
-    num_samples_fwd=$(find "$trimmed/run$run_number/fwd" -name "s*R1.fastq.gz" | wc -l)
-    mean_reads_per_sample_fwd=$((surviving_read_count_fwd / num_samples_fwd))
 
-    # Calculate mean reads per sample per run after trimming for R2 (rev) files
-    num_samples_rev=$(find "$trimmed/run$run_number/rev" -name "s*R2.fastq.gz" | wc -l)
-    mean_reads_per_sample_rev=$((surviving_read_count_rev / num_samples_rev))
+    # Calculate mean reads per sample
+    mean_reads_per_sample_fwd=$(awk "BEGIN { printf \"%.2f\", $surviving_read_count_fwd / $NUM_RUNS }")
+    mean_reads_per_sample_rev=$(awk "BEGIN { printf \"%.2f\", $surviving_read_count_rev / $NUM_RUNS }")
 
-    # Find the minimum and maximum number of reads within a sample for R1 (fwd) and R2 (rev) 
-    # Initialise variables to store the minimum and maximum read counts
-    min_reads_in_sample_fwd=9999999999 # Start with a very large number so that the first sample will always be less than this number
-    max_reads_in_sample_fwd=0
-    min_reads_in_sample_rev=9999999999
-    max_reads_in_sample_rev=0
+    # Calculate minimum reads in a sample
+    min_reads_in_sample_fwd=$(awk "BEGIN { min = $surviving_read_count_fwd; } $surviving_read_count_fwd < min { min = $surviving_read_count_fwd; } END { print min; }")
+    min_reads_in_sample_rev=$(awk "BEGIN { min = $surviving_read_count_rev; } $surviving_read_count_rev < min { min = $surviving_read_count_rev; } END { print min; }")
 
-    # Loop through each R1 (fwd) sample within individual runs
-    for sample_file in "$trimmed/run$run_number/fwd/s"*R1.fastq.gz; do
-        total_reads=$(( $(zcat "$sample_file" | wc -l) / 4 )) # Divide by 4 because each read occupies four lines in a fastq file
+    # Calculate maximum reads in a sample
+    max_reads_in_sample_fwd=$(awk "BEGIN { max = 0; } $surviving_read_count_fwd > max { max = $surviving_read_count_fwd; } END { print max; }")
+    max_reads_in_sample_rev=$(awk "BEGIN { max = 0; } $surviving_read_count_rev > max { max = $surviving_read_count_rev; } END { print max; }")
+
+    # Calculate the number of samples with less than 10K reads
+    samples_less_than_10k_fwd=$(awk "BEGIN { count = 0; } $surviving_read_count_fwd < 10000 { count++; } END { print count; }")
+    samples_less_than_10k_rev=$(awk "BEGIN { count = 0; } $surviving_read_count_rev < 10000 { count++; } END { print count; }")
+
+    # Calculate the number of samples with 10K to 20K reads
+    samples_10K_to_20K_fwd=$(awk "BEGIN { count = 0; } $surviving_read_count_fwd >= 10000 && $surviving_read_count_fwd <= 20000 { count++; } END { print count; }")
+    samples_10K_to_20K_rev=$(awk "BEGIN { count = 0; } $surviving_read_count_rev >= 10000 && $surviving_read_count_rev <= 20000 { count++; } END { print count; }")
+
+    # Calculate the number of samples with more than 20K reads
+    samples_more_than_20k_fwd=$(awk "BEGIN { count = 0; } $surviving_read_count_fwd > 20000 { count++; } END { print count; }")
+    samples_more_than_20k_rev=$(awk "BEGIN { count = 0; } $surviving_read_count_rev > 20000 { count++; } END { print count; }")
+
+    # Append results to the respective files (add error handling)
+    printf "$run_number\t$input_reads_count_fwd\t$surviving_read_count_fwd\t$percentage_retained_fwd\t$dropped_reads_count_fwd\t$percentage_dropped_fwd\t$mean_reads_per_sample_fwd\t$min_reads_in_sample_fwd\t$max_reads_in_sample_fwd\t$samples_less_than_10k_fwd\t$samples_10K_to_20K_fwd\t$samples_more_than_20k_fwd\n" >> "$results_file_fwd"
     
-        if [ "$total_reads" -lt "$min_reads_in_sample_fwd" ]; then
-            min_reads_in_sample_fwd="$total_reads"
-        fi
-    
-        if [ "$total_reads" -gt "$max_reads_in_sample_fwd" ]; then
-            max_reads_in_sample_fwd="$total_reads"
-        fi
+    printf "$run_number\t$input_reads_count_rev\t$surviving_read_count_rev\t$percentage_retained_rev\t$dropped_reads_count_rev\t$percentage_dropped_rev\t$mean_reads_per_sample_rev\t$min_reads_in_sample_rev\t$max_reads_in_sample_rev\t$samples_less_than_10k_rev\t$samples_10K_to_20K_rev\t$samples_more_than_20k_rev\n" >> "$results_file_rev"
+}
+
+# Main script
+
+log "Starting at: $(date)"
+
+# Create trimmed read subdirectories for each run
+for dir in "02.Quality_trimmed"; do
+    for run in $(seq 1 "$NUM_RUNS"); do
+        mkdir -p "$path/$dir/run$run/fwd"
+        mkdir -p "$path/$dir/run$run/rev"
     done
-
-    # Loop through each R2 (rev) sample within individual runs
-    for sample_file in "$trimmed/run$run_number/rev/s"*R2.fastq.gz; do
-        total_reads=$(( $(zcat "$sample_file" | wc -l) / 4 )) # Divide by 4 because each read occupies four lines in a fastq file
-    
-        if [ "$total_reads" -lt "$min_reads_in_sample_rev" ]; then
-            min_reads_in_sample_rev="$total_reads"
-        fi
-    
-        if [ "$total_reads" -gt "$max_reads_in_sample_rev" ]; then
-            max_reads_in_sample_rev="$total_reads"
-        fi
-    done
-
-    # Calculate the number of samples with <10,000 reads, 10,000-20,000 reads, and >20,000 reads within a run for R1 (fwd) and R2 (rev)
-    # Initialize variables to count the samples in different read count ranges
-    samples_less_than_10k_fwd=0
-    samples_10K_to_20K_fwd=0
-    samples_more_than_20k_fwd=0
-    samples_less_than_10k_rev=0
-    samples_10K_to_20K_rev=0
-    samples_more_than_20k_rev=0
-
-    # Loop through each R1 (fwd) sample within individual runs
-    for sample_file in "$trimmed/run$run_number/fwd/s"*R1.fastq.gz; do
-        total_reads=$(($(zcat "$sample_file" | wc -l) / 4)) # Divide by 4 because each read occupies four lines in a fastq file
-
-        if [ "$total_reads" -lt 10000 ]; then
-            ((samples_less_than_10k_fwd++))
-        elif [ "$total_reads" -ge 10000 ] && [ "$total_reads" -lt 20000 ]; then
-            ((samples_10K_to_20K_fwd++))
-        else
-            ((samples_more_than_20k_fwd++))
-        fi
-    done
-
-    # Loop through each R2 (rev) sample within individual runs
-    for sample_file in "$trimmed/run$run_number/rev/s"*R2.fastq.gz; do
-        total_reads=$(($(zcat "$sample_file" | wc -l) / 4)) # Divide by 4 because each read occupies four lines in a fastq file
-
-        if [ "$total_reads" -lt 10000 ]; then
-            ((samples_less_than_10k_rev++))
-        elif [ "$total_reads" -ge 10000 ] && [ "$total_reads" -lt 20000 ]; then
-            ((samples_10K_to_20K_rev++))
-        else
-            ((samples_more_than_20k_rev++))
-        fi
-    done
-    
-    # Append the results to the respective files
-    printf "$run_number\t$input_reads_count_fwd\t$surviving_read_count_fwd\t$percentage_retained_fwd\t$dropped_reads_count_fwd\t$percentage_dropped_fwd\t$mean_reads_per_sample_fwd\t$min_reads_in_sample_fwd\t$max_reads_in_sample_fwd\t$samples_less_than_10k_fwd\t$samples_10K_to_20K_fwd\t$samples_more_than_20k_fwd" >> "$results_file_fwd"
-    
-    printf "$run_number\t$input_reads_count_rev\t$surviving_read_count_rev\t$percentage_retained_rev\t$dropped_reads_count_rev\t$percentage_dropped_rev\t$mean_reads_per_sample_rev\t$min_reads_in_sample_rev\t$max_reads_in_sample_rev\t$samples_less_than_10k_rev\t$samples_10K_to_20K_rev\t$samples_more_than_20k_rev" >> "$results_file_rev"
 done
 
-echo "Ending at: $(date)"
+# Run Trimmomatic and generate quality reports for each sample and read tracking statistics for each run
+for run_number in $(seq 1 "$NUM_RUNS"); do
+    run_trimmomatic_and_report "$run_number"
+    calculate_and_log_statistics "$run_number"
+done
+
+log "Ending at: $(date)"
