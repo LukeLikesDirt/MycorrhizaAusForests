@@ -1,29 +1,45 @@
-# Script: code/01.Bioinformatics_ITS/03.Quality_filter_denoise.R
-# Purpose: Prepare Illumina forwards reads targeting the ITS1 chimera detection
-# in VSEARCH.
-# Author: Luke Florence
-# Date: 28th September 2023
 #
-# This script is adapted from: https://benjjneb.github.io/dada2/bigdata.html
+# Credit: This script is adapted from https://benjjneb.github.io/dada2/bigdata.html
+#
+# Script: Quality filter and denoise Illumina single-end reads, and merge
+# sequences from multiple sequencing runs.
+# Purpose: Prepare Illumina forwards reads for chimera detection in VSEARCH.
+# Author: Luke Florence.
+# Date: 28th September 2023.
 #
 # Script Purpose:
 # ---------------
 # This R script is designed for the quality filtering and denoising of
-# Illumina forward reads targeting the ITS1 subregion using DADA2. The script
-# is designed for "big data" projects, and therefore, performs quality
-# filtering and denoising on sequencing run subsets. The data are subset by
-# sequencing run to improve error rate estimations, as each sequencing run has
-# a unique error profile. The script also converts the DADA2 'rds' sequence
-# table to a 'fasta' file formatted for VESEARCH for subsequent chimera
-# detection and removal in VSEARCH.
+# Illumina forward reads using DADA2. The script is designed for "big data"
+# projects, and therefore, performs quality filtering and denoising on
+# sequencing runs induvidually. Sequencing runs are processed induvidually to
+# improve error rate estimations, as each sequencing run has a unique error
+# profile. The script also converts the DADA2 'rds' sequence table to a 'fasta'
+# file formatted for VESEARCH for the subsequent chimera detection and removal
+# in VSEARCH.
 #
 # Script Overview:
 # ---------------
-# This script (1) quality filters reads, (2) denoises the quality-filtered
-# reads, (3) merges the denoised sequence tables, and (4) converts the merged
-# sequence table to a fasta file for chimera detection and removal in VSEARCH.
-# Note that the reads have already been trimmed using ITSxpress and quality
-# truncated using Trimmomatic.
+#   (1) Quality filter reads from each sequencing run induvidually.
+#   (2) Denoise the reads from each sequencing run induvidually.
+#   (3) Merges the denoised sequence tables.
+#   (4) Convert the merged sequence table to a fasta file for chimera detection
+#       and removal in VSEARCH.
+#
+# Pre-processing:
+# ---------------
+# If processing ITS sequences, ITS extraction with ITSxpress is recomended
+# prior to quality filtering and denoising.
+#
+# I have quality truncated reads with Trimmomatic prior to quality filtering
+# to improve overall read quality (maxEE). This is because removing the low
+# quality reads on the distal (3') end removes low-quality bases, which can
+# have a disproportionately high impact on the overall quality score. Therefore,
+# by removing these low quality bases more reads will have the potential to
+#  pass the initial quality quality filtering step in DADA2.
+#
+# For SSU or LSU regions, reads can be trimmed to the same length in Trimmomatic
+# or DADA2.
 
 # Load required libraries
 library(dada2, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')
