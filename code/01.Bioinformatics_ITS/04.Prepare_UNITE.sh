@@ -6,19 +6,30 @@
 #SBATCH --mem-per-cpu=32G
 #SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/01.Bioinformatics_ITS/slurm/%x.%j.out
 
-# Script: code/01.Bioinformatics_ITS/04.Prepare_UNITE.sh
-# Purpose: Prepare the UNITE references dataset for chimera detection and taxonomic assignment for ITS1 and ITS2 amplicons
-# Author: Luke Florence
-# Date: 3rd October 2023
+## Script: Prepare UNITE dataset for chimera detection and taxonomic assignment
+## Purpose: Extract the desired ITS region from the UNITE reference dataset so
+## that it aligns with the target region in your data
+## Author: Luke Florence
+## Date: 4th October 2023
 
-## Constants and file paths
-readonly path="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests"  ## The path to the project directory
-readonly UNITE_dir="$path/data/AusMicrobiome/ITS/06.Reference_dataset"        ## Path to the UNITE fasta file
-readonly ITS1_dir="$UNITE_dir/ITS1"                                           ## Path to the ITS1 fasta file
-readonly ITS2_dir="$UNITE_dir/ITS2"                                           ## Path to the ITS2 fasta file
-mkdir -p "$UNITE_dir"                                                         ## UNITE subdirectory
-mkdir -p "$ITS1_dir"                                                          ## ITS1 subdirectory
-mkdir -p "$ITS2_dir"                                                          ## ITS2 subdirectory
+## Software:
+## --------
+## ITSx v1.1.3: https://microbiology.se/software/itsx/
+## MMER v3.1b2: http://hmmer.org/
+
+## Constants
+readonly CPUS=8        ## Set the number of CPUS
+readonly REGION="all"  ## ITSx: The target ITS region: SSU, ITS1, 5.8S, ITS2, LSU, all , none. Outputs only the actual ITS sequences (ITS1, ITS2) by default.
+readonly TAXA="ALL"    ## ITSx: The taxonomic group to extract: ALL, Fungi, Metazoa, Viridiplantae, Streptophyta, Rhodophyta, Protozoa, Chromista, Bacteria, Archaea, none. Extracts all taxa by default.
+
+## File paths
+readonly PROJECT_PATH="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests"  ## The path to the project directory
+readonly UNITE_DIR="$PROJECT_PATH/data/AusMicrobiome/ITS/06.Reference_dataset"   ## Path to the UNITE fasta file
+readonly ITS1_DIR="$UNITE_DIR/ITS1"                                                   ## Path to the ITS1 fasta file
+readonly ITS2_DIR="$UNITE_DIR/ITS2"                                                   ## Path to the ITS2 fasta file
+mkdir -p "$UNITE_DIR"                                                                 ## UNITE subdirectory
+mkdir -p "$ITS1_DIR"                                                                  ## ITS1 subdirectory
+mkdir -p "$ITS2_DIR"                                                                  ## ITS2 subdirectory
 
 ## UNITE dataset information: 
 ## CHANGE ME to the URL and file name for the desired UNITE version: https://unite.ut.ee/repository.php
@@ -28,9 +39,9 @@ UNITE_URL="https://files.plutof.ut.ee/public/orig/3D/FF/3DFF70D8FC94F5C331FA2AE7
 ##    - The stable version ends in '.fasta' at the development version ends in '_dev.fasta'.
 ##    - The 'prepare_UNITE_dataset' function uses the stable version by default.
 ##    - Amend "$UNITE_version" from '.fatsa' to '_dev.fasta' if you want to use the development version.
-UNITE_dataset="$UNITE_dir/sh_general_release_dynamic_all_25.07.2023"
-UNITE_version=".fasta"
-UNITE_reformatted_dataset="$UNITE_dir/UNITE_reformatted.fasta"
+UNITE_DATASET="$UNITE_DIR/sh_general_release_dynamic_all_25.07.2023"
+UNITE_VERSION=".fasta"
+UNITE_REFORMATTED_DATASET="$UNITE_DIR/UNITE_reformatted.fasta"
 
 ## Log function
 log() {
@@ -44,51 +55,54 @@ prepare_UNITE_dataset() {
 
     ## Retrieve UNITE
     log 'Downloading UNITE at:'
-    wget -O "$UNITE_dir/UNITE_compressed.tgz" "$UNITE_URL"
+    wget -O "$UNITE_DIR/UNITE_compressed.tgz" "$UNITE_URL"
 
     ## Decompress UNITE
     log 'Decompressing UNITE at:'
-    tar -zxvf "$UNITE_dir/UNITE_compressed.tgz" -C "$UNITE_dir/"
+    tar -zxvf "$UNITE_DIR/UNITE_compressed.tgz" -C "$UNITE_DIR/"
 
     ## Reformat to remove lowercase and spaces
     log 'Reformatting UNITE at:'
     awk '/^>/ {print($0)}; /^[^>]/ {print(toupper($0))}' \
-       "$UNITE_dataset$UNITE_version" | tr -d ' ' > \
-       "$UNITE_reformatted_dataset"
+       "$UNITE_DATASET$UNITE_VERSION" | tr -d ' ' > \
+       "$UNITE_REFORMATTED_DATASET"
     # Remove the intermediate files
-    rm "$UNITE_dir/UNITE_compressed.tgz"
-    rm ""$UNITE_dataset"_dev.fasta"
-    rm ""$UNITE_dataset".fasta"
+    rm "$UNITE_DIR/UNITE_compressed.tgz"
+    rm ""$UNITE_DATASET"_dev.fasta"
+    rm ""$UNITE_DATASET".fasta"
     # Rename the reformatted UNITE file
-    mv "$UNITE_reformatted_dataset" "$UNITE_dataset$UNITE_version"
+    mv "$UNITE_REFORMATTED_DATASET" "$UNITE_DATASET$UNITE_VERSION"
 
     ## Extract the ITS1 and ITS2 subregions from the UNITE dataset
     log 'Extracting the ITS region from UNITE at:'
 
     ITSx \
-      -i "$UNITE_dataset$UNITE_version" \
+      -i "$UNITE_DATASET$UNITE_VERSION" \
       --complement T \
-      --save_regions all \
+      --save_regions "$REGION" \
       --graphical F \
       --positions T \
       -E 1e-1 \
-      -t All \
-      --cpu 8 \
+      -t "$TAXA" \
+      --cpu "$CPUS" \
       --preserve T \
-      -o "$UNITE_dir/ITSx"
+      -o "$UNITE_DIR/ITSx"
 
     ## Build UNITE ITS1 and ITS2 datasets for input into BLAST
     log 'Building blast databases for the ITS1 and ITS2 subregions at:'
 
+    mv "$UNITE_DIR/ITSx.ITS1.fasta" "$ITS1_DIR/ITS1.fasta"
+    mv "$UNITE_DIR/ITSx.ITS2.fasta" "$ITS2_DIR/ITS2.fasta"
+
     makeblastdb \
-       -in "$UNITE_dir/ITSx.ITS1.fasta" \
-       -out "$ITS1_dir/" \
+       -in "$ITS1_DIR/ITS1.fasta" \
+       -out "$ITS1_DIR/ITS1" \
        -dbtype 'nucl' \
        -hash_index
 
     makeblastdb \
-       -in "$ITS2_dir/ITSx.ITS2.fasta" \
-       -out "$ITS2_dir/" \
+       -in "$ITS2_DIR/ITS2.fasta" \
+       -out "$ITS2_DIR/ITS2" \
        -dbtype 'nucl' \
        -hash_index
 
