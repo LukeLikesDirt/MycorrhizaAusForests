@@ -1,14 +1,26 @@
-# Test code
+# Test code and data
 code/**/00.Test_code/
+data/**/test/
 
 # Slurm scripts
-code/**/slurm/
+*slurm*
+*.out
 
 # Notes
 notes/
 
-# Data files
-data/
+# Large data files
+data/AusMicrobiome/**/01.*
+data/AusMicrobiome/**/02.*
+data/AusMicrobiome/**/03.*
+data/AusMicrobiome/**/04.*
+data/AusMicrobiome/**/05.*
+data/AusMicrobiome/**/06.*
+data/AusMicrobiome/**/07.*
+*reference_dataset*
+*tiff
+*html
+
 
 # R packages
 envs/R-packages/
