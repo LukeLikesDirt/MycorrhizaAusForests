@@ -1,9 +1,8 @@
-#
-# Credit: This script is adapted from https://benjjneb.github.io/dada2/bigdata.html
-#
+
 # Script: Quality filter and denoise Illumina single-end reads, and merge
 # sequences from multiple sequencing runs.
 # Purpose: Prepare Illumina forwards reads for chimera detection in VSEARCH.
+# Credit: This script is adapted from https://benjjneb.github.io/dada2/bigdata.html
 # Author: Luke Florence.
 # Date: 28th September 2023.
 #
