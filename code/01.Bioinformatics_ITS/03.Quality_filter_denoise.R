@@ -35,7 +35,7 @@
 # quality reads on the distal (3') end removes low-quality bases, which can
 # have a disproportionately high impact on the overall quality score. Therefore,
 # by removing these low quality bases more reads will have the potential to
-#  pass the initial quality quality filtering step in DADA2.
+# pass the initial quality quality filtering step in DADA2.
 #
 # For SSU or LSU regions, reads can be trimmed to the same length in Trimmomatic
 # or DADA2.

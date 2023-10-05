@@ -7,7 +7,7 @@
 #SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/01.Bioinformatics_ITS/slurm/%x.%j.out
 
 ## The R script executed here is adapted from: https://benjjneb.github.io/dada2/bigdata.html
-## See the R script for more details.
+## See the R script for more details
 
 printf "\nStarting at: %s\n" "$(date)"
 
