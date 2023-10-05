@@ -20,6 +20,7 @@ data/AusMicrobiome/**/07.*
 *reference_dataset*
 *tiff
 *html
+*.md5
 
 
 # R packages
