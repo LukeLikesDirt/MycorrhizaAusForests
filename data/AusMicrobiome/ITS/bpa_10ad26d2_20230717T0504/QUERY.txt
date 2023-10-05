@@ -1,0 +1,14 @@
+Title              : Search of all datasets
+Prefix             : bpa_10ad26d2_20230717T0504
+Timestamp          : 2023-07-17T05:04:45.084642+0000
+User Page          : https://data.bioplatforms.com/user/lukelikesdirt
+Query              : ticket:BPAOPS-1335
+QueryURL           : https://data.bioplatforms.com/dataset/?ext_search_by=&ext_search_by=&q=ticket%3ABPAOPS-1335&q=ticket%3ABPAOPS-1335&ext_search_by=&q=ticket%3ABPAOPS-1335
+Download URL       : https://data.bioplatforms.com/bulk/dataset/file_list?ext_search_by=&ext_search_by=&q=ticket%3ABPAOPS-1335&q=ticket%3ABPAOPS-1335&ext_search_by=&q=ticket%3ABPAOPS-1335
+URL Count          : 575
+MD5 Sum Count      : 575
+Organization Count : 1
+Package Count      : 111
+Resource Count     : 575
+Total Space        : 6.16 GiB
+Total Bytes        : 6614436993

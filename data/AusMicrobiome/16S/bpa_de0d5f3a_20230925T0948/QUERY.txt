@@ -1,0 +1,14 @@
+Title              : Search of organization: australian-microbiome
+Prefix             : bpa_de0d5f3a_20230925T0948
+Timestamp          : 2023-09-25T09:48:39.127019+0000
+User Page          : https://data.bioplatforms.com/user/lukelikesdirt
+Query              : 
+QueryURL           : https://data.bioplatforms.com/organization/75a9f0a5-fc60-4af6-b455-32e2011d969b?ext_search_by=&ext_search_by=&q=&q=&tags=16S&tags=amplicons-control&tags=16S&sort=score+desc%2C+metadata_modified+desc&sort=score+desc%2C+metadata_modified+desc&ext_search_by=&q=&tags=16S&sort=score+desc%2C+metadata_modified+desc
+Download URL       : https://data.bioplatforms.com/bulk/organization/75a9f0a5-fc60-4af6-b455-32e2011d969b/file_list?ext_search_by=&ext_search_by=&q=&q=&tags=16S&tags=amplicons-control&tags=16S&sort=score+desc%2C+metadata_modified+desc&sort=score+desc%2C+metadata_modified+desc&ext_search_by=&q=&tags=16S&sort=score+desc%2C+metadata_modified+desc
+URL Count          : 1947
+MD5 Sum Count      : 1947
+Organization Count : 1
+Package Count      : 131
+Resource Count     : 1947
+Total Space        : 33.63 GiB
+Total Bytes        : 36108751645
