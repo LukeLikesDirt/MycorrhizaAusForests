@@ -15,7 +15,7 @@
 ## Script Overview:
 ## ---------------
 ##   (1) Dereplicate across samples.
-##   (2) Denoise the reads from each sequencing run induvidually.
+##   (2) Denoise the reads from each sequencing run individually.
 ##   (3) Merges the denoised sequence tables.
 ##   (4) Convert the merged sequence table to a fasta file for chimera detection
 ##       and removal in VSEARCH.
