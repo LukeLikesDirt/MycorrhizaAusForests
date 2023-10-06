@@ -15,14 +15,13 @@
 ## Script Overview:
 ## ---------------
 ##   (1) Dereplicate across samples.
-##   (2) Denoise the reads from each sequencing run individually.
-##   (3) Merges the denoised sequence tables.
-##   (4) Convert the merged sequence table to a fasta file for chimera detection
-##       and removal in VSEARCH.
+##   (2) De novo chimera detection.
+##   (3) Reference-based chimera detection.
+##   (4) Extract all dereplicated non-chimeric sequences.
 ##
 ## Pre-requisites:
 ## ---------------
-## By this point, reads should be quality processed and dereplicated within
+## By this point reads should be quality processed and dereplicated within
 ## samples. If processing ITS sequences, reads should be ITS extracted.
 ##
 ## There should be one file named 'all.fasta' formatted for VSEARCH. That is,
@@ -32,7 +31,7 @@
 ##
 ## There should also be a mapping file named 'map.pl'. The mapping file can be
 ## found in this repository or on the VSEARCH wiki linked at the top of the 
-## page. Otherwise here is a link to wiki with an example VSEARCH pipline that
+## page. Otherwise here is a link to wiki with an example VSEARCH pipeline that
 ## doesn't use a map.pl file: https://github.com/torognes/vsearch/wiki/Alternative-VSEARCH-pipeline
 ##
 ## Additional notes:
@@ -40,14 +39,14 @@
 ## Here, I will dereplicate across samples and perform both de-novo and
 ## reference-based chimera filtering in VSEARCH. The previous quality and
 ## denosing steps in this pipeline were done with DADA2. I have chosen to
-## swithch from DADA2 to VSEARCH to perform chimera filtering because:
+## switch from DADA2 to VSEARCH to perform chimera filtering because:
 ##  (1) De novo chimera detection with DADA2 results in has high rates
 ##      of false positives compared to the UCHIME3 algorithm that is used
 ##      by VSEARCH (Edgar 2016, bioRxiv 074252; https://doi.org/10.1101/074252).
-##  (2) VSEARCH impliments reference-based chimera detection whereas VSEARCH
+##  (2) VSEARCH implements reference-based chimera detection whereas VSEARCH
 ##      does not. Despite de novo chimera detection outperforming the 
 ##      reference-based approach in terms of true positive detection, the
-##      referenced-based approach is a recomended suppliment as most 
+##      referenced-based approach is a recommended supplement as most 
 ##      referenced-based chimeras are true chimeras (Tedersoo et al. 2022, Molecular ecology 31, no. 10 (2022): 2769-2795).
 
 readonly THREADS=8                                                                                  ## Set the number of threads
