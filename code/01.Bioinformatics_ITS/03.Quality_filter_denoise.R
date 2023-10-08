@@ -46,7 +46,7 @@ library(seqinr, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAus
 library(tidyverse, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')
 
 # Constant variables
-num_runs <- 2   # The number of sequencing runs that will be processed
+num_runs <- 44   # The number of sequencing runs that will be processed
 mEE <- 1        # maxEE: maximum number of expected errors per read
 tL <- 0         # truncLen: fixed length for truncating reads
 tQ <- 0         # truncQ: quality threshold for truncating reads
@@ -86,11 +86,11 @@ for (run in 1:num_runs) {
                               rm.phix = TRUE, compress = TRUE, verbose = TRUE, multithread = TRUE,
                               matchIDs = TRUE)
     
-    # Track reads through the quality filtering pipeline
+    ## Track reads through the quality filtering pipeline
     colnames(qualFilt) <- c("input_qualFilter", "output_qualFilter")
     rownames(qualFilt) <- sample.names
     
-    # Save track file to denoised directory
+    ## Save track file to denoised directory
     write.csv(qualFilt, file = file.path(path, "04.Quality_filtered", paste0("run", run), "stats.csv"))
 }
 
@@ -123,11 +123,11 @@ for (run in 1:num_runs) {
     seqtab <- makeSequenceTable(dds)
     saveRDS(seqtab, file.path(denoised_dir, paste0(run, '_seqtab.rds')))
 
-    # Track reads through the DADA2 pipeline for the current run
+    ## Track reads through the DADA2 pipeline for the current run
     quality <- read.csv(file.path(qualFilt_dir, "stats.csv"))
     getN <- function(x) sum(getUniques(x))
     
-    # Check if there are rows in the "stats.csv" file
+    ## Check if there are rows in the "stats.csv" file
     if (nrow(quality) > 0) {
         track <- data.frame(
             run_number = run,
@@ -136,12 +136,12 @@ for (run in 1:num_runs) {
             output_denoised = sapply(dds, getN)
         )
         
-        # Append the track information for the current run to the summary_track data frame
+        ## Append the track information for the current run to the summary_track data frame
         summary_track <- rbind(summary_track, track)
     }
 }
 
-# Track reads across the pipeline, summarized by sequencing run
+# Track reads across the pipeline, summarised by sequencing run
 summary_track %>%
     rename("Run" = run_number) %>%
     group_by(Run) %>%
@@ -157,22 +157,25 @@ summary_track %>%
         "Samples_10-20K_Reads" = sum(output_qualFilter >= 10000 & output_qualFilter < 20000),
         Samples_MT_20K_Reads = sum(output_qualFilter >= 20000)) %>%
         ungroup() %>%
-        write.csv(file.path(path, "denoise_summary.csv"), row.names = FALSE)
+        write.csv(file.path(path, "summary_denoised.csv"), row.names = FALSE)
 
 # Merge all sequence tables and convert rds to fasta format for chimera detection in VSEARCH
+
+# NOTE: Some samples have been re-sequenced across multiple sequencing runs.
+# Therefore, I sum read counts and merge re-sequenced samples when executing the mergeSequenceTables()function.
 
 # Initialise an empty list to store the sequence tables
 seqtab_list <- list()
 
-# Loop through the sequencing runs to merge the sequence tables
+# Loop through the sequencing runs to read and merge the sequence tables
 for (run in 1:num_runs) {
   seqtab_file <- file.path(path, paste0('05.Denoised/', run, '_seqtab.rds'))
   seqtab <- readRDS(seqtab_file)
   seqtab_list[[run]] <- seqtab
 }
 
-# Merge all sequence tables
-all.seqtab <- do.call(mergeSequenceTables, seqtab_list)
+# Merge all sequence tables with repeats = "sum" to combine abundance across samples that have been sequenced in multiple runs
+all.seqtab <- mergeSequenceTables(tables = seqtab_list, repeats = "sum")
 
 ## Convert rds to fasta for chimera detection in VSEARCH
 
