@@ -62,7 +62,7 @@ PROJECT_PATH="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests"    #
 RAW_DATA="$PROJECT_PATH/data/AusMicrobiome/ITS/01.Raw_data"                    # Path to demultiplexed reads
 ITS_EXTRACTED="$PROJECT_PATH/data/AusMicrobiome/ITS/02.ITS_extracted"          # Path for the extracted ITS reads
 QUALITY_TRIMMED="$PROJECT_PATH/data/AusMicrobiome/ITS/03.Quality_trimmed"      # Path for the quality truncated reads
-TRACK_READS="$PATH/data/AusMicrobiome/ITS/trim_summary.txt"                    # Path to the file for tracking reads across the pipeline
+TRACK_READS="$PROJECT_PATH/data/AusMicrobiome/ITS/summary_trimmed.txt"                    # Path to the file for tracking reads across the pipeline
 
 # Create subdirectories if they don't exist
 mkdir -p "$ITS_EXTRACTED"
@@ -139,8 +139,8 @@ track_reads() {
 
     # Calculate the number of input, output (retained), and dropped reads during trimming
     # The number of lines are divided by 4 because each read occupies 4 lines in a fastq file
-    input_reads=$(($(zcat "$input_dir/s"*."$FILE_EXT"| wc -l) / 4))
-    output_reads=$(($(zcat "$output_dir/s"*."$FILE_EXT"| wc -l) / 4))
+    input_reads=$(($(zcat "$input_dir/s"*"$FILE_EXT"| wc -l) / 4))
+    output_reads=$(($(zcat "$output_dir/s"*"$FILE_EXT"| wc -l) / 4))
     dropped_reads=$((input_reads - output_reads))
 
     # Calculate the percentage of reads retained and dropped during trimming
@@ -148,7 +148,7 @@ track_reads() {
     percentage_dropped=$(awk "BEGIN { printf \"%.2f\", ($dropped_reads / $input_reads) * 100 }")
     
     # Calculate mean reads per sample per run after trimming
-    num_samples=$(find "$output_dir/" -name "s*.fastq.gz" | wc -l)
+    num_samples=$(find "$output_dir/" -name "s"*"$FILE_EXT" | wc -l)
     mean_reads_per_sample=$((output_reads / num_samples))
 
     # Find the minimum and maximum number of reads within a sample
