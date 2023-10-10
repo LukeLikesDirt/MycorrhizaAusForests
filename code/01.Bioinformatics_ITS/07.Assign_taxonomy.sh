@@ -13,15 +13,20 @@ readonly PROJECT_DIR="/data/group/frankslab/project/LFlorence/MycorrhizaAusFores
 readonly REFERENCE_SEQUENCES="$PROJECT_DIR/data/AusMicrobiome/ITS/06.Reference_dataset/ITS1/ITS1"
 readonly OTU_FASTA="$PROJECT_DIR/data/AusMicrobiome/ITS/08.Clustered/OTUs.fasta"
 readonly TAXA_DIR="$PROJECT_DIR/data/AusMicrobiome/ITS/09.Taxonomy"
-readonly OUTPUT_DIR="$PROJECT_DIR/output/AusMicrobiome/ITS"
 mkdir -p "$TAXA_DIR"
-mkdir -p "$OUTPUT_DIR"
+
+## Log function
+log() {
+    local timestamp
+    timestamp=$(date)
+    printf "\n%s %s\n\n" "$1" "$timestamp"
+}
 
 ## BLAST function
 
 my_blast() {
 
-    printf '\nBLAST best hit starting at %s\n' "$(date)"
+    log 'BLAST best hit starting at'
 
     # Best hit
     blastn \
@@ -41,7 +46,7 @@ my_blast() {
         -out "$TAXA_DIR/BLAST_best_hit.txt" \
         -num_threads "$THREADS"
 
-    printf '\nBLAST best ten hits starting at %s\n' "$(date)"
+    log 'BLAST best ten hits starting at'
 
     # Best 10
     blastn \
@@ -61,18 +66,30 @@ my_blast() {
         -out "$TAXA_DIR/BLAST_best_10.txt" \
         -num_threads "$THREADS"
 
-    # Reformat taxa tables
+}
+
+## Reformat taxa table function
+
+reformat_taxa_tables() {
+
     sed -i '1s/^/OTU_ID;abundance\tkingdom;phylum;class;order;family;genus;species\tpident\tlength\tslen\tmismatch\tgapopen\tqstart\tqend\tsstart\tsend\tevalue\tbitscore\n/' "$TAXA_DIR/BLAST_best_hit.txt"
-    sed 's/[[:space:]]\{1,\}/;/g' "$TAXA_DIR/BLAST_best_hit.txt" > "$OUTPUT_DIR/BLAST_best_hit.csv"
+    sed 's/[[:space:]]\{1,\}/;/g' "$TAXA_DIR/BLAST_best_hit.txt" > "$TAXA_DIR/BLAST_best_hit.csv"
 
     sed -i '1s/^/OTU_ID;abundance\tkingdom;phylum;class;order;family;genus;species\tpident\tlength\tslen\tmismatch\tgapopen\tqstart\tqend\tsstart\tsend\tevalue\tbitscore\n/' "$TAXA_DIR/BLAST_best_10.txt"
-    sed 's/[[:space:]]\{1,\}/;/g' "$TAXA_DIR/BLAST_best_10.txt" > "$OUTPUT_DIR/BLAST_best_10.csv"
+    sed 's/[[:space:]]\{1,\}/;/g' "$TAXA_DIR/BLAST_best_10.txt" > "$TAXA_DIR/BLAST_best_10.csv"
+
 }
 
 ## Main script
 
-printf '\nStarting at: %s\n' "$(date)"
+log 'Starting at:'
+
+source /data/group/frankslab/home/21258990/mambaforge/etc/profile.d/conda.sh
+conda activate shell
 
 my_blast
+reformat_taxa_tables
 
-printf '\nFinished at: %s\n' "$(date)"
+conda deactivate
+
+log 'Finished at:'
