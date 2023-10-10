@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=168:00:00
-#SBATCH --partition=week
+#SBATCH --time=24:00:00
+#SBATCH --partition=day
 #SBATCH --mem-per-cpu=32G
 #SBATCH --output=/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/code/01.Bioinformatics_ITS/slurm/%x.%j.out
 
