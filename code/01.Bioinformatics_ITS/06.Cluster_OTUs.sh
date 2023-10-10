@@ -17,9 +17,7 @@ readonly IDENTITY=0.97                                                          
 readonly PROJECT_PATH="/data/group/frankslab/project/LFlorence/MycorrhizaAusForests"     ## Path to the project directory
 readonly CHIMERA_FILTERED_DIR="$PROJECT_PATH/data/AusMicrobiome/ITS/07.Chimera_filtered" ## Path to chimera filtered fasta file
 readonly CLUSTERED_DIR="$PROJECT_PATH/data/AusMicrobiome/ITS/08.Clustered"               ## Path to clustered fasta file and OTU table
-readonly OUTPUT_DIR="$PROJECT_PATH/output/"                                              ## Path to formatted OTU table
 mkdir -p "$CLUSTERED_DIR"                                                                ## Make the clustered subdirectory
-mkdir -p "$OUTPUT_DIR"                                                                   ## Make the clustered subdirectory
 
 ## Log function
 log() {
@@ -52,9 +50,9 @@ cluster_OTUs() {
     ## Convert to .csv and save to the output directory
     sed -e 's/\s\+/,/g' "$CLUSTERED_DIR/OTUs.txt" > "$OUTPUT_DIR/OTUs.csv"
 
-    printf '\nNumber of OTUs and reads\n'
-    printf '    Number of OTUs: %s\n' "$(grep -c "^>" "$CLUSTERED_DIR/OTUs.fasta")"
-    printf '    Number of reads: %s\n' "$(grep -c "^>" "$CHIMERA_FILTERED_DIR/all.nonchimeras.derep.fasta")"
+    printf '\nNumber of unique sequences and OTUs\n'
+    printf '    Unique non-chimeric sequence: %s\n' "$(grep -c "^>" "$CHIMERA_FILTERED_DIR/all.nonchimeras.derep.fasta")"
+    printf '    Clustered OTUs: %s\n' "$(grep -c "^>" "$CLUSTERED_DIR/OTUs.fasta")"
 
 }
 
