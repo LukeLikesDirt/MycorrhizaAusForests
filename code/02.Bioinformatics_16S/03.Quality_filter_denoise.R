@@ -1,26 +1,44 @@
-# This script is adapted from: https://benjjneb.github.io/dada2/bigdata_paired.html
+#
+# Creadit: This script is adapted from https://benjjneb.github.io/dada2/bigdata_paired.html
 #
 # Script Purpose:
 # ---------------
 # This R script is designed for the quality filtering and denoising of
-# paired-end 16S rRNA gene amplicons using DADA2. The script is designed
+# illumina paired-end amplicons using DADA2. The script is designed
 # for "big data" projects, and therefore, performs quality filtering and
-# denoising on sequencing run subsets. The data are subset by sequencing run
-# to improve error rate estimations, as each sequencing run has a unique error
-# profile. The script also converts the DADA2 'rds' sequence table to a 'fasta'
-# file formatted for VESEARCH for subsequent chimera detection and removal in
-# VSEARCH.
+# denoising on sequencing runs individually. The sequencing runs are
+# individually denoised to improve error rate estimations, as each sequencing
+# run has a unique error profile. The script also converts the DADA2 'rds'
+# sequence table to a 'fasta' file formatted for VESEARCH, to run the
+# subsequent chimera detection and removal process in VSEARCH.
 #
 # Script Overview:
 # ---------------
-# This script (1) quality filters reads, (2) denoises the quality-filtered
-# reads, (3) merges the denoised sequence tables, and (4) converts the merged
-# sequence table to a fasta file for chimera detection and removal in VSEARCH.
-# Note that the reads have already been trimmed and quality truncated using
-# Trimmomatic.
+#   (1) Quality filter reads from each sequencing run individually.
+#   (2) Denoise each sequencing run individually and merge the R1 and R2 reads.
+#   (3) Merges the denoised sequence tables.
+#   (4) Convert the merged sequence table to a fasta file for chimera detection
+#       and removal in VSEARCH.
+#
+# Pre-processing:
+# ---------------
+# If processing ITS sequences, ITS extraction with ITSxpress is recommended
+# prior to quality filtering and denoising.
+#
+# I have quality truncated reads with Trimmomatic prior to quality filtering
+# to improve overall read quality (maxEE). This is because removing the low
+# quality reads on the distal (3') end removes low-quality bases, which can
+# have a disproportionately high impact on the overall quality score. Therefore,
+# by removing these low-quality bases more reads will have the potential to
+#  pass the initial quality quality filtering step in DADA2.
+#
+# For SSU or LSU regions, reads can be trimmed to the same length in Trimmomatic
+# or DADA2.
 
-# Load DADA2
-require(dada2, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')
+# Load required libraries
+library(dada2, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')
+library(seqinr, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')
+library(tidyverse, lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages')
 
 # Set the working directory to the project directory
 setwd("/data/group/frankslab/project/LFlorence/MycorrhizaAusForests")
@@ -28,7 +46,7 @@ setwd("/data/group/frankslab/project/LFlorence/MycorrhizaAusForests")
 # Define the path to the directory containing the runs
 path <- "data/AusMicrobiome/16S"
 
-# Define the number of sequencing runs thta will be processed
+# Define the number of sequencing runs that will be processed
 num_runs <- 43
 
 # Define the parameters for quality filtering
@@ -45,11 +63,10 @@ for (i in 1:num_runs) {
   dir.create(file.path(run_dir, 'fwd'))
   dir.create(file.path(run_dir, 'rev'))
 }
-## Subdirectories for merged and denoised sequence tables
-for (i in 1:num_runs) {
-  run_dir = file.path(path, '04.Denoised', paste0('run', i))
-  dir.create(run_dir, recursive = TRUE) # create parent directories if they don't exist
-}
+dir.create(file.path(path, '04.Denoised'))
+
+# Create an empty data frame to store the read tracking summary
+summary_track <- data.frame()
 
 # Quality filter each run individually
 for (run in 1:num_runs) {
@@ -59,7 +76,6 @@ for (run in 1:num_runs) {
   trim.rev <- file.path(path, "02.Quality_trimmed", paste0("run", run), "rev")
   qualFilt.fwd <- file.path(path, "03.Quality_filtered", paste0("run", run), "fwd")
   qualFilt.rev <- file.path(path, "03.Quality_filtered", paste0("run", run), "rev")
-  dnoise <- file.path(path, "04.Denoised", paste0("run", run))
   
   # List file names for 'fwd' and 'rev' reads for the current run
   fns.fwd <- sort(list.files(trim.fwd, pattern = "R1.fastq.gz", full.names = TRUE))
@@ -91,10 +107,10 @@ for (run in 1:num_runs) {
 for (run in 1:num_runs) {
   
   # Define the input and output directories for the current run
-  qualFilt <- file.path(path, "03.Quality_filtered", paste0("run", run))
-  qualFilt.fwd <- file.path(qualFilt, "fwd")
-  qualFilt.rev <- file.path(qualFilt, "rev")
-  dnoise <- file.path(path, "04.Denoised", paste0("run", run))
+  qualFilt_dir <- file.path(path, "03.Quality_filtered", paste0("run", run))
+  qualFilt.fwd <- file.path(qualFilt_dir, "fwd")
+  qualFilt.rev <- file.path(qualFilt_dir, "rev")
+  denoised_dir <- file.path(path, "04.Denoised")
 
   # Rename sample files to samplename.fastq.gz and list names for denoising for the current run
   filts.fwd <- list.files(qualFilt.fwd, pattern = "R1.fastq.gz", full.names = TRUE)
@@ -126,18 +142,79 @@ for (run in 1:num_runs) {
   }
   rm(derep.fwd, derep.rev)
   
-# Build sequence tables
+  # Build sequence tables
 
   seqtab <- makeSequenceTable(mergers)
-  save(seqtab, file = file.path(dnoise, "seqtab.rds"))
+  saveRDS(seqtab, file.path(denoised_dir, paste0(run, '_seqtab.rds')))
 
-  # Track reads through the DADA2 pipeline
-  quality <- read.csv(file.path(qualFilt, "stats.csv"))
+  ## Track reads through the DADA2 pipeline for the current run
+  quality <- read.csv(file.path(qualFilt_dir, "stats.csv"))
   getN <- function(x) sum(getUniques(x))
-  track <- cbind(quality, sapply(mergers, getN))
-  # If processing a single sample, remove the sapply calls: e.g. replace sapply(dadaFs, getN) with getN(dadaFs)
-  colnames(track) <- c("sample_names", "input_qualFilter", "output_qualFilter", "merged")
-  # Save track file to denoised directory
-  write.csv(track, file = file.path(dnoise, "stats.csv"), row.names = FALSE)
-  
+    
+  ## Check if there are rows in the "stats.csv" file
+  if (nrow(quality) > 0) {
+      track <- data.frame(
+          run_number = run,
+          input_qualFilter = quality$input_qualFilter,
+          output_qualFilter = quality$output_qualFilter,
+          output_denoised = sapply(mergers, getN)
+      )
+        
+        ## Append the track information for the current run to the summary_track data frame
+        summary_track <- rbind(summary_track, track)
+    }
 }
+
+# Track reads across the pipeline, summarised by sequencing run
+summary_track %>%
+    rename("Run" = run_number) %>%
+    group_by(Run) %>%
+    summarise(
+        Input_Reads = sum(input_qualFilter),
+        Output_Reads = sum(output_qualFilter),
+        "Retained_Reads_%" = round((sum(output_denoised) / sum(input_qualFilter)) * 100, digits = 2),
+        "Dropped_Reads_%" = round((sum(input_qualFilter) - sum(output_qualFilter)) / sum(input_qualFilter), digits = 2),
+        Mean_Reads_Per_Sample = round(sum(output_qualFilter) / n(), digits = 0),
+        Min_Reads = min(output_qualFilter),
+        Max_Reads = max(output_qualFilter),
+        Samples_LT_10K_Reads = sum(output_qualFilter < 10000),
+        "Samples_10-20K_Reads" = sum(output_qualFilter >= 10000 & output_qualFilter < 20000),
+        Samples_MT_20K_Reads = sum(output_qualFilter >= 20000)) %>%
+        ungroup() %>%
+        write.csv(file.path(path, "summary_denoised.csv"), row.names = FALSE)
+
+# Merge all sequence tables and convert rds to fasta format for chimera detection in VSEARCH
+
+# NOTE: Some samples have been re-sequenced across multiple sequencing runs.
+# Therefore, I sum read counts and merge re-sequenced samples when executing the mergeSequenceTables()function.
+
+# Initialise an empty list to store the sequence tables
+seqtab_list <- list()
+
+# Loop through the sequencing runs to read and merge the sequence tables
+for (run in 1:num_runs) {
+  seqtab_file <- file.path(path, paste0('04.Denoised/', run, '_seqtab.rds'))
+  seqtab <- readRDS(seqtab_file)
+  seqtab_list[[run]] <- seqtab
+}
+
+# Merge all sequence tables with repeats = "sum" to combine abundance across samples that have been sequenced in multiple runs
+all.seqtab <- mergeSequenceTables(tables = seqtab_list)
+
+## Convert rds to fasta for chimera detection in VSEARCH
+
+## Format data frame
+fasta.tab <- as.data.frame(all.seqtab) %>%
+    rownames_to_column('sample.names') %>%
+    as_tibble() %>%
+    pivot_longer(-sample.names, names_to = 'seq', values_to = 'size') %>%
+    filter(size > 0) %>%
+    ungroup() %>%
+    mutate(seq.name = paste0(sample.names, '.fasta', '.', row_number(), ';size=', size)) %>%
+    select(seq.name, seq)
+
+## Save the rds file for the merged sequence table
+saveRDS(all.seqtab, file.path(path, '04.Denoised/all_seqtab.rds'))
+
+## Write and save the fasta file for the merged sequence table
+write.fasta(as.list(fasta.tab$seq), fasta.tab$seq.name, file.path(path, '04.Denoised/all.fasta'), open = 'w', nbchar = 60, as.string = FALSE)
