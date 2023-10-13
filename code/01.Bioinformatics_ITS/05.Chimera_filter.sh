@@ -143,14 +143,14 @@ track_reads() {
     
     # Calculate the percentages of chimeras
     percentage_denovo_chimeras=$(bc <<< "scale=2; 100 - (100 * $reads_denovo / $total_dereplicated_reads)")
-    percentage_reference_chimeras=$(bc <<< "scale=2; (100 - (100 * $reads_reference / $total_dereplicated_reads) - $percentage_denovo_chimeras")
+    percentage_reference_chimeras=$(bc <<< "scale=2; (100 - (100 * $reads_reference / $total_dereplicated_reads)) - $percentage_denovo_chimeras")
     total_chimeras_percentage=$(bc <<< "scale=2; $percentage_denovo_chimeras + $percentage_reference_chimeras")
     
-    printf '   Reads input: %s\n' "$(get_reads_count "$DENOISED_DIR/all.fasta")" | tee -a "$TRACK_REPSEQS_READS_FILE"
-    printf '   Reads after dereplication: %s\n' "$total_dereplicated_reads" | tee -a "$TRACK_REPSEQS_READS_FILE"
-    printf '   Reads after de novo chimera detection: %s (%.2f%% chimeras)\n' "$reads_denovo" "$percentage_denovo_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
-    printf '   Reads after reference-based chimera detection: %s (%.2f%% chimeras)\n' "$reads_reference" "$percentage_reference_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
-    printf '   Percentage of total chimeras relative to dereplicated reads: %.2f%%\n' "$total_chimeras_percentage" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Reads input: %s\n' "$(get_reads_count "$DENOISED_DIR/all.fasta")" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Reads after dereplication: %s\n' "$total_dereplicated_reads" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Reads after de novo chimera detection: %s (%.2f%% chimeras)\n' "$reads_denovo" "$percentage_denovo_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Reads after reference-based chimera detection: %s (%.2f%% chimeras)\n' "$reads_reference" "$percentage_reference_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Percentage of total chimeras relative to dereplicated reads: %.2f%%\n' "$total_chimeras_percentage" | tee -a "$TRACK_REPSEQS_READS_FILE"
 }
 
 ###############################################################################
