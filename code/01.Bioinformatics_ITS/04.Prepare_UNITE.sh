@@ -62,9 +62,10 @@ prepare_UNITE_dataset() {
     tar -zxvf "$UNITE_DIR/UNITE_compressed.tgz" -C "$UNITE_DIR/"
 
     ## Reformat to remove lowercase and spaces
+    ## Also replace "|k__" with ";k__" to help with taxa table formating in the "07.Assign_taxonomy.sh" script
     log 'Reformatting UNITE at:'
     awk '/^>/ {print($0)}; /^[^>]/ {print(toupper($0))}' \
-       "$UNITE_DATASET$UNITE_VERSION" | tr -d ' ' > \
+       "$UNITE_DATASET$UNITE_VERSION" | tr -d ' ' | sed 's/|k__/;k__/g' > \
        "$UNITE_REFORMATTED_DATASET"
     # Remove the intermediate files
     rm "$UNITE_DIR/UNITE_compressed.tgz"
