@@ -1,6 +1,6 @@
 ## Introduction
 
-This repository is dedicated to the first chapter of my PhD at La Trobe University–—a project aimed at mapping patterns of root-trait diversity and endemism in Australian forests.
+This repository is dedicated to the first chapter of my PhD at La Trobe University—a project aimed at mapping patterns of root-trait diversity and endemism in Australian forests.
 
 This project encompasses eight main tasks:
 
