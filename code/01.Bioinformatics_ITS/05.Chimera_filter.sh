@@ -56,12 +56,16 @@ readonly REFERENCE_SEQS="$PROJECT_PATH/data/AusMicrobiome/ITS/06.Reference_datas
 readonly DENOISED_DIR="$PROJECT_PATH/data/AusMicrobiome/ITS/05.Denoised"                            ## Path to denoised fasta file
 readonly CHIMERA_FILTERED_DIR="$PROJECT_PATH/data/AusMicrobiome/ITS/07.Chimera_filtered"            ## Path for chimera filtered fasta file
 mkdir -p "$CHIMERA_FILTERED_DIR"                                                                    ## Chimera filtered directory
+# File to track representative sequences and reads across the pipeline
+LOG_FILE="$PROJECT_PATH/code/02.Bioinformatics_ITSS/slurm/%x.%j.out"
+TRACK_REPSEQS_READS_FILE="$PROJECT_PATH/data/AusMicrobiome/ITS/summary_chimeraFiltered.txt"
+
 
 ## Log function
 log() {
     local timestamp
     timestamp=$(date)
-    printf "\n%s %s\n\n" "$1" "$timestamp"
+    printf "\n%s %s\n\n" "$1" "$timestamp" | tee -a "$LOG_FILE"
 }
 
 ## Function for dereplication across samples, de novo and referenced-based chimera filtering, and mapping reads back to dereplicated non-chimeric sequences
@@ -99,13 +103,56 @@ chimera_filter() {
 
     perl "$MAP_SCRIPT" "$CHIMERA_FILTERED_DIR/all.derep.fasta" "$CHIMERA_FILTERED_DIR/all.derep.uc" "$CHIMERA_FILTERED_DIR/all.ref.nonchimeras.fasta" > "$CHIMERA_FILTERED_DIR/all.nonchimeras.derep.fasta"
 
-    ## Track reads across the pipeline
-    printf 'Track reads across the pipeline\n'
-    printf '    Unique sequence input: %s\n' "$(grep -c "^>" "$CHIMERA_FILTERED_DIR/all.derep.fasta")"
-    printf '    Unique sequences after de novo chimera detection: %s\n' "$(grep -c "^>" "$CHIMERA_FILTERED_DIR/all.denovo.nonchimeras.fasta")"
-    printf '    Unique sequences after reference-based chimera detection: %s\n' "$(grep -c "^>" "$CHIMERA_FILTERED_DIR/all.ref.nonchimeras.fasta")"
-    printf '    Unique non-chimeric sequence output: %s\n' "$(grep -c "^>" "$CHIMERA_FILTERED_DIR/all.nonchimeras.derep.fasta")"
+}
 
+## Functions to track the number of representative sequences and reads across the pipeline
+
+get_rep_seq_count() {
+    file="$1"
+    count=$(grep -c "^>" "$file")
+    echo "$count"
+}
+
+track_representative_sequences() {
+    log 'Track the number of representative sequences across the pipeline:' | tee -a "$TRACK_REPSEQS_READS_FILE"
+    unique_sequences_deno="$(get_rep_seq_count "$CHIMERA_FILTERED_DIR/all.denovo.nonchimeras.fasta")"
+    unique_sequences_ref="$(get_rep_seq_count "$CHIMERA_FILTERED_DIR/all.ref.nonchimeras.fasta")"
+    total_dereplicated_seqs="$(get_rep_seq_count "$CHIMERA_FILTERED_DIR/all.derep.fasta")"
+    
+     # Calculate the percentages of chimeras
+    percentage_denovo_chimeras=$(bc <<< "scale=2; 100 * $unique_sequences_deno / $total_dereplicated_seqs")
+    percentage_reference_chimeras=$(bc <<< "scale=2; 100 * $unique_sequences_ref / $total_dereplicated_seqs")
+    total_chimeras_percentage=$(bc <<< "scale=2; 100 * ($unique_sequences_deno + $unique_sequences_ref) / $total_dereplicated_seqs")
+    
+    printf '    Unique sequence input: %s\n' "$(get_rep_seq_count "$DENOISED_DIR/all.fasta")" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Unique sequences after dereplication: %s\n' "$total_dereplicated_seqs" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Unique sequences after de novo chimera detection: %s (%.2f%% chimeras)\n' "$unique_sequences_deno" "$percentage_denovo_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Unique sequences after reference-based chimera detection: %s (%.2f%% chimeras)\n' "$unique_sequences_ref" "$percentage_reference_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '    Percentage of total chimeras relative to dereplicated unique sequences: %.2f%%\n' "$total_chimeras_percentage" | tee -a "$TRACK_REPSEQS_READS_FILE"
+}
+
+get_reads_count() {
+    file="$1"
+    count=$(grep -o 'size=[0-9]\+' "$file" | awk -F'=' '{ sum += $2 } END { print sum }')
+    echo "$count"
+}
+
+track_reads() {
+    log 'Track the number of reads across the pipeline:' | tee -a "$TRACK_REPSEQS_READS_FILE"
+    total_dereplicated_reads="$(get_reads_count "$CHIMERA_FILTERED_DIR/all.derep.fasta")"
+    reads_denovo="$(get_reads_count "$CHIMERA_FILTERED_DIR/all.denovo.nonchimeras.fasta")"
+    reads_reference="$(get_reads_count "$CHIMERA_FILTERED_DIR/all.ref.nonchimeras.fasta")"
+    
+    # Calculate the percentages of chimeras
+    percentage_denovo_chimeras=$(bc <<< "scale=2; 100 * $reads_denovo / $total_dereplicated_reads")
+    percentage_reference_chimeras=$(bc <<< "scale=2; 100 * $reads_reference / $total_dereplicated_reads")
+    total_chimeras_percentage=$(bc <<< "scale=2; 100 * ($reads_denovo + $reads_reference) / $total_dereplicated_reads")
+    
+    printf '   Reads input: %s\n' "$(get_reads_count "$DENOISED_DIR/all.fasta")" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '   Reads after dereplication: %s\n' "$total_dereplicated_reads" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '   Reads after de novo chimera detection: %s (%.2f%% chimeras)\n' "$reads_denovo" "$percentage_denovo_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '   Reads after reference-based chimera detection: %s (%.2f%% chimeras)\n' "$reads_reference" "$percentage_reference_chimeras" | tee -a "$TRACK_REPSEQS_READS_FILE"
+    printf '   Percentage of total chimeras relative to dereplicated reads: %.2f%%\n' "$total_chimeras_percentage" | tee -a "$TRACK_REPSEQS_READS_FILE"
 }
 
 ###############################################################################
@@ -120,6 +167,9 @@ conda activate shell
 
 ## Dereplicate across samples and remove chimeras
 chimera_filter
+## Track the number of representative sequences and reads across the pipeline
+track_representative_sequences
+track_reads
 
 ## Deactivate the conda environment
 conda deactivate
