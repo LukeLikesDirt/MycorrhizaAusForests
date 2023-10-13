@@ -1,0 +1,16 @@
+
+Track the number of representative sequences across the pipeline: Fri Oct 13 14:00:09 AEDT 2023
+
+    Unique sequence input: 911316
+    Unique sequences after dereplication: 296830
+    Unique sequences after de novo chimera detection: 283269 (4.57% chimeras)
+    Unique sequences after reference-based chimera detection: 277369 (1.99% chimeras)
+    Percentage of total chimeras relative to dereplicated unique sequences: 6.56%
+
+Track the number of reads across the pipeline: Fri Oct 13 14:00:11 AEDT 2023
+
+   Reads input: 190711522
+   Reads after dereplication: 190711522
+   Reads after de novo chimera detection: 190233475 (0.26% chimeras)
+   Reads after reference-based chimera detection: 188600721 (1.11% chimeras)
+   Percentage of total chimeras relative to dereplicated reads: 1.37%
