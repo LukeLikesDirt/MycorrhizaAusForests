@@ -1,8 +1,0 @@
-
-# Install packages to .libPaths('/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages') 
-lib.loc = '/data/group/frankslab/project/LFlorence/MycorrhizaAusForests/envs/R-packages'
-install.packages('BiocManager', version = '3.17', lib = lib.loc)
-BiocManager::install('dada2', version = '3.17', lib = lib.loc)
-install.packages('tidyverse', version = '2.0.0', lib = lib.loc)
-install.packages('seqinr', version = '4.2.30', lib = lib.loc)
-install.packages('WorldFlora', version = '1.13-2', lib = lib.loc)
