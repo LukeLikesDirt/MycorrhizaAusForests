@@ -1,6 +1,6 @@
-# Test code and data
-code/**/00.Test_code/
-data/**/test/
+
+# Scripts run in subsets
+02.Extract_ITS_b*.sh
 
 # Slurm scripts
 *slurm*
@@ -17,11 +17,11 @@ data/AusMicrobiome/**/04.*
 data/AusMicrobiome/**/05.*
 data/AusMicrobiome/**/06.*
 data/AusMicrobiome/**/07.*
+data/AusMicrobiome/**/bpa*
 *reference_dataset*
 *tiff
 *html
 *.md5
-
 
 # R packages
 envs/R-packages/
