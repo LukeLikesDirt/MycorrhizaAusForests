@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --nodes=2
-#SBATCH --ntasks-per-node=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
 #SBATCH --time=24:00:00
 #SBATCH --partition=day
-#SBATCH --mem-per-cpu=32G
+#SBATCH --mem=100G
 #SBATCH --output=../01.Bioinformatics_ITS/slurm/%x.%j.out
 
 # Constants and subdirectories
