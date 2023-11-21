@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
+#SBATCH --mem=100G
 #SBATCH --time=168:00:00
 #SBATCH --partition=week
-#SBATCH --mem=100G
 #SBATCH --output=../01.Bioinformatics_ITS/slurm/%x.%j.out
 
 ## The R script executed here is adapted from: https://benjjneb.github.io/dada2/bigdata.html

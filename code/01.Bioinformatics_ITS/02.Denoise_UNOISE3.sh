@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=8G
 #SBATCH --time=168:00:00
 #SBATCH --partition=week
-#SBATCH --mem=100G
 #SBATCH --output="../01.Bioinformatics_ITS/slurm/%x.%j.out"
 
 ## Script:  Remove chimeras using de novo and reference-based chimera detection in VSEARCH.

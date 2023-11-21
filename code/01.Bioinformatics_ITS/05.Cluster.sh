@@ -83,20 +83,25 @@ match_list() {
 
 log 'Starting at:'
 
+# Activate the conda environment
 source /data/group/frankslab/home/21258990/mambaforge/etc/profile.d/conda.sh
 conda activate shell
 
 # Run cluster_OTUs for both methods concurrently
 (cluster_OTUs "$method_DADA2") &  # Run the first method in the background
 (cluster_OTUs "$method_UNOISE3") &  # Run the second method in the background
-wait  # Wait for background processes to finish
+
+# Wait for background processes to finish
+wait
 
 # Run match_list for both methods concurrently
 (match_list "$method_DADA2") &  # Run the first method in the background
 (match_list "$method_UNOISE3") &  # Run the second method in the background
-wait  # Wait for background processes to finish
 
+# Wait for background processes to finish
+wait
 
+# Deactivate the conda environment
 conda deactivate
 
 log 'Finished at:'

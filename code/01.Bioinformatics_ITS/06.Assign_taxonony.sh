@@ -60,7 +60,7 @@ blast_best_hit() {
 
 blast_best_ten_hits() {
     local method=$1
-    local OTU_FASTA="$TAXA_METHODS_DIR$method/OTUs.fasta"
+    local OTU_FASTA="$CLUSTERED_METHODS_DIR$method/OTUs.fasta"
     local TAXA_DIR="$TAXA_METHODS_DIR$method"
 
     # Create the directory if it doesn't exist

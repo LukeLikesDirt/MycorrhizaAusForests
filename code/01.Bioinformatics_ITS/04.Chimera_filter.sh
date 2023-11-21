@@ -29,6 +29,10 @@ LOG_FILE="slurm/%x.%j.out"
 
 ## Function for dereplication across samples, de novo and referenced-based chimera filtering
 chimera_filter() {
+    local method=$1
+    local CHIMERA_FILTERED_DIR="$CHIMERA_METHODS_DIR$method"
+
+    # Remove downstream files if re-running the pipeline
     local files_to_remove=("all.denovo.nonchimeras.fasta" "all.derep.fasta" "all.derep.uc" "all.nonchimeras.derep.fasta" "all.nonchimeras.fasta" "all.preclustered.fasta" "all.preclustered.uc" "all.ref.nonchimeras.fasta")
 
     for file in "${files_to_remove[@]}"; do
@@ -84,6 +88,10 @@ get_rep_seq_count() {
 }
 
 track_representative_sequences() {
+    local method=$1
+    local CHIMERA_FILTERED_DIR="$CHIMERA_METHODS_DIR$method"
+    local TRACK_REPSEQS_READS_FILE="$TRACK_REPSEQS_READS_DIR/summary_denoised$method.txt"
+
     log 'Track the number of representative sequences across the pipeline:' | tee -a "$TRACK_REPSEQS_READS_FILE"
     unique_sequences_denovo="$(get_rep_seq_count "$CHIMERA_FILTERED_DIR/all.denovo.nonchimeras.fasta")"
     unique_sequences_reference="$(get_rep_seq_count "$CHIMERA_FILTERED_DIR/all.ref.nonchimeras.fasta")"
@@ -107,6 +115,10 @@ get_reads_count() {
 }
 
 track_reads() {
+    local method=$1
+    local CHIMERA_FILTERED_DIR="$CHIMERA_METHODS_DIR$method"
+    local TRACK_REPSEQS_READS_FILE="$TRACK_REPSEQS_READS_DIR/summary_denoised$method.txt"
+
     log 'Track the number of reads across the pipeline:' | tee -a "$TRACK_REPSEQS_READS_FILE"
     total_reads="$(get_reads_count "$CHIMERA_FILTERED_DIR/all.preclustered.fasta")"
     reads_denovo="$(get_reads_count "$CHIMERA_FILTERED_DIR/all.denovo.nonchimeras.fasta")"
@@ -127,6 +139,34 @@ track_reads() {
 ###############################################################################
 
 log 'Starting at:'
+
+# Activate the conda environment
+source /data/group/frankslab/home/21258990/mambaforge/etc/profile.d/conda.sh
+conda activate shell
+
+# Chimera detection for both methods in parallel
+(chimera_filter "$method_DADA2") &
+(chimera_filter "$method_UNOISE3") &
+
+# Wait for background processes to finish
+wait
+
+# Deactivate the conda environment
+conda deactivate
+
+# Track the number of representative sequences across the pipeline
+(track_representative_sequences "$method_DADA2") &
+(track_representative_sequences "$method_UNOISE3") &
+
+# Wait for background processes to finish
+wait
+
+# Track the number of reads across the pipeline
+(track_reads "$method_DADA2") &
+(track_reads "$method_UNOISE3") &
+
+# Wait for background processes to finish
+wait
 
 for method in "$method_DADA2" "$method_UNOISE3"; do
     printf "Current method: $method\n"

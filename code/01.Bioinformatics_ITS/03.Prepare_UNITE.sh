@@ -1,4 +1,10 @@
-#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=8G
+#SBATCH --time=168:00:00
+#SBATCH --partition=week
+#SBATCH --output="../01.Bioinformatics_ITS/slurm/%x.%j.out"
 
 ## Script:  Prepare UNITE dataset for chimera detection and taxonomic assignment
 ## Author:  Luke Florence
