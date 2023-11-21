@@ -1,6 +1,7 @@
 
-# My scripts with senetive infomration
+# Scripts with senetive infomration
 **/my_scripts/*
+data/AusMicrobiome/**/bpa*/*
 
 # Slurm scripts
 *slurm*
@@ -17,7 +18,8 @@ data/AusMicrobiome/**/04.*
 data/AusMicrobiome/**/05.*
 data/AusMicrobiome/**/06.*
 data/AusMicrobiome/**/07.*
-data/AusMicrobiome/**/bpa*
+data/AusMicrobiome/**/08.*
+data/AusMicrobiome/**/09.*
 *reference_dataset*
 *tiff
 *html
