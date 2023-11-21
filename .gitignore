@@ -1,6 +1,6 @@
 
-# Scripts run in subsets
-02.Extract_ITS_b*.sh
+# My scripts with senetive infomration
+**/my_scripts/*
 
 # Slurm scripts
 *slurm*
