@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=8G
 #SBATCH --time=168:00:00
 #SBATCH --partition=week
-#SBATCH --mem=100G
-#SBATCH --output="../02.Bioinformatics_16S/slurm/%x.%j.out"
+#SBATCH --output="../01.Bioinformatics_ITS/slurm/%x.%j.out"
 
 # Script:   Denoise Illumina paired-end reads using the UNOISE3 algorithm in
 #           VSEARCH
