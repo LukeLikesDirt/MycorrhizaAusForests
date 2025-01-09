@@ -1,9 +1,0 @@
-# Harmonise plant databases according to World Flora Online
-
-## Overview
-
-[World Flora Online](http://www.worldfloraonline.org/) is an online flora of all known plants, used to match a list of plant names against a static copy of the World Flora Online Taxonomic Backbone.
-
-Here I use the [WorldFlora package](https://cran.r-project.org/web/packages/WorldFlora/index.html) to harmonise the plant names in the [Biomass Plot Library](https://portal.tern.org.au/metadata/23218#:~:text=The%20Biomass%20Plot%20Library%20is,private%20companies%20and%20other%20agencies.), [Harmonised Australian Vegetation Plot (HAVPlot)](https://data.csiro.au/collection/csiro:54461?_st=browse&_str=6&_si=2&browseType=kw&browseValue=vegetation), [FungalRoot](https://nph.onlinelibrary.wiley.com/doi/full/10.1111/nph.18207), [Root nodulation (NodDB)](https://onlinelibrary.wiley.com/doi/10.1111/jvs.12627), and [GlobalTreeSearch](https://tools.bgci.org/global_tree_search.php) databases according to the World Flora Online.
-
-The FungalRoot database is a collection of mycorrhizal annotations based on the presence or absence of mycorrhizal structures in plant roots, using a 67% consensus threshold across all observations. The database contains generic-level mycorrhizal annotations for plants of all ages, from seedlings to mature plants. However, for my project, I am interested in the mycorrhizal type of mature trees. As many Australian ectomycorrhizal trees, including Eucalyptus, are typically dominated by arbuscular mycorrhizal associations as seedlings yet transition to mostly ectomycorrhizal as mature trees, I will recalculate the mycorrhizal type of tree genera on observations where host age is greater than 12 months.
