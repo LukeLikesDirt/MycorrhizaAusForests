@@ -1,29 +1,11 @@
 
-# Scripts with senetive infomration
-**/my_scripts/*
-data/AusMicrobiome/**/bpa*/*
+# Data, output, and manuscript files
+output/
+data/
+manuscipt/
 
-# Slurm scripts
-*slurm*
-*.out
-
-# Notes
-notes/
-
-# Large data files
-data/AusMicrobiome/**/01.*
-data/AusMicrobiome/**/02.*
-data/AusMicrobiome/**/03.*
-data/AusMicrobiome/**/04.*
-data/AusMicrobiome/**/05.*
-data/AusMicrobiome/**/06.*
-data/AusMicrobiome/**/07.*
-data/AusMicrobiome/**/08.*
-data/AusMicrobiome/**/09.*
-*reference_dataset*
-*tiff
-*html
-*.md5
+# macOS folder settings
+.DS_Store
 
 # R packages
 envs/R-packages/
@@ -51,7 +33,7 @@ envs/R-packages/
 # RStudio files
 .Rproj.user/
 
-# produced vignettes
+# Produced vignettes
 vignettes/*.html
 vignettes/*.pdf
 
@@ -66,7 +48,7 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
-# R Environment Variables
+# R environment variables
 .Renviron
 
 # pkgdown site
