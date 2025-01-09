@@ -2,7 +2,7 @@
 # Data, output, and manuscript files
 output/
 data/
-manuscipt/
+manuscript/
 
 # macOS folder settings
 .DS_Store
