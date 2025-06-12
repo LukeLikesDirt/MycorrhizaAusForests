@@ -1,14 +1,10 @@
 
-# Data, output, and manuscript files
-output/
+# Data,and manuscript files
 data/
 manuscript/
 
 # macOS folder settings
 .DS_Store
-
-# R packages
-envs/R-packages/
 
 # History files
 .Rhistory
