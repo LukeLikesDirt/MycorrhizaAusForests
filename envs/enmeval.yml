@@ -1,0 +1,25 @@
+name: enmeval
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - r-base=4.3.3
+  - r-terra
+  - r-sf
+  - r-dismo
+  - r-distance
+  - r-data.table
+  - r-fst
+  - r-blockcv
+  - r-ecospat
+  - r-maxnet
+  - r-lhs
+  - r-dplyr
+  - r-future.apply
+  - r-remotes
+  - r-enmeval
+  - r-textshaping
+  - r-automap
