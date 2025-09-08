@@ -18,8 +18,7 @@ Corresponding author: Luke Florence (L.Florence@latrobe.edu.au)
 ## Repository contents
 
 * `code/` — Contains all R scripts used to reproduce the analysis, including data sourcing, preparation, execution of statistical workflows, and figure generation
-* `data/` — Will store all sourced and prepared data required for datasets required statistical workflows
-* `code/Figure*.R` - Individual scripts for generating each figure presented in the manuscript
+* `code/Figure*.R` — Individual scripts for generating each figure presented in the manuscript
 * `output/generated_data/` — Includes all datasets required to reproduce the primary figures and results
 * `envs/` — Contains the Conda environment set-up scripts used for modelling environmental breadth. This analysis was executed on a high-performance computing cluster due to computational intensity
 
