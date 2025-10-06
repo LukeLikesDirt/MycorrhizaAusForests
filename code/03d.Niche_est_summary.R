@@ -13,9 +13,16 @@ forest_rast <- rast("data/aus_forests_23/predictors_10.tif") %>%
 
 # Load species and niche data
 tree_species <- fread("data/presence/trees_10.txt") %>%
-  select(family, genus, species = scientific_name, mycorrhizal_type) %>%
+  select(family, genus, species = scientific_name, mycorrhizal_type, latitude) %>%
   filter(mycorrhizal_type != "ErM") %>%
-  unique()
+  # Compute latitudinal range size based on 95% quantiles
+  group_by(family, genus, species, mycorrhizal_type) %>%
+  summarise(
+    lat_min = quantile(abs(latitude), 0.025, na.rm = TRUE),
+    lat_max = quantile(abs(latitude), 0.975, na.rm = TRUE),
+    lat_range = lat_max - lat_min
+  ) %>%
+  select(family, genus, species, mycorrhizal_type, lat_range)
 
 niche_breadth_est <- read_fst("data/niche_estimates_enmeval/niche_model_results_enmeval.fst", as.data.table = TRUE) %>%
   filter(pass_validation == TRUE, auc >= 0.6) %>%
@@ -61,7 +68,7 @@ dominant_biome_group <- species_biome %>%
   arrange(desc(prop)) %>%
   slice(1) %>%
   select(species, biome_group)
-dominant_biome %>%
+dominant_biome_group %>%
   group_by(biome_group) %>%
   count(biome_group)
 
@@ -92,7 +99,7 @@ niche_breadth_est %>%
   inner_join(
     dominant_biome_group, 
     by = c("species") 
-    ) %>%
+  ) %>%
   select(
     family, genus, species, mycorrhizal_type,
     AOO, EOO,
@@ -100,6 +107,7 @@ niche_breadth_est %>%
     env_B2_corrected, geo_B2_corrected,
     RC1_position, RC2_position, RC3_position,
     lat_position,
+    lat_range,
     biome = biome_group
   ) %>%
   # Compute "Tropical" and "Non-tropical" climate zones based on lat_position
@@ -110,3 +118,28 @@ niche_breadth_est %>%
     )
   ) %>%
   fwrite("data/niche_estimates_enmeval/niche_estimates.txt", sep = "\t")
+
+# Also save to generated_data for github repository                 
+niche_breadth_est %>%
+  inner_join(
+    dominant_biome_group, 
+    by = c("species") 
+  ) %>%
+  select(
+    family, genus, species, mycorrhizal_type,
+    AOO, EOO,
+    env_B2, geo_B2, ex_dent, 
+    env_B2_corrected, geo_B2_corrected,
+    RC1_position, RC2_position, RC3_position,
+    lat_position,
+    lat_range,
+    biome = biome_group
+  ) %>%
+  # Compute "Tropical" and "Non-tropical" climate zones based on lat_position
+  mutate(
+    climate_zone = case_when(
+      lat_position > -23.45 ~ "Tropical",
+      lat_position < -23.45 ~ "Non-tropical"
+    )
+  ) %>%
+  fwrite("output/generated_data/niche_estimates.txt", sep = "\t")                    
