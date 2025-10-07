@@ -42,8 +42,7 @@ data <- data.table::fread(
 ) %>%
   filter(mycorrhizal_type != "ErM") %>%
   mutate(
-    # Sqrt-root transformation to normalise env_breadth
-    env_breadth = sqrt(env_B2_corrected),
+    env_breadth = env_B2_corrected,
     # Rename EcM-AM to Dual
     mycorrhizal_type = recode(mycorrhizal_type, "EcM-AM" = "Dual"),
     mycorrhizal_type = factor(mycorrhizal_type, levels = c("AM", "EcM", "Dual", "NM")),
