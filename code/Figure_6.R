@@ -42,6 +42,7 @@ data <- data.table::fread(
 ) %>%
   filter(mycorrhizal_type != "ErM") %>%
   mutate(
+    # Sqrt-root transformation to normalise env_breadth
     env_breadth = env_B2_corrected,
     # Rename EcM-AM to Dual
     mycorrhizal_type = recode(mycorrhizal_type, "EcM-AM" = "Dual"),
@@ -249,10 +250,6 @@ mde_pred_list <- foreach(
   
   subset_data <- data[data$mycorrhizal_type == myc_type, ]
   
-  # Alternative: Compute n_species to sample based on proportion
-  # # Compute n_species to sample (20% of the original data)
-  # n_species <- round(prop_sample * nrow(subset_data))
-  
   # Pre-calculate feasible midpoint ranges (outside simulation loop)
   min_midpoints <- lat_min + (subset_data$lat_range / 2)
   max_midpoints <- lat_max - (subset_data$lat_range / 2)
@@ -272,6 +269,10 @@ mde_pred_list <- foreach(
     # Calculate range endpoints
     range_starts <- random_midpoints - half_ranges
     range_ends <- random_midpoints + half_ranges
+    
+    # Alternative: Compute n_species to sample based on proportion
+    # # Compute n_species to sample (20% of the original data)
+    # n_species <- round(prop_sample * nrow(subset_data))
     
     # Randomly sample species for this simulation
     sample_idx <- sample(nrow(subset_data), n_species, replace = FALSE)
