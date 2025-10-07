@@ -62,6 +62,7 @@ pred_list <- list()
 r2_list <- list()
 model_list <- list()
 model_prams_list <- list()
+preds_species_list <- list()
 
 # Fit models for each mycorrhizal type
 for (myc_type in unique(data$mycorrhizal_type)) {
@@ -89,6 +90,15 @@ for (myc_type in unique(data$mycorrhizal_type)) {
   preds <- as.data.frame(preds)
   preds$mycorrhizal_type <- myc_type
   
+  # Get predicted values for each species
+  preds_species_list[[myc_type]] <- data.frame(
+    species = subset_data$species,
+    latitude = subset_data$latitude,
+    observed = subset_data$env_breadth,
+    predicted = predict(model, newdata = subset_data),
+    mycorrhizal_type = myc_type
+  )
+  
   pred_list[[myc_type]] <- preds
 }
 
@@ -101,6 +111,12 @@ pred_combined <- do.call(rbind, pred_list) %>%
 
 # Combine R2 values
 r2_combined <- do.call(rbind, r2_list) %>%
+  mutate(mycorrhizal_type = factor(
+    mycorrhizal_type, levels = c("AM", "EcM", "Dual", "NM")
+  ))
+
+# Combine species-level predictions
+preds_species_combined <- do.call(rbind, preds_species_list) %>%
   mutate(mycorrhizal_type = factor(
     mycorrhizal_type, levels = c("AM", "EcM", "Dual", "NM")
   ))
@@ -259,7 +275,7 @@ mde_pred_list <- foreach(
     range_ends <- random_midpoints + half_ranges
     
     # Randomly sample species for this simulation
-    sample_idx <- sample(nrow(subset_data), n_species, replace = TRUE)
+    sample_idx <- sample(nrow(subset_data), n_species, replace = FALSE)
     sampled_starts <- range_starts[sample_idx]
     sampled_ends <- range_ends[sample_idx]
     sampled_breadths <- subset_data$env_breadth[sample_idx]
@@ -384,25 +400,25 @@ ggplot() +
   scale_x_continuous(
     labels = function(x) paste0(abs(x), "°S")
   ) +
-  # # Add R2 annotations
-  # geom_text(
-  #   data = r2_summary,
-  #   aes(
-  #     x = lat_min + 0.01 * domain_size,
-  #     y = max(data$env_breadth, na.rm = TRUE) * 0.99,
-  #     label = label
-  #   ),
-  #   parse = TRUE,
-  #   hjust = 0,
-  #   vjust = 1,
-#   size = 2.5,
-#   color = "black",
-#   inherit.aes = FALSE
-# ) +
-labs(
-  x = "Latitude",
-  y = "Environmental breadth"
-) +
+  # Add R2 annotations
+  geom_text(
+    data = r2_summary,
+    aes(
+      x = lat_min + 0.99 * domain_size,
+      y = max(data$env_breadth, na.rm = TRUE) * 0.99,
+      label = label
+    ),
+    parse = TRUE,
+    hjust = 1,
+    vjust = 1,
+    size = 2.5,
+    colour = "black",
+    inherit.aes = FALSE
+  ) +
+  labs(
+    x = "Latitude",
+    y = "Environmental breadth"
+  ) +
   common_theme +
   facet_wrap(~ mycorrhizal_type, nrow = 1)
 
