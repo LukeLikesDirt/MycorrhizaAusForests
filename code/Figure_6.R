@@ -32,8 +32,8 @@ common_theme <- theme_minimal() +
 # (1) Organise data ------------------------------------------------------------
 
 # Define domain boundaries: North-south latitude limits for Australia
-lat_min <- 10
-lat_max <- 45
+lat_min <- 10.5
+lat_max <- 44.5
 domain_size <- lat_max - lat_min
 
 # Read in the data
@@ -43,7 +43,7 @@ data <- data.table::fread(
   filter(mycorrhizal_type != "ErM") %>%
   mutate(
     # Sqrt-root transformation to normalise env_breadth
-    env_breadth = env_B2_corrected,
+    env_breadth = sqrt(env_B2_corrected),
     # Rename EcM-AM to Dual
     mycorrhizal_type = recode(mycorrhizal_type, "EcM-AM" = "Dual"),
     mycorrhizal_type = factor(mycorrhizal_type, levels = c("AM", "EcM", "Dual", "NM")),
@@ -86,7 +86,7 @@ for (myc_type in unique(data$mycorrhizal_type)) {
     R2 = performance(model)$R2
   )
   # Get predictions with CIs across the entire domain
-  preds <- ggpredict(model, terms = list(latitude = seq(lat_min + 1, lat_max - 1, by = 0.01)))  
+  preds <- ggpredict(model, terms = list(latitude = seq(lat_min, lat_max, by = 0.01)))  
   preds <- as.data.frame(preds)
   preds$mycorrhizal_type <- myc_type
   
@@ -135,7 +135,7 @@ for (myc_type in unique(data$mycorrhizal_type)) {
   subset_data <- data[data$mycorrhizal_type == myc_type, ]
   
   # Storage for null predictions
-  lat_range <- seq(lat_min + 1, lat_max - 1, by = 1)
+  lat_range <- seq(lat_min, lat_max, by = 0.01)
   null_predictions <- matrix(NA, nrow = length(lat_range), ncol = n_sims)
   
   for (sim in 1:n_sims) {
@@ -155,7 +155,7 @@ for (myc_type in unique(data$mycorrhizal_type)) {
                      data = sim_data)
     
     # Get predictions: ggpredict approach
-    # preds <- ggpredict(model, terms = list(latitude = seq(lat_min + 1, lat_max - 1, by = 1)))
+    # preds <- ggpredict(model, terms = list(latitude = seq(lat_min, lat_max, by = 0.01)))
     # preds <- ggpredict(model, terms="latitude [all]")
     # null_predictions[, sim] <- preds$predicted
     
@@ -211,21 +211,18 @@ ggplot() +
 
 # (4) Null model mid-domain effect ---------------------------------------------
 # This tests if species' latitudinal ranges were randomly placed within the
-# domain, given their observed range sizes, what pattern of overlap (and mean
-# breadth) would result from geometry alone?
+# domain, given their observed range sizes, what pattern would result from 
+# fitting models to the randomly placed data?
 
 # Set random seed and number of simulations
 set.seed(1986)
 n_sims <- 1000
 
-# MDE null model constants 
-lat_min <- 10 # <-- Minimum latitude in the dataset
-lat_max <- 45 # <-- Maximum latitude in the dataset
-prop_sample <- 0.2 # <-- Proportion of species to sample (uncomment in the loop if using)
+# MDE null model constants
 n_species <- 100 # <-- Number of species to sample in each simulation
 
 # Create latitude grid for predictions
-lat_range_grid <- seq(lat_min, lat_max, by = 1)
+lat_range_grid <- seq(lat_min, lat_max, by = 0.01)
 
 # Set up parallel processing
 n_cores <- detectCores() - 1
@@ -234,7 +231,7 @@ cl <- makeCluster(n_cores)
 registerDoParallel(cl)
 
 # Export necessary objects to cluster
-clusterExport(cl, c("data", "lat_min", "lat_max", "prop_sample", 
+clusterExport(cl, c("data", "lat_min", "lat_max", "n_species",
                     "n_sims", "lat_range_grid"))
 
 # Get unique mycorrhizal types
@@ -243,88 +240,106 @@ myc_types <- unique(data$mycorrhizal_type)
 # Run MDE null model in parallel across mycorrhizal types
 mde_pred_list <- foreach(
   myc_type = myc_types, 
-  .packages = c('dplyr')
-) %dopar% {
-  
-  message(paste0("Processing MDE null model for mycorrhizal type: ", myc_type))
-  
-  subset_data <- data[data$mycorrhizal_type == myc_type, ]
-  
-  # Pre-calculate feasible midpoint ranges (outside simulation loop)
-  min_midpoints <- lat_min + (subset_data$lat_range / 2)
-  max_midpoints <- lat_max - (subset_data$lat_range / 2)
-  half_ranges <- subset_data$lat_range / 2
-  
-  # Storage for null predictions
-  null_breadth_sims <- matrix(NA, nrow = length(lat_range_grid), ncol = n_sims)
-  
-  for (sim in 1:n_sims) {
-    if (sim %% 100 == 0) {
-      message(paste0("  - Completed ", sim, " of ", n_sims, " simulations"))
+  .packages = c('dplyr', 'betareg')) %dopar% {
+    
+    message(paste0("Processing MDE null model for mycorrhizal type: ", myc_type))
+    
+    subset_data <- data[data$mycorrhizal_type == myc_type, ]
+    
+    # Get species-level data with range sizes
+    species_data <- subset_data %>%
+      group_by(species) %>%
+      summarise(
+        lat_range = first(lat_range),
+        env_breadth = first(env_breadth)
+      ) %>%
+      filter(!is.na(lat_range))
+    
+    # Pre-calculate feasible midpoint ranges
+    species_data <- species_data %>%
+      mutate(
+        min_midpoint = lat_min + (lat_range / 2),
+        max_midpoint = lat_max - (lat_range / 2)
+      )
+    
+    # Storage for model predictions from each simulation
+    null_prediction_sims <- matrix(NA, nrow = length(lat_range_grid), ncol = n_sims)
+    
+    for (sim in 1:n_sims) {
+      if (sim %% 100 == 0) {
+        message(paste0("  - Completed ", sim, " of ", n_sims, " simulations"))
+      }
+      
+      # Sample n_species randomly
+      sample_size <- min(n_species, nrow(species_data))
+      sampled_species <- species_data %>%
+        slice_sample(n = sample_size, replace = FALSE)
+      
+      # Randomly place each species' range midpoint
+      sampled_species <- sampled_species %>%
+        mutate(
+          random_midpoint = runif(n(), min_midpoint, max_midpoint),
+          range_start = random_midpoint - (lat_range / 2),
+          range_end = random_midpoint + (lat_range / 2)
+        )
+      
+      # For each latitude bin, identify which species' ranges overlap
+      # and create observation rows
+      sim_observations <- lapply(lat_range_grid, function(lat) {
+        overlapping <- sampled_species %>%
+          filter(range_start <= lat & range_end >= lat)
+        
+        if (nrow(overlapping) > 0) {
+          data.frame(
+            latitude = lat,
+            env_breadth = overlapping$env_breadth
+          )
+        } else {
+          NULL
+        }
+      })
+      
+      # Combine all observations
+      sim_data <- do.call(rbind, sim_observations)
+      
+      # Only fit model if we have enough data
+      if (!is.null(sim_data) && nrow(sim_data) > 10) {
+        
+        # Fit betareg model with second-order polynomial
+        tryCatch({
+          model <- betareg(env_breadth ~ poly(latitude, 2), 
+                           data = sim_data,
+                           link = "logit")
+          
+          # Get predictions across the latitude grid
+          pred_data <- data.frame(latitude = lat_range_grid)
+          preds <- predict(model, newdata = pred_data, type = "response")
+          
+          null_prediction_sims[, sim] <- preds
+        }, error = function(e) {
+          # If model fails, store NAs
+          null_prediction_sims[, sim] <- NA
+        })
+      } else {
+        null_prediction_sims[, sim] <- NA
+      }
     }
     
-    # Randomly place midpoint within feasible bounds for each species
-    random_midpoints <- runif(nrow(subset_data), min_midpoints, max_midpoints)
+    message(paste0("  - Completed all ", n_sims, " simulations for ", myc_type))
     
-    # Calculate range endpoints
-    range_starts <- random_midpoints - half_ranges
-    range_ends <- random_midpoints + half_ranges
+    # Calculate empirical mean and 95% CIs from model predictions
+    mde_summary <- data.frame(
+      x = lat_range_grid,
+      predicted = apply(null_prediction_sims, 1, mean, na.rm = TRUE),
+      conf.low = apply(null_prediction_sims, 1, quantile, probs = 0.025, na.rm = TRUE),
+      conf.high = apply(null_prediction_sims, 1, quantile, probs = 0.975, na.rm = TRUE),
+      mycorrhizal_type = myc_type
+    )
     
-    # Alternative: Compute n_species to sample based on proportion
-    # # Compute n_species to sample (20% of the original data)
-    # n_species <- round(prop_sample * nrow(subset_data))
+    message(paste0("Finished processing MDE null for ", myc_type, "\n"))
     
-    # Randomly sample species for this simulation
-    sample_idx <- sample(nrow(subset_data), n_species, replace = FALSE)
-    sampled_starts <- range_starts[sample_idx]
-    sampled_ends <- range_ends[sample_idx]
-    sampled_breadths <- subset_data$env_breadth[sample_idx]
-    
-    # For each latitude point, calculate mean breadth of overlapping species
-    breadth_at_lat <- sapply(lat_range_grid, function(lat) {
-      # Which species' ranges overlap this latitude?
-      overlapping_idx <- which(sampled_starts <= lat & sampled_ends >= lat)
-      
-      # Return mean breadth of overlapping species
-      if (length(overlapping_idx) > 0) {
-        mean(sampled_breadths[overlapping_idx])
-      } else {
-        NA
-      }
-    })
-    
-    null_breadth_sims[, sim] <- breadth_at_lat
+    return(mde_summary)
   }
-  
-  message(paste0("  - Completed all ", n_sims, " simulations for ", myc_type))
-  
-  # Calculate empirical mean and 95% CIs across simulations
-  mde_summary <- data.frame(
-    x = lat_range_grid,
-    predicted = rowMeans(null_breadth_sims, na.rm = TRUE),
-    conf.low = apply(null_breadth_sims, 1, quantile, probs = 0.025, na.rm = TRUE),
-    conf.high = apply(null_breadth_sims, 1, quantile, probs = 0.975, na.rm = TRUE),
-    mycorrhizal_type = myc_type
-  )
-  
-  # Apply loess smoothing to reduce choppiness at 95% CI edges
-  # Adjust span parameter (0.1-0.3) for more/less smoothing
-  smooth_span <- 0.3
-  
-  # Only smooth if we have enough non-NA values
-  if (sum(!is.na(mde_summary$predicted)) > 10) {
-    mde_summary <- mde_summary %>%
-      mutate(
-        predicted = predict(loess(predicted ~ x, data = ., span = smooth_span, na.action = na.exclude)),
-        conf.low = predict(loess(conf.low ~ x, data = ., span = smooth_span, na.action = na.exclude)),
-        conf.high = predict(loess(conf.high ~ x, data = ., span = smooth_span, na.action = na.exclude))
-      )
-  }
-  
-  message(paste0("Finished processing MDE null for ", myc_type, "\n"))
-  
-  return(mde_summary)
-}
 
 # Stop cluster
 stopCluster(cl)
@@ -379,6 +394,10 @@ r2_summary <- r2_combined %>%
     label = paste0('italic(R)^2 == \"', sprintf("%.2f", R2), '\"')
   ) %>%
   ungroup()
+
+# Take a glimpse at the summaries
+prop_within_mde %>% print()
+r2_summary %>% print()
 
 # Plot with both null models
 ggplot() +
