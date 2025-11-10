@@ -28,7 +28,7 @@ data <- data.table::fread(
     mycorrhizal_type = recode(mycorrhizal_type, "EcM-AM" = "Dual"),
     mycorrhizal_type = factor(mycorrhizal_type, levels = c("AM", "EcM", "Dual", "NM")),
     species = str_replace_all(species, " ", "_"),
-    biome = ifelse(dominant_biome == "Tropical", "tropical", "nontropical"),
+    biome = ifelse(biome == "Tropical", "tropical", "nontropical"),
     biome = factor(
       biome,
       levels = c("tropical", "nontropical")
@@ -57,11 +57,11 @@ contrasts(data$mycorrhizal_type)
 contrasts(data_tropical$mycorrhizal_type)
 contrasts(data_nontropical$mycorrhizal_type)
 
-# Number of species: 2,428 species
+# Number of species: 2,437 species
 unique(data$species) %>% length(.)
-# Number of tropical species: 1,318 species
+# Number of tropical species: 1,293 species
 unique(data_tropical$species) %>% length(.)
-# Number of nontropical species: 1,110 species
+# Number of nontropical species: 1,144 species
 unique(data_nontropical$species) %>% length(.)
 
 #### * Phylogenetic tree * ####
@@ -124,25 +124,30 @@ rownames(data_nontropical) <- data_nontropical[["species"]]
 #### * Phylogenetic data * ####
 
 # Generate proximity matrices:
-phylo_prox <- proxTips(phylo_tree, method = "oriAbouheif", normalise = "row")
-phylo_prox_tropical <- proxTips(phylo_tree_tropical, method = "oriAbouheif", normalise = "row")
-phylo_prox_nontropical <- proxTips(phylo_tree_nontropical, method = "oriAbouheif", normalise = "row")
+phylo_prox <- proxTips(phylo_tree, method = "oriAbouheif", normalize = "row")
+phylo_prox_tropical <- proxTips(phylo_tree_tropical, method = "oriAbouheif", normalize = "row")
+phylo_prox_nontropical <- proxTips(phylo_tree_nontropical, method = "oriAbouheif", normalize = "row")
 
 # Fix the proximity matrix by setting tiny negative values to zero:
 # Count total negative values
 sum(phylo_prox < 0)
+sum(phylo_prox_tropical < 0)
 sum(phylo_prox_nontropical < 0)
 # Get the minimum value to see how negative it gets
 min(phylo_prox) # <- round to 0: numeric precision errors, not true negative values
+min(phylo_prox_tropical) # <- round to 0: numeric precision errors, not true negative values
 min(phylo_prox_nontropical) # <- round to 0: numeric precision errors, not true negative values
 # Set negative values to zero
 phylo_prox[phylo_prox < 0] <- 0
+phylo_prox_tropical[phylo_prox_tropical < 0] <- 0
 phylo_prox_nontropical[phylo_prox_nontropical < 0] <- 0
 
 # Verify the fix
 any(phylo_prox < 0)  # Should be FALSE now
+any(phylo_prox_tropical < 0)  # Should be FALSE now
 any(phylo_prox_nontropical < 0)  # Should be FALSE now
 min(phylo_prox)      # Should now be 0
+min(phylo_prox_tropical) # Should now be 0
 min(phylo_prox_nontropical) # Should now be 0
 
 # Generate eigenvector matrices:
@@ -766,5 +771,6 @@ save(
   pem_model_params_breadth,
   pairwise_results_breadth,
   
-  file = "output/generated_data/figure_4.RData"
+  file = "output/generated_data/figure_5.RData"
 )
+

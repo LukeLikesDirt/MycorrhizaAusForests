@@ -615,5 +615,5 @@ save(
   base_model_params_position, pem_model_params_position,
   phylo_auto_stats_position,
   
-  file = "output/generated_data/figure_S16_S17.RData"
+  file = "output/generated_data/figure_S4.RData"
 )

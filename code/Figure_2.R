@@ -10,11 +10,7 @@ tag_size <- 14
 strip_size <- 12
 title_size <- 10
 text_size <- 8
-# Plot constants
-tag_size <- 14
-strip_size <- 12
-title_size <- 10
-text_size <- 8
+
 common_theme <- theme_minimal() +
   theme(
     legend.position = "none",

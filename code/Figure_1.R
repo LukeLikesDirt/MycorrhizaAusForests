@@ -385,10 +385,9 @@ ggsave(
 ggsave(
   "output/figure1.tiff",
   final_plot,
-  width = 15.5, 
-  height = 16.5, 
+  width = 16, 
+  height = 20, 
   bg = "white",
-  units = "cm", 
-  dpi = 300,
-  device = "tiff"
+  units = "cm"
 )
+
