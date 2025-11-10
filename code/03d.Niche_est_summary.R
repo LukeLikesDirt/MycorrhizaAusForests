@@ -99,7 +99,7 @@ niche_breadth_est %>%
   inner_join(
     dominant_biome_group, 
     by = c("species") 
-  ) %>%
+    ) %>%
   select(
     family, genus, species, mycorrhizal_type,
     AOO, EOO,
@@ -143,3 +143,4 @@ niche_breadth_est %>%
     )
   ) %>%
   fwrite("output/generated_data/niche_estimates.txt", sep = "\t")                    
+                    
