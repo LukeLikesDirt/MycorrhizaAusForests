@@ -24,7 +24,7 @@ data <- data.table::fread("data/niche_estimates_enmeval/niche_estimates.txt") %>
     RC1 = as.numeric(scale(RC1_position)),
     RC2 = as.numeric(scale(RC2_position)),
     RC3 = as.numeric(scale(RC3_position)),
-    biome = ifelse(dominant_biome == "Tropical", "tropical", "nontropical"),
+    biome = ifelse(biome == "Tropical", "tropical", "nontropical"),
     biome = factor(
       biome,
       levels = c("tropical", "nontropical")
