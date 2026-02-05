@@ -49,14 +49,15 @@ dummy_myco_data <- data.frame(
 # Add theme if I want to use the plot as a legend
 dummy_plot_myco <- ggplot(
   dummy_myco_data, 
-  aes(x = value, y = value, fill = mycorrhizal_type)
+  aes(x = value, y = value, colour = mycorrhizal_type)
 ) +
   geom_point(
-    colour = alpha('grey30', 0.5),
+    fill = alpha('lightgrey', 0.33),
     shape = 22,
-    size = 7
+    size = 7,
+    stroke = 1.25
   ) +
-  scale_fill_manual(values = myco_colours, name = "Mycorrhizal\ntype") +
+  scale_colour_manual(values = myco_colours, name = "Mycorrhizal\ntype") +
   theme_void() +
   scale_y_continuous(limits = c(0,0))
 
@@ -107,9 +108,9 @@ create_density_plot <- function(rc_var, biome, rc_idx, biome_idx) {
   plot_data <- if(biome == "all") data else data %>% filter(biome == !!biome)
   
   # Create base plot
-  p <- ggplot(plot_data, aes(x = !!sym(rc_var), fill = mycorrhizal_type)) +
-    geom_density(alpha = 0.5) +
-    scale_fill_manual(values = myco_colours) +
+  p <- ggplot(plot_data, aes(x = !!sym(rc_var), colour = mycorrhizal_type)) +
+    geom_density(aes(fill = mycorrhizal_type), alpha = 0.33, fill = "lightgrey", linewidth = 1.25) +
+    scale_colour_manual(values = myco_colours) +
     scale_y_continuous(
       limits = y_limits[[rc_idx]],
       breaks = y_breaks[[rc_idx]]
@@ -167,7 +168,7 @@ env_list <- split(
     select("RC1", "RC2", "RC3"),
   data_position %>%
     pull(mycorrhizal_type)
-  )
+)
 env_list_tropical <- split(
   data_position %>%
     filter(biome == "tropical") %>%
@@ -175,7 +176,7 @@ env_list_tropical <- split(
   data_position %>%
     filter(biome == "tropical") %>%
     pull(mycorrhizal_type)
-  )
+)
 env_list_nontropical <- split(
   data_position %>%
     filter(biome == "nontropical") %>%
@@ -183,7 +184,7 @@ env_list_nontropical <- split(
   data_position %>%
     filter(biome == "nontropical") %>%
     pull(mycorrhizal_type)
-  )
+)
 
 # Function to compute 3D Schoener's D using kernel density estimation
 compute_schoeners_d_3d <- function(data_list, space_type = "Environmental") {
@@ -372,7 +373,7 @@ schoener_tropical <- ggplot(schoeners_df_tropical, aes(x = pair_label, y = schoe
     axis.text.y = element_blank(),
     panel.grid = element_blank()
   )
-  
+
 # Schoener's D plot for temperate trees
 schoener_nontropical <- ggplot(schoeners_df_nontropical, aes(x = pair_label, y = schoeners_d, fill = type, colour = type)) +
   geom_col(linewidth = 0.25) +
@@ -584,4 +585,3 @@ ggsave(
   bg = "white",
   units = "cm"
 )
-
