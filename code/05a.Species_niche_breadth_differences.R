@@ -702,9 +702,9 @@ compute_pairwise_differences <- function(summary_data) {
 }
 
 # Compute the pairwise differences for each environment breadth result
-env_breadth_all_pairwise <- compute_pairwise_differences(env_breadth_results[["all"]]$mean$summary)
-env_breadth_tropical_pairwise <- compute_pairwise_differences(env_breadth_results[["tropical"]]$mean$summary)
-env_breadth_nontropical_pairwise <- compute_pairwise_differences(env_breadth_results[["nontropical"]]$mean$summary)
+env_breadth_all_pairwise <- compute_pairwise_differences(processed_results[["env_breadth"]][["all"]]$mean$summary)
+env_breadth_tropical_pairwise <- compute_pairwise_differences(processed_results[["env_breadth"]][["tropical"]]$mean$summary)
+env_breadth_nontropical_pairwise <- compute_pairwise_differences(processed_results[["env_breadth"]][["nontropical"]]$mean$summary)
 
 # Create a tibble to store all pairwise results
 pairwise_results <- bind_rows(
