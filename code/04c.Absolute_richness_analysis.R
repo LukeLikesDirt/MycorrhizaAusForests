@@ -111,44 +111,6 @@ data_est %>%
   geom_smooth(method = "loess", se = FALSE) +
   facet_wrap(~ name, scales = "free")
 
-# Does the log-ratio transformation account for sampling effort?
-
-# Number of sites per grid cell
-sample_effort_plot <- data_est %>%
-  select(
-    n_obs, AM = richness_AM, EcM = richness_EcM, 
-    Dual = richness_EcM_AM, NM = richness_NM) %>%
-  pivot_longer(
-    cols = -n_obs,
-    names_to = "richness_type",
-    values_to = "richness_log_ratio"
-  ) %>%
-  ggplot(aes(n_obs, richness_log_ratio+1)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "loess") +
-  stat_smooth(method = "lm", colour = "red") +
-  ggpubr::stat_cor(aes(label = after_stat(rr.label)), colour = "red", size = 3) +
-  labs(
-    x = "Number of Sites (log-scale)",
-    y = "Absolute richness",
-  ) +
-  scale_y_log10() +
-  scale_x_log10() +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    panel.border = element_rect(colour = "grey90", fill = NA, linewidth = 0.5),
-    aspect.ratio = 1,
-    plot.margin = margin(t = 1, r = 1, b = 1, l = 1, "pt")
-  ) +
-  facet_wrap(~ richness_type, ncol = 2)
-
-# Save the plot
-ggsave(
-  "output/supplimentary_richness_log_ratio/sample_effort_abs_richness.png",
-  sample_effort_plot, height = 15, width = 15, units = "cm", dpi = 300
-)
-
 # Notes:
 #   - For random walk models, set the recommended pc.prior and scale the random 
 #     walk for a smoother fit that is less prone to over-fitting
@@ -1144,7 +1106,7 @@ combined_marginal_effects_plot <- patchwork::wrap_elements(combined_plot) +
 
 # Save the combined plot
 ggsave(
-  filename = "output/supplimentary_absolute_richness/marginal_effects_plot.png",
+  filename = "output/figure_S9.png",
   plot = combined_marginal_effects_plot,
   width = 16, height = 19.75, units = "cm", dpi = 300
 )
@@ -1790,7 +1752,7 @@ supplementary_plots <- patchwork::wrap_plots(
 
 # Save the supplementary plots
 ggsave(
-  filename = "output/supplimentary_absolute_richness/model_performance_plot.png",
+  filename = "output/figure_S10.png",
   plot = supplementary_plots,
   width = 22,
   height = 26,
@@ -2270,7 +2232,7 @@ spatial_diagnostics <- patchwork::wrap_plots(
 
 # Save the spatial diagnostics
 ggsave(
-  filename = "output/supplimentary_absolute_richness/spatial_diagnostics.png",
+  filename = "output/figure_S11.png",
   plot = spatial_diagnostics,
   width = 16,
   height = 12.75,
@@ -2288,7 +2250,7 @@ writeRaster(
     `EcM-AM` = standardised_rast_EcM_AM,
     NM = standardised_rast_NM)),
   overwrite = TRUE,
-  filename = "output/supplimentary_absolute_richness/main_figure_a.tif"
+  filename = "generated_data/figure_S8a.tif"
 )
 
 # Save data for main figure c
@@ -2297,122 +2259,5 @@ data_figure_c_limits <- min_max_limits
 save(
   data_figure_c,
   data_figure_c_limits,
-  file = "output/supplimentary_absolute_richness/main_figure_c.RData"
+  file = "generated_data/figure_S8c.RData"
 )
-
-# (13) Process data for al trees ###############################################
-
-# Get the predicted richness at estimation sites, marginalised over sampling effort
-richness_effort_adjusted <- tibble(
-  rihcness_adjusted = round(model_all$summary.fitted$mean[index_est_marg], 0),
-  richness_observed = data_est$richness,
-  sample_effort = data_est$n_obs,
-  latitude = data_est$latitude,
-  longitude = data_est$longitude,
-)
-
-# Plot the relationship between observed and sample effort
-effort_plot <- ggplot(richness_effort_adjusted, aes(x = sample_effort, y = richness_observed)) +
-  geom_point(alpha = 0.3, shape = 1, size = 0.5) +
-  geom_smooth(method = "lm", linewidth = 0.5) +
-  ggpubr::stat_cor(aes(label = after_stat(rr.label)), colour = "red", size = 4) +
-  common_theme +
-  scale_y_log10() +
-  scale_x_log10() +
-  labs(
-    tag = "(**a**)",
-    x = "Number of sites (log-scale)", y = "Observed absolute richness (log-scale)")
-
-# Plot observed vs fitted values for all trees
-obs_fit_all <- tibble(
-  posterior_mean = model_all$summary.fitted$mean[index_est],
-  observed = data_est$richness
-  ) %>%
-  ggplot(aes(x = posterior_mean, y = observed)) +
-  geom_point(alpha = 0.3, shape = 1, size = 0.5) +
-  geom_abline(intercept = 0, slope = 1, linewidth = 0.5, colour = "red") +
-  ggpubr::stat_cor(aes(label = after_stat(rr.label)), colour = "red", size = 4) +
-  common_theme +
-  labs(
-    tag = "(**b**)",
-    x = "Posterior mean predictions",
-    y = "Observed absolute richness"
-    ) +
-  ylim(c(0, 500)) +
-  xlim(c(0, 500))
-
-# Plot the relationship between observed and effort-adjusted richness
-observed_adjusted_plot <- ggplot(richness_effort_adjusted, aes(x = rihcness_adjusted, y = richness_observed)) +
-  geom_point(alpha = 0.3, shape = 1, size = 0.5) +
-  stat_smooth(method = "lm", linewidth = 0.5) +
-  ggpubr::stat_cor(aes(label = after_stat(rr.label)), colour = "red", size = 4) +
-  common_theme +
-  labs(
-    tag = "(**c**)",
-    x = "Effort-adjusted richness", 
-    y = "Observed absolute richness"
-    )
-
-# Plot the relationship between effort-adjusted richness and sample effort
-effort_adjusted_plot <- ggplot(richness_effort_adjusted, aes(x = sample_effort, y = rihcness_adjusted)) +
-  geom_point(alpha = 0.3, shape = 1, size = 0.5) +
-  geom_smooth(method = "lm", linewidth = 0.5) +
-  ggpubr::stat_cor(
-    aes(label = after_stat(rr.label)), 
-    colour = "red", 
-    size = 4,
-    label.x.npc = "left",
-    label.y = sqrt(4)
-    ) +
-  theme_minimal() +
-  common_theme +
-  scale_x_log10() +
-  scale_y_sqrt(breaks = c(10, 20, 40, 60)) +
-  labs(
-    tag = "(**d**)",
-    x = "Number of sites (log-scale)", 
-    y = "Effort-adjusted richness (sqrt-scale)"
-    )
-
-# Wrap the plots
-absolute_richness_plot <- patchwork::wrap_plots(
-  effort_plot,
-  obs_fit_all,
-  observed_adjusted_plot,
-  effort_adjusted_plot,
-  ncol = 2
-)
-
-# Save the plot
-ggsave(
-  filename = "output/supplimentary_absolute_richness/diagnostics_sample_effort.png",
-  plot = absolute_richness_plot,
-  width = 16,
-  height = 16,
-  units = "cm",
-  bg = "white",
-  dpi = 300
-)
-
-# Save the effort adjusted richness values for using as a predictor
-tibble(
-  richness = c(
-    model_all$summary.fitted$mean[index_est_marg],
-    model_all$summary.fitted$mean[index_pred]
-    ),
-  latitude = c(
-    data_est$latitude,
-    data_pred$latitude
-    ),
-  longitude = c(
-    data_est$longitude,
-    data_pred$longitude
-    ),
-  source = c(
-    rep("est", length(index_est_marg)),
-    rep("pred", length(index_pred))
-    )) %>%
-  data.table::fwrite(
-    file = "output/supplimentary_absolute_richness/effort_adjusted_richness.txt",
-    sep = "\t"
-    )

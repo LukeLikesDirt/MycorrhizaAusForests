@@ -561,5 +561,5 @@ save(
   latitude_gradient_data_abs,
   latitude_gradient_marginal_effects_abs,
   latitude_gradient_coeficients_abs,
-  file = "output/supplimentary_absolute_richness/main_figure_b.RData"
+  file = "generated_data/figure_S8b.RData"
 )

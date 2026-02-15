@@ -117,43 +117,6 @@ data_est %>%
   geom_smooth(method = "loess", se = FALSE) +
   facet_wrap(~ name, scales = "free")
 
-# Does the log-ratio transformation account for sampling effort?
-
-# Number of sites per grid cell
-sample_effort_plot <- data_est %>%
-  select(
-    n_obs, AM = richness_AM_log_ratio, EcM = richness_EcM_log_ratio, 
-    Dual = richness_EcM_AM_log_ratio, NM = richness_NM_log_ratio) %>%
-  pivot_longer(
-    cols = -n_obs,
-    names_to = "richness_type",
-    values_to = "richness_log_ratio"
-  ) %>%
-  ggplot(aes(n_obs, richness_log_ratio)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "loess") +
-  #stat_smooth(method = "lm", colour = "red") +
-  #ggpubr::stat_cor(aes(label = after_stat(rr.label)), colour = "red", size = 3) +
-  labs(
-    x = "Number of Sites (log-scale)",
-    y = "Relative richness (log-ratio)",
-  ) +
-  scale_x_log10() +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    panel.border = element_rect(colour = "grey90", fill = NA, linewidth = 0.5),
-    aspect.ratio = 1,
-    plot.margin = margin(t = 1, r = 1, b = 1, l = 1, "pt")
-  ) +
-  facet_wrap(~ richness_type, ncol = 2)
-
-# Save the plot
-ggsave(
-  "output/supplimentary_richness_log_ratio/sample_effort_plot.png",
-  sample_effort_plot, height = 15, width = 15, units = "cm", dpi = 300
-)
-
 # Notes:
 #   - For random walk models, set the recommended pc.prior and scale the random 
 #     walk for a smoother fit that is less prone to over-fitting
@@ -621,14 +584,6 @@ diagnostic_plot <- patchwork::wrap_plots(
   homogeneity_plot,
   obs_fit_plot,
   ncol = 1
-)
-
-# Save the plots
-ggsave(
-  "output/supplimentary_richness_log_ratio/validation_plot.png",
-  diagnostic_plot, 
-  height = 14.75, width = 15, units = "cm",
-  dpi = 300
 )
 
 # (8) Summarise model outputs #######################################################
@@ -1601,7 +1556,7 @@ supplementary_plots <- patchwork::wrap_plots(
 
 # Save the supplementary plots
 ggsave(
-  filename = "output/supplimentary_richness_log_ratio/model_performance_plot.png",
+  filename = "output/figure_S5.png",
   plot = supplementary_plots,
   width = 22,
   height = 26,
@@ -2072,7 +2027,7 @@ spatial_diagnostics <- patchwork::wrap_plots(
 
 # Save the spatial diagnostics
 ggsave(
-  filename = "output/supplimentary_richness_log_ratio/spatial_diagnostics.png",
+  filename = "output/figure_S6.png",
   plot = spatial_diagnostics,
   width = 16,
   height = 12.75,
@@ -2082,7 +2037,7 @@ ggsave(
 
 # (12) Save the data ###########################################################
 
-# Save raster data fro figure 2a
+# Save raster data for figure 2a
 writeRaster(
   rast(c(
     AM = standardised_rast_AM,
@@ -2090,7 +2045,7 @@ writeRaster(
     `EcM-AM` = standardised_rast_EcM_AM,
     NM = standardised_rast_NM)),
   overwrite = TRUE,
-  filename = "output/generated_data/figure_2a.tif"
+  filename = "generated_data/figure_2a.tif"
 )
 
 # Save data for figure 2c
@@ -2099,7 +2054,7 @@ data_figure_2c_limits <- min_max_limits
 save(
   data_figure_2c,
   data_figure_2c_limits,
-  file = "output/generated_data/figure_2c.RData"
+  file = "generated_data/figure_2c.RData"
 )
 
 # Organise and save the data for figure 3
@@ -2154,7 +2109,7 @@ save(
   relative_richness_data,
   relative_richness_marginal_effects,
   relative_richness_coeficients,
-  file = "output/generated_data/figure_3.RData"
+  file = "generated_data/figure_3.RData"
 )
 
 # Save the model coefficients
@@ -2190,6 +2145,6 @@ map_dfr(model_names, function(model_name) {
     select(parameter, median, quantiles, mycorrhizal_type)
 }) %>%
   data.table::fwrite(
-    "output/supplimentary_richness_log_ratio/model_coefficients.txt",
+    "output/table_S2.txt",
     sep = "\t"
   )
