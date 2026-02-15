@@ -3,15 +3,27 @@
 
 # Table of contents:
 #   (1) Prepare the World Flora Online backbone database
-#   (2) Prepare the root trait and tree classification databases
-#       (2a) NodDB
-#       (2b) FungalRoot
-#       (2c) GlobalTreeSearch
-#   (3) Prepare the plant distribution databases
-#       (3a) BiomassPlotLib 
-#       (3b) HAVPlot
+#   (2) Download and harmonise GlobalTreeSearch
+#   (3) Download and harmonise FungalRoot
+#   (4) Download and harmonise abundance-based data
+#       (4a) BiomassPlotLib
+#       (4b) LTERN
+#       (4c) Natural Values Atlas
+#       (4d) FORESTCHECK
+#   (5) Download and harmonise HAVPlot
+#       (5a) Harmonise tree names
+#       (5b) Remove plots dominated by exotics
+#       (5c) Retain most recent survey
+#       (5d) Remove plots dominated by exotics
+#       (5e) Generate abundance dataset
+#       (5f) Generate presence dataset
+#   (6) Download and harmonise GBIF
+#       (6a) Clean GBIF occurrences
+#       (6b) Harmonise GBIF tree list
+#   (7) Prepare occurrence data
 
 # Required packages
+require(terra)
 require(data.table)
 require(WorldFlora)
 require(tidyverse)
@@ -93,112 +105,7 @@ fwrite(WFO_family, "data/WorldFloraOnline/WFO_family.txt", sep = "\t")
 # Remove all objects from the global environment
 rm(list = ls())
 
-# (2) Harmonise GlobalTreeSearch ###############################################
-
-# Read in the WFO datasets
-WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
-WFO_genus <- fread("data/WorldFloraOnline/WFO_genus.txt")
-
-# Download the GlobalTreeSearch database:
-dir.create("data/GlobalTreeSearch")
-URL <- "https://tools.bgci.org/global_tree_search_trees_1_8.csv"
-file_destination <- "data/GlobalTreeSearch/global_tree_search_trees_1_8.csv"
-download.file(URL, file_destination)
-
-# Read in the database:
-global_tree_database <- fread(
-  "data/GlobalTreeSearch/global_tree_search_trees_1_8.csv",
-  header = TRUE
-) %>%
-  select(species_original = TaxonName) %>%
-  distinct(species_original, .keep_all = TRUE) %>%
-  as.data.frame() %>%
-  glimpse()
-
-# There are 57,681 unique tree species in the GlobalTreeSearch database:
-nrow(global_tree_database)
-
-# Match the GlobalTreeSearch to WFO
-global_tree_database_WFO <- WFO.one(
-  WFO.match.fuzzyjoin(
-    spec.data = global_tree_database,
-    WFO.data = WFO_species,
-    spec.name = "species_original"
-  ),
-  verbose = FALSE) %>%
-  glimpse()
-
-# Direct matches: 57,130 out of 57,681
-global_tree_database_WFO %>%
-  filter(Matched == TRUE & Fuzzy == FALSE) %>%
-  nrow()
-
-# Fuzzy matches: 545 out of 57,681
-global_tree_database_WFO %>%
-  filter(Matched == TRUE & Fuzzy == TRUE) %>%
-  select(species_original, Fuzzy.dist, scientificName, Old.name) %>%
-  as_tibble() %>%
-  print(n = Inf)
-
-# Unmatched
-global_tree_database_WFO %>%
-  filter(Matched == "FALSE") %>%
-  select(species_original)
-
-# Save the harmonised GlobalTreeSearch database
-global_tree_database_WFO %>%
-  filter(Matched == TRUE) %>%
-  select(family, genus, scientific_name = scientificName) %>%
-  # Extract species epithet from original scientific name
-  mutate(species_epithet = word(scientific_name, 2)) %>%
-  # Resolve genus names for unaccepted genera and synonym genera
-  mutate(
-    genus = case_when(
-      genus == "Afromorus" ~ "Morus",
-      genus == "Archidasyphyllum" ~ "Dasyphyllum",
-      genus == "Ceodes" ~ "Pisonia",
-      genus == "Lychnophorella" ~ "Lychnophora",
-      genus == "Macrolearia" ~ "Olearia",
-      genus == "Ardisia" & family == "Ericaceae" ~ "Leptecophylla",
-      genus == "Esenbeckia" & family == "Ptychomniaceae" ~ "Garovaglia",
-      genus == "Schizocalyx" & family == "Salvadoraceae" ~ "Dobera",
-      genus == "Spiranthera" & family == "Pittosporaceae" ~ "Billardiera",
-      genus == "Volkameria" & family == "Clethraceae" ~ "Clethra",
-      TRUE ~ genus
-    ),
-    # Reconstruct full scientific name with updated genus
-    scientific_name = paste(genus, species_epithet),
-    # Add family information for genera with missing family
-    family = case_when(
-      genus == "Morus" ~ "Moraceae",
-      genus == "Dasyphyllum" ~ "Asteraceae",
-      genus == "Hoffmannanthus" ~ "Asteraceae",
-      genus == "Lachanodes" ~ "Asteraceae",
-      genus == "Leptogonum" ~ "Polygonaceae",
-      genus == "Lundinia" ~ "Asteraceae",
-      genus == "Lychnophora" ~ "Asteraceae",
-      genus == "Niemeyera" ~ "Sapotaceae",
-      genus == "Olearia" ~ "Asteraceae",
-      genus == "Maschalostachys" ~ "Asteraceae",
-      genus == "Melanodendron" ~ "Asteraceae",
-      genus == "Nahuatlea" ~ "Asteraceae",
-      genus == "Neoarytera" ~ "Sapindaceae",
-      genus == "Nototrichium" ~ "Amaranthaceae",
-      genus == "Pladaroxylon" ~ "Asteraceae",
-      genus == "Rockia" ~ "Nyctaginaceae",
-      genus == "Scyphostegia" ~ "Salicaceae",
-      TRUE ~ family
-    )
-  ) %>%
-  select(family, genus, scientific_name) %>%
-  unique() %>%
-  fwrite("data/GlobalTreeSearch/harmonised_global_tree.txt", sep = "\t")
-
-# Remove all objects from the global environment and free unused memory
-rm(list = ls())
-gc()
-
-# (3) Harmonise the FungalRoot databases #######################################
+# (2) Harmonise the FungalRoot databases #######################################
 
 # Read in the WFO datasets
 WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
@@ -216,7 +123,7 @@ unzip(file_destination, exdir = "data/FungalRoot/")
 # Remove the zip file
 file.remove(file_destination)
 
-##### (3a) Harmonise genera #####
+##### (2a) Harmonise genera #####
 
 # Read in the FungalRoot mycorrhizal type database:
 fungal_root_database <- fread("data/FungalRoot/FungalRoot.csv") %>%
@@ -416,7 +323,7 @@ fungal_root_measurments_WFO %>%
 rm(list = ls())
 gc()
 
-##### (3a) Harmonise species #####
+##### (2b) Harmonise species #####
 
 # Read in the WFO datasets
 WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
@@ -571,6 +478,217 @@ fread("data/GlobalTreeSearch/harmonised_global_tree.txt") %>%
   fwrite("data/FungalRoot/harmonised_tree_occurrences.txt", sep = "\t")
 
 # Clean up
+rm(list = ls())
+gc()
+
+# (3) Harmonise GlobalTreeSearch ###############################################
+
+# Read in the WFO datasets
+WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
+WFO_genus <- fread("data/WorldFloraOnline/WFO_genus.txt")
+
+# Download the GlobalTreeSearch database:
+dir.create("data/GlobalTreeSearch")
+URL <- "https://tools.bgci.org/global_tree_search_trees_1_9.csv"
+file_destination <- "data/GlobalTreeSearch/global_tree_search_trees_1_9.csv"
+download.file(URL, file_destination)
+
+# Read in the genus-level estimates from FungalRoot:
+fungal_root_genus <- fread("data/FungalRoot/harmonised_fungal_root.txt") %>%
+  select(genus, mycorrhizal_type) %>%
+  # Remove uncertain mycorrhizal types
+  filter(mycorrhizal_type != "uncertain") %>%
+  # Mutate NM-AM to AM (NM-AM is a facilitative status not type)
+  mutate(
+    mycorrhizal_type = ifelse(mycorrhizal_type == "NM-AM", "AM", mycorrhizal_type),
+    mycorrhizal_type = ifelse(mycorrhizal_type == "nM", "NM", mycorrhizal_type),
+    mycorrhizal_type = ifelse(str_detect(mycorrhizal_type, "species-specific") == TRUE, "uncertain", mycorrhizal_type)
+  ) %>%
+  unique()
+
+# Check for duplicated genera
+fungal_root_genus %>%
+  group_by(genus) %>%
+  filter(n() > 1) %>%
+  arrange(genus) %>%
+  as_tibble() %>%
+  print(n = Inf)
+
+# Resolve duplicated genera
+# Create a function to resolve duplicated mycorrhizal types for a genus
+resolve_mycorrhizal_types <- function(types) {
+  # Priority order (higher number = higher priority)
+  priority <- c(
+    "NM" = 1,
+    "OM" = 2,
+    "AM" = 3,
+    "EcM" = 4,
+    "EcM-AM" = 5,
+    "ErM" = 6,
+    "Thysanothus" = 7
+  )
+  
+  # Get the highest priority type present
+  types_present <- types[types %in% names(priority)]
+  
+  if (length(types_present) > 0) {
+    priorities <- priority[types_present]
+    return(types_present[which.max(priorities)])
+  } else {
+    # If type not in our priority list, just return the first one
+    return(types[1])
+  }
+}
+
+# Apply to deduplicate genera
+fungal_root_genus <- fungal_root_genus %>%
+  group_by(genus) %>%
+  summarise(mycorrhizal_type = resolve_mycorrhizal_types(mycorrhizal_type)) %>%
+  ungroup()
+
+# Check if duplicates remain
+fungal_root_genus %>%
+  group_by(genus) %>%
+  filter(n() > 1)
+
+# Unique mycorrhizal types:
+unique(fungal_root_genus$mycorrhizal_type)
+
+# Read in the database for Australian trees, downloaded from:
+# https://tools.bgci.org/global_tree_search.php
+# Read in the database for Australian trees
+australian_tree_database <- fread(
+  "data/GlobalTreeSearch/global_tree_search_trees_1_9_australia.csv",
+  header = TRUE
+) %>%
+  select(species_original = taxon) %>%
+  distinct(species_original, .keep_all = TRUE) %>%
+  as.data.frame() %>%
+  glimpse()
+
+# Read in the global database and add missing Australian species
+global_tree_database <- fread(
+  "data/GlobalTreeSearch/global_tree_search_trees_1_9.csv",
+  header = TRUE
+) %>%
+  select(species_original = TaxonName) %>%
+  distinct(species_original, .keep_all = TRUE) %>%
+  # Add Australian species that aren't in the global database
+  bind_rows(
+    anti_join(australian_tree_database, ., by = "species_original")
+  ) %>%
+  as.data.frame() %>%
+  # Add native status for Australian trees
+  mutate(
+    native_status = ifelse(
+      species_original %in% australian_tree_database$species_original,
+      "native", "non-native"
+    )
+  ) %>%
+  glimpse()
+
+# There are 57,609 unique tree species in the GlobalTreeSearch database:
+nrow(global_tree_database)
+
+# There are 3,249 native tree species in the GlobalTreeSearch database:
+nrow(australian_tree_database)
+global_tree_database %>%
+  filter(native_status == "native") %>%
+  nrow()
+
+# Match the GlobalTreeSearch to WFO
+global_tree_database_WFO <- WFO.one(
+  WFO.match.fuzzyjoin(
+    spec.data = global_tree_database,
+    WFO.data = WFO_species,
+    spec.name = "species_original"
+  ),
+  verbose = FALSE) %>%
+  glimpse()
+
+# Direct matches: 57,050 out of 57,609
+global_tree_database_WFO %>%
+  filter(Matched == TRUE & Fuzzy == FALSE) %>%
+  nrow()
+
+# Fuzzy matches: 550 out of 57,609
+global_tree_database_WFO %>%
+  filter(Matched == TRUE & Fuzzy == TRUE) %>%
+  select(species_original, Fuzzy.dist, scientificName, Old.name) %>%
+  as_tibble() %>%
+  print(n = Inf)
+
+# Unmatched
+global_tree_database_WFO %>%
+  filter(Matched == "FALSE") %>%
+  select(species_original)
+
+# Save the harmonised GlobalTreeSearch database
+global_tree_database_WFO %>%
+  filter(Matched == TRUE) %>%
+  select(family, genus, scientific_name = scientificName, species_original) %>%
+  # Add native status for Australian trees
+  left_join(
+    global_tree_database %>%
+      select(species_original, native_status),
+    by = "species_original"
+  ) %>%
+  # Extract species epithet from original scientific name
+  mutate(species_epithet = word(scientific_name, 2)) %>%
+  # Resolve genus names for unaccepted genera and synonym genera
+  mutate(
+    genus = case_when(
+      genus == "Afromorus" ~ "Morus",
+      genus == "Archidasyphyllum" ~ "Dasyphyllum",
+      genus == "Ceodes" ~ "Pisonia",
+      genus == "Lychnophorella" ~ "Lychnophora",
+      genus == "Macrolearia" ~ "Olearia",
+      genus == "Ardisia" & family == "Ericaceae" ~ "Leptecophylla",
+      genus == "Esenbeckia" & family == "Ptychomniaceae" ~ "Garovaglia",
+      genus == "Schizocalyx" & family == "Salvadoraceae" ~ "Dobera",
+      genus == "Spiranthera" & family == "Pittosporaceae" ~ "Billardiera",
+      genus == "Volkameria" & family == "Clethraceae" ~ "Clethra",
+      TRUE ~ genus
+    ),
+    # Reconstruct full scientific name with updated genus
+    scientific_name = paste(genus, species_epithet),
+    # Add family information for genera with missing family
+    family = case_when(
+      genus == "Andea" ~ "Lauraceae",
+      genus == "Bahiana" ~ "Euphorbiaceae",
+      genus == "Morus" ~ "Moraceae",
+      genus == "Dasyphyllum" ~ "Asteraceae",
+      genus == "Hoffmannanthus" ~ "Asteraceae",
+      genus == "Lachanodes" ~ "Asteraceae",
+      genus == "Leptogonum" ~ "Polygonaceae",
+      genus == "Lundinia" ~ "Asteraceae",
+      genus == "Lychnophora" ~ "Asteraceae",
+      genus == "Niemeyera" ~ "Sapotaceae",
+      genus == "Olearia" ~ "Asteraceae",
+      genus == "Maschalostachys" ~ "Asteraceae",
+      genus == "Melanodendron" ~ "Asteraceae",
+      genus == "Nahuatlea" ~ "Asteraceae",
+      genus == "Neoarytera" ~ "Sapindaceae",
+      genus == "Nototrichium" ~ "Amaranthaceae",
+      genus == "Pladaroxylon" ~ "Asteraceae",
+      genus == "Rockia" ~ "Nyctaginaceae",
+      genus == "Scyphostegia" ~ "Salicaceae",
+      TRUE ~ family
+    )
+  ) %>%
+  select(family, genus, scientific_name, native_status) %>%
+  unique() %>%
+  # Add mycorrhizal type for genera in FungalRoot
+  left_join(
+    fungal_root_genus,
+    by = "genus"
+  ) %>%
+  # Mutate NA  mycorrhizal type to "uncertain"
+  mutate(mycorrhizal_type = ifelse(is.na(mycorrhizal_type), "uncertain", mycorrhizal_type)) %>%
+  unique() %>%
+  fwrite("generated_data/global_tree_mycorrhizal_types.txt", sep = "\t")
+
+# Remove all objects from the global environment and free unused memory
 rm(list = ls())
 gc()
 
@@ -1454,292 +1572,9 @@ harmonised_tree_list_native %>%
 rm(list = ls())
 gc()
 
-# (6) Harmonise Global Register of Introduced and Invasive Species (GRIIS) #####
+# (6) Harmonise GBIF data ######################################################
 
-# Read in the WFO datasets
-WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
-WFO_genus <- fread("data/WorldFloraOnline/WFO_genus.txt")
-
-# Download the HAVPlot dataset:
-dir.create("data/GRIIS")
-URL = "https://cloud.gbif.org/griis/archive.do?r=griis-australia&v=1.10"
-destfile <- "data/GRIIS/dwca-griis-australia-v1.10.zip"
-download.file(URL, destfile)
-
-# Unzip the download
-unzip(destfile, exdir = "data/GRIIS/")
-
-# Remove the zip file
-file.remove(destfile)
-
-# Read in the database:
-griis_database <- fread(
-  "data/GRIIS/taxon.txt"
-) %>%
-  filter(
-    kingdom == "Plantae",
-    taxonRank %in% c("SPECIES", "SUBSPECIES", "VARIETY")
-  ) %>%
-  select(species_original = scientificName) %>%
-  mutate(
-    # Handle hybrids
-    species_original = gsub(" x ", " ×", species_original),
-    # Remove 'subspecies' and 'variety' annotations by extracting the first two
-    # words from species names
-    species_original = map_chr(
-      str_split(species_original, "\\s+"), 
-      ~ paste(head(.x, 2), collapse = " ")
-    )
-  ) %>%
-  distinct(species_original, .keep_all = TRUE) %>%
-  as.data.frame() %>%
-  glimpse()
-
-# There are 2,641 unique species in the GRIIS database:
-nrow(griis_database)
-
-# Match species
-griis_species_WFO <- WFO.one(
-  WFO.match.fuzzyjoin(
-    spec.data = griis_database,
-    WFO.data = WFO_species,
-    spec.name = "species_original"
-  ),
-  verbose = FALSE
-) %>%
-  glimpse()
-
-# Check matching
-# Direct matches: 2,597 out of 2,641
-griis_species_WFO %>%
-  filter(Matched == TRUE & Fuzzy == FALSE) %>%
-  nrow()
-
-# Fuzzy matches: 29 out of 2,641
-griis_species_WFO %>%
-  filter(Matched == TRUE & Fuzzy == TRUE) %>%
-  select(species_original, Fuzzy.dist, scientificName, Old.name) %>%
-  as_tibble() %>%
-  print(n = Inf)
-
-# Unmatched: 15 out of 2,641
-griis_species_WFO %>%
-  filter(Matched == "FALSE") %>%
-  select(species_original) %>%
-  as_tibble() %>%
-  print(n = Inf)
-
-# Harmonised tree list
-griis_tree_list <- griis_species_WFO %>%
-  select(family, genus, scientific_name = scientificName) %>%
-  # Make amendments consistent with GlobalTreeSearch
-  # Extract species epithet from original scientific name
-  mutate(species_epithet = word(scientific_name, 2)) %>%
-  # Resolve genus names for unaccepted genera and synonym genera
-  mutate(
-    genus = case_when(
-      genus == "Afromorus" ~ "Morus",
-      genus == "Archidasyphyllum" ~ "Dasyphyllum",
-      genus == "Ceodes" ~ "Pisonia",
-      genus == "Lychnophorella" ~ "Lychnophora",
-      genus == "Macrolearia" ~ "Olearia",
-      genus == "Ardisia" & family == "Ericaceae" ~ "Leptecophylla",
-      genus == "Esenbeckia" & family == "Ptychomniaceae" ~ "Garovaglia",
-      genus == "Schizocalyx" & family == "Salvadoraceae" ~ "Dobera",
-      genus == "Spiranthera" & family == "Pittosporaceae" ~ "Billardiera",
-      genus == "Volkameria" & family == "Clethraceae" ~ "Clethra",
-      TRUE ~ genus
-    ),
-    # Reconstruct full scientific name with updated genus
-    scientific_name = paste(genus, species_epithet),
-    # Add family information for genera with missing family
-    family = case_when(
-      genus == "Morus" ~ "Moraceae",
-      genus == "Dasyphyllum" ~ "Asteraceae",
-      genus == "Hoffmannanthus" ~ "Asteraceae",
-      genus == "Lachanodes" ~ "Asteraceae",
-      genus == "Leptogonum" ~ "Polygonaceae",
-      genus == "Lundinia" ~ "Asteraceae",
-      genus == "Lychnophora" ~ "Asteraceae",
-      genus == "Niemeyera" ~ "Sapotaceae",
-      genus == "Olearia" ~ "Asteraceae",
-      genus == "Maschalostachys" ~ "Asteraceae",
-      genus == "Melanodendron" ~ "Asteraceae",
-      genus == "Nahuatlea" ~ "Asteraceae",
-      genus == "Neoarytera" ~ "Sapindaceae",
-      genus == "Nototrichium" ~ "Amaranthaceae",
-      genus == "Pladaroxylon" ~ "Asteraceae",
-      genus == "Rockia" ~ "Nyctaginaceae",
-      genus == "Scyphostegia" ~ "Salicaceae",
-      TRUE ~ family
-    )
-  ) %>%
-  unique(.) %>%
-  inner_join(
-    fread("data/GlobalTreeSearch/harmonised_global_tree.txt") %>%
-      select("scientific_name"),
-    by = c("scientific_name")
-  )
-
-# Save the harmonised GRIIS tree list
-griis_tree_list %>%
-  fwrite("data/GRIIS/harmonised_griis_tree_list.txt", sep = "\t")
-
-# Remove all objects from the global environment and free unused memory
-rm(list = ls())
-gc()
-
-# (7) Harmonise Australian Plant Census ########################################
-
-# Download the Australian Plant Census dataset: https://biodiversity.org.au/
-
-# Read in the WFO datasets
-WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
-WFO_genus <- fread("data/WorldFloraOnline/WFO_genus.txt")
-
-# Read in the database:
-apc_database <- fread(
-  "data/APC/APC-taxon-2025-03-18-0622.csv",
-  header = TRUE
-) %>%
-  filter(taxonRank %in% c(
-    "[infraspecies]", "[n/a]", "[unranked]", "Forma", "Nothovarietas",
-    "Species", "Subforma", "Subspecies", "Subvarietas", "Varietas"
-  )) %>%
-  select(species_original = canonicalName) %>%
-  mutate(
-    # Handle hybrids
-    species_original = gsub(" x ", " ×", species_original),
-    # Remove 'subspecies' and 'variety' annotations by extracting the first two
-    # words from species names
-    species_original = map_chr(
-      str_split(species_original, "\\s+"), 
-      ~ paste(head(.x, 2), collapse = " ")
-    )
-  ) %>%
-  distinct(species_original, .keep_all = TRUE) %>%
-  as.data.frame() %>%
-  glimpse()
-
-# There are 62,556 unique species in the APC database:
-nrow(apc_database)
-
-# Split data into chunks
-apc_database_split <- split(
-  apc_database,
-  ceiling(seq_along(apc_database$species_original) / (nrow(apc_database) / 20))
-)
-
-# Apply the matching function to each chunk
-processed_chunks <- lapply(apc_database_split, function(chunk) {
-  WFO.one(
-    WFO.match.fuzzyjoin(
-      spec.data = chunk,
-      WFO.data = WFO_species,
-      spec.name = "species_original"
-    ),
-    verbose = FALSE
-  )
-})
-
-# Combine the processed chunks
-apc_database_WFO_combined <- do.call(rbind, processed_chunks)
-
-# Glimpse the final collapsed dataset
-glimpse(apc_database_WFO_combined)
-
-# Direct matches: 54,415 out of 62,556
-apc_database_WFO_combined %>%
-  filter(Matched == TRUE & Fuzzy == FALSE) %>%
-  nrow()
-
-# Fuzzy matches: 6,951 out of 62,556
-apc_database_WFO_combined %>%
-  filter(Matched == TRUE & Fuzzy == TRUE) %>%
-  select(species_original, Fuzzy.dist, scientificName, Old.name) %>%
-  as_tibble() %>%
-  print(n = Inf)
-
-# Unmatched: 1,190 out of 62,556
-apc_database_WFO_combined %>%
-  filter(Matched == "FALSE") %>%
-  as_tibble() %>%
-  print()
-
-# Filter to GlobalTreeSearch species
-apc_tree_database <- apc_database_WFO_combined %>%
-  select(family, genus, scientific_name = scientificName) %>%
-  # Make amendments consistent with GlobalTreeSearch
-  # Extract species epithet from original scientific name
-  mutate(species_epithet = word(scientific_name, 2)) %>%
-  # Resolve genus names for unaccepted genera and synonym genera
-  mutate(
-    genus = case_when(
-      genus == "Afromorus" ~ "Morus",
-      genus == "Archidasyphyllum" ~ "Dasyphyllum",
-      genus == "Ceodes" ~ "Pisonia",
-      genus == "Lychnophorella" ~ "Lychnophora",
-      genus == "Macrolearia" ~ "Olearia",
-      genus == "Ardisia" & family == "Ericaceae" ~ "Leptecophylla",
-      genus == "Esenbeckia" & family == "Ptychomniaceae" ~ "Garovaglia",
-      genus == "Schizocalyx" & family == "Salvadoraceae" ~ "Dobera",
-      genus == "Spiranthera" & family == "Pittosporaceae" ~ "Billardiera",
-      genus == "Volkameria" & family == "Clethraceae" ~ "Clethra",
-      TRUE ~ genus
-    ),
-    # Reconstruct full scientific name with updated genus
-    scientific_name = paste(genus, species_epithet),
-    # Add family information for genera with missing family
-    family = case_when(
-      genus == "Morus" ~ "Moraceae",
-      genus == "Dasyphyllum" ~ "Asteraceae",
-      genus == "Hoffmannanthus" ~ "Asteraceae",
-      genus == "Lachanodes" ~ "Asteraceae",
-      genus == "Leptogonum" ~ "Polygonaceae",
-      genus == "Lundinia" ~ "Asteraceae",
-      genus == "Lychnophora" ~ "Asteraceae",
-      genus == "Niemeyera" ~ "Sapotaceae",
-      genus == "Olearia" ~ "Asteraceae",
-      genus == "Maschalostachys" ~ "Asteraceae",
-      genus == "Melanodendron" ~ "Asteraceae",
-      genus == "Nahuatlea" ~ "Asteraceae",
-      genus == "Neoarytera" ~ "Sapindaceae",
-      genus == "Nototrichium" ~ "Amaranthaceae",
-      genus == "Pladaroxylon" ~ "Asteraceae",
-      genus == "Rockia" ~ "Nyctaginaceae",
-      genus == "Scyphostegia" ~ "Salicaceae",
-      TRUE ~ family
-    )
-  ) %>%
-  select(family, genus, scientific_name) %>%
-  filter(
-    # Keep tree species only
-    scientific_name %in% fread("data/GlobalTreeSearch/harmonised_global_tree.txt")$scientific_name,
-    # Remove non-native species
-    !scientific_name %in% fread("data/GRIIS/harmonised_griis_tree_list.txt")$scientific_name
-  ) %>%
-  unique(.)
-
-# How many tree species are there: 3,802
-n_distinct(apc_tree_database$scientific_name)
-
-# Save the harmonised APC flora and tree list
-apc_database_WFO_combined %>%
-  select(family, genus, scientific_name = scientificName) %>%
-  unique(.) %>%
-  fwrite("data/APC/harmonised_apc_flora_list.txt", sep = "\t")
-apc_tree_database %>%
-  fwrite("data/APC/harmonised_apc_tree_list.txt", sep = "\t")
-apc_tree_database %>%
-  fwrite("output/generated_data/apc_tree_list.txt", sep = "\t")
-
-# Remove all objects from the global environment and free unused memory
-rm(list = ls())
-gc()
-
-# (8) Harmonise GBIF data ######################################################
-
-#### (8a) Clean GBIF data ####
+#### (6a) Clean GBIF occurrences ####
 
 # Download the GBIF dataset used in this analysis: https://doi.org/10.15468/DL.ATKQFB
 
@@ -1824,7 +1659,7 @@ repeat {
 cat("Final dataset has", nrow(gbif_trees_clean), "records\n")
 glimpse(gbif_trees_clean)
 
-#### (8b) Harmonise GBIF tree list ####
+#### (6b) Harmonise GBIF tree list ####
 
 # Read in the WFO datasets
 WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
@@ -1896,7 +1731,7 @@ gbif_tree_species <- gbif_species_WFO %>%
   select(scientific_name, species_original) %>%
   # Filter to APC and add genus and species according to APC harmonised names
   inner_join(
-    fread("data/APC/harmonised_apc_tree_list.txt") %>%
+    fread("data/APC/harmonised_aus_tree_list.txt") %>%
       select(scientific_name, family, genus),
     by = "scientific_name"
   ) %>%
@@ -1922,6 +1757,182 @@ gbif_trees_final <- gbif_trees_clean %>%
 # Save the harmonised GBIF tree list
 gbif_trees_final %>%
   fwrite("data/GBIF/harmonised_gbif_tree_list.txt", sep = "\t")
+
+# Remove all objects from the global environment and free unused memory
+rm(list = ls())
+gc()
+
+# (7) Prepare occurrence data ##################################################
+
+#### (7a) Load data ####
+
+# Forest raster
+forest_rast <- rast(
+  "data/aus_forests_23/aus_for23.tif"
+)
+
+# Read in the harmonised HAVPlot data
+HAVPlot_data <- fread("data/HAVPlot/harmonised_tree_list_presence.txt") %>%
+  select(scientific_name, longitude, latitude)
+
+# Read in the harmonised GBIF data
+gbif_data <- fread("data/GBIF/harmonised_gbif_tree_list.txt") %>%
+  select(scientific_name, longitude, latitude)
+
+# Read in the harmonised abundance data from multiple sources
+abundance_data <- bind_rows(
+  fread("data/BiomassPlotLib/harmonised_treelist.txt"),
+  fread("data/CSIRO_PermanentPlots_Data/harmonised_treelist.txt"),
+  fread("data/FORESTCHECK/harmonised_treelist.txt"),
+  fread("data/NaturalValuesAtlas/harmonised_treelist.txt")
+) %>%
+  select(
+    scientific_name, longitude, latitude
+  ) %>%
+  unique()
+
+# Read in the tree list with mycorrhizal types
+aus_tree_list <- fread("generated_data/global_tree_mycorrhizal_types.txt") %>%
+  # Filter to native trees
+  filter(native_status == "native") %>%
+  # Remove "uncertain" mycorrhizal types
+  filter(mycorrhizal_type != "uncertain") %>%
+  # Mutate eucalypts to EcM
+  mutate(
+    mycorrhizal_type = case_when(
+      genus == "Eucalyptus" ~ "EcM",
+      genus == "Corymbia" ~ "EcM",
+      genus == "Angophora" ~ "EcM",
+      TRUE ~ mycorrhizal_type
+    )
+  ) %>%
+  select(family, genus, scientific_name, mycorrhizal_type)
+
+#### (7b) Occurrence data #####
+
+# Combine the occurrence data with tree list of Australian native trees
+trees <- bind_rows(
+  HAVPlot_data,
+  gbif_data,
+  abundance_data
+) %>%
+  # Remove duplicates
+  unique(.) %>%
+  # Add family and genus information from the harmonised APC tree list and retain
+  # only unique combinations of Australian native trees
+  inner_join(
+    .,
+    aus_tree_list,
+    by = "scientific_name",
+    relationship = "many-to-many"
+  ) %>%
+  select(family, genus, scientific_name, mycorrhizal_type, longitude, latitude) %>%
+  unique(.) %>%
+  # Generate site IDs based on unique geographic coordinates
+  group_by(longitude, latitude) %>%
+  mutate(
+    site = paste0("site_", cur_group_id()) 
+  ) %>%
+  ungroup() %>%
+  glimpse()
+
+# Number of tree species: 3,118
+unique(trees$scientific_name) %>%
+  length() %>%
+  message("Number of tree species: ", .)
+
+# Number of sites: 1,348,505
+unique(trees$site) %>%
+  length() %>%
+  message("Number of sites: ", .)
+
+# Check for unassigned mycorrhizal types
+trees %>%
+  filter(is.na(mycorrhizal_type) | mycorrhizal_type == "" | mycorrhizal_type == "uncertain")
+
+#### (7c) Site data ####
+
+# Filter sites to forests
+
+# Extract unique sites with coordinates
+all_sites <- trees %>%
+  select(site, longitude, latitude) %>%
+  distinct() %>%
+  glimpse(.)
+
+# Project longlat according to the forest_rast
+coords <- all_sites %>%
+  select(x = longitude, y = latitude) %>%
+  as.matrix() %>%
+  # Longitude and latitude as a spatial vector
+  vect(., crs = '+proj=longlat') %>%
+  # Project coordinates according to forest_rast
+  project(., forest_rast)
+
+# Forest structure values for each plot
+structure_values <- terra::extract(forest_rast, coords) %>%
+  select(FOR_CATEGO)
+
+# Forest sites
+forest_sites <- all_sites %>%
+  bind_cols(structure_values) %>%
+  filter(
+    FOR_CATEGO == "Native forest"
+  ) %>%
+  select(-FOR_CATEGO)
+
+# Forest trees
+forest_trees <- trees %>%
+  filter(
+    site %in% forest_sites$site
+  ) %>%
+  distinct() %>%
+  glimpse(.)
+
+# Number of forest tree species: 3,020
+forest_trees %>%
+  select(scientific_name) %>%
+  distinct() %>%
+  nrow() %>%
+  message("Number of tree species: ", .)
+
+# Number of forest sites: 711,459
+forest_sites %>%
+  select(site) %>%
+  distinct() %>%
+  nrow() %>%
+  message("Number of sites: ", .)
+
+### (7d) Save forest tree data ####
+
+# Compute the number of observations per site as a proxy to sampling effort
+sample_effort <- forest_trees %>%
+  group_by(site) %>%
+  summarise(
+    n_obs = n()
+  ) %>%
+  ungroup() %>%
+  glimpse(.)
+
+# Save the forest tree data
+forest_trees %>%
+  distinct() %>%
+  fwrite(
+    "data/presence/trees.txt",
+    sep = "\t"
+  )
+
+# Save the forest site data
+forest_sites %>%
+  inner_join(
+    sample_effort,
+    by = "site"
+  ) %>%
+  distinct() %>%
+  fwrite(
+    "data/presence/sites.txt",
+    sep = "\t"
+  )
 
 # Remove all objects from the global environment and free unused memory
 rm(list = ls())
