@@ -410,7 +410,7 @@ print(RC1_correlations)
 
 # Save the plot
 ggsave(
-  "output/supplementary_predictors/RC1_correlations.png",
+  "output/figure_correlations_RC1.png",
   RC1_correlations,
   width = 15.75,
   height = 22,
@@ -460,7 +460,7 @@ print(RC2_correlations)
 
 # Save the plot
 ggsave(
-  "output/supplementary_predictors/RC2_correlations.png",
+  "output/figure_correlations_RC2.png",
   RC2_correlations,
   width = 15.75,
   height = 22,
@@ -510,7 +510,7 @@ print(RC3_correlations)
 
 # Save the plot
 ggsave(
-  "output/supplementary_predictors/RC3_correlations.png",
+  "output/figure_correlations_RC3.png",
   RC3_correlations,
   width = 15.75,
   height = 22,
@@ -636,7 +636,7 @@ print(RC1_plots)
 
 # Save the plots
 ggsave(
-  "output/supplementary_predictors/RC1_map.png",
+  "output/figure_S2.png",
   RC1_plots,
   width = 15.75,
   height = 22,
@@ -762,7 +762,7 @@ print(RC2_plots)
 
 # Save the plots
 ggsave(
-  "output/supplementary_predictors/RC2_maps.png",
+  "output/figure_S3.png",
   RC2_plots,
   width = 15.75,
   height = 22,
@@ -868,7 +868,7 @@ print(RC3_noRC_plots)
 
 # Save the plots
 ggsave(
-  "output/supplementary_predictors/RC3_map.png",
+  "output/figure_s4.png",
   RC3_noRC_plots,
   width = 15.75,
   height = 16,
