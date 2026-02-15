@@ -1041,10 +1041,10 @@ sites_upscaled <- sites_predictors %>%
 # forest cover less than 10%
 nrow(sites_upscaled)
 nrow(sites_upscaled %>% filter(!is.na(RC1), forest_cover >= 10))
-# 17,787 cells have forest cover > 10% and are paired with predictor variables
+# 17,764 cells have forest cover > 10% and are paired with predictor variables
 # Cells with at least 10 observations
 nrow(sites_upscaled %>% filter(!is.na(RC1), forest_cover >= 10, n_obs >= 10))
-# 11,811 cells have forest cover > 10% and at least 10 observations
+# 11,780 cells have forest cover > 10% and at least 10 observations
 
 # Save the data for richness estimation
 sites_upscaled %>% 
@@ -1192,13 +1192,13 @@ fwrite(
   sep = "\t"
 )
 
-# Count the number of unique species
+# Count the number of unique species: 2,958
 n_distinct(trees_upscaled$scientific_name)
 
-# Count the number of unique grid cells
+# Count the number of unique grid cells: 17,764
 n_distinct(trees_upscaled$cell)
 
-# Count the number of unique species in at least 10 grid cells
+# Count the number of unique species in at least 10 grid cells: 2,434
 trees_upscaled %>%
   group_by(scientific_name) %>%
   summarise(

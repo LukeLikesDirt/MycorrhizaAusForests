@@ -142,5 +142,5 @@ niche_breadth_est %>%
       lat_position < -23.45 ~ "Non-tropical"
     )
   ) %>%
-  fwrite("output/generated_data/niche_estimates.txt", sep = "\t")                    
+  fwrite("generated_data/niche_estimates.txt", sep = "\t")                    
                     
