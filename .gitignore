@@ -3,6 +3,9 @@
 data/
 manuscript/
 
+# Draft code
+draft_*.R
+
 # macOS folder settings
 .DS_Store
 
