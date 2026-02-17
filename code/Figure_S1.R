@@ -10,6 +10,7 @@ source("code/map_australia.R")
 
 # Read in the prediction raster
 native_forest_rast_10 <- rast("data/aus_forests_23/predictors_10.tif")
+global(!is.na(native_forest_rast_10), "sum") 
 
 # Create a raster for relative richness estimation cells
 relative_richness_df <- fread("data/presence/sites_relative_richness_est_10.txt")
@@ -111,5 +112,5 @@ forest_plots <- patchwork::wrap_plots(
 
 # Save plots
 ggsave(
-  "output/figureS1.png", forest_plots, width = 15, height = 8, units = "cm"
+  "output/figure_S1.png", forest_plots, width = 15, height = 8, units = "cm"
   )

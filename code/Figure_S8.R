@@ -14,9 +14,9 @@ text_size <- 8
 # Figure 2 #####################################################################
 
 # Load the data:
-data_figure_2a <- rast("output/supplimentary_absolute_richness/main_figure_a.tif")
-load("output/supplimentary_absolute_richness/main_figure_b.RData")
-load("output/supplimentary_absolute_richness/main_figure_c.RData")
+data_figure_2a <- rast("generated_data/figure_S8a.tif")
+load("generated_data/figure_S8b.RData")
+load("generated_data/figure_S8c.RData")
 
 #### Legend ####
 
@@ -203,7 +203,7 @@ print(figure_final)
 
 # Save the final plot
 ggsave(
-  filename = "output/figureS8.png",
+  filename = "output/figure_S8.png",
   plot = figure_final,
   width = 16,
   height = 13.5,

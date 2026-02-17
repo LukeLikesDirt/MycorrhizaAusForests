@@ -4,7 +4,7 @@ require(ggtext)
 require(tidyverse)
 
 # Load the data
-load('output/generated_data/figure_4.RData')
+load('generated_data/figure_4.RData')
 
 #### Theme ####
 
