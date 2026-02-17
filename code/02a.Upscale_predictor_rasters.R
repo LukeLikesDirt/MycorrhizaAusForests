@@ -510,7 +510,7 @@ writeRaster(
 
 # Load habitat type rasters with keyword filtering
 habitat_type_rast <- list.files(
-  "data/habitat/lvl2_frac_1km_ver004",
+  "data/georeferenced_predictors/habitat/lvl2_frac_1km_ver004",
   pattern = "iucn_habitatclassification.*(?i)(Forest|Grassland|Shrubland|Savanna).*ver004\\.tif$",
   full.names = TRUE
 ) %>%

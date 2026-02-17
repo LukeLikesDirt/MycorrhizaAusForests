@@ -140,7 +140,7 @@ spde$n.spde
 # (3) Create sensitivity datasets ###############################################
 
 # Function to create sensitivity datasets by resampling mycorrhizal types
-create_sensitivity_datasets <- function(original_data, n_sensitivity = 5, resample_prop = 0.1) {
+create_sensitivity_datasets <- function(original_data, n_sensitivity = 5, resample_prop = 0.2) {
   
   # Calculate mycorrhizal type probabilities from unique species
   species_types <- original_data %>%
@@ -231,7 +231,7 @@ tree_data <- data.table::fread("data/presence/trees_10.txt") %>%
 
 # Create datasets with 10% resampling
 sensitivity_tree_data <- create_sensitivity_datasets(
-  tree_data, n_sensitivity = 5, resample_prop = 0.1
+  tree_data, n_sensitivity = 5, resample_prop = 0.2
 )
 
 # Process sensitivity datasets to create estimation data
@@ -768,10 +768,10 @@ print(rc_plots[["RC2"]])
 print(rc_plots[["RC3"]])
 
 # Save plots
-ggsave("output/supplimentary_richness_log_ratio/sensitivity_RC1.png", rc_plots[["RC1"]],
+ggsave("output/figure_S14.png", rc_plots[["RC1"]],
        width = 14, height = 20, units = "cm", dpi = 300)
-ggsave("output/supplimentary_richness_log_ratio/sensitivity_RC2.png", rc_plots[["RC2"]],
+ggsave("output/figure_S15.png", rc_plots[["RC2"]],
        width = 14, height = 20, units = "cm", dpi = 300)
-ggsave("output/supplimentary_richness_log_ratio/sensitivity_RC3.png", rc_plots[["RC3"]],
+ggsave("output/figure_S16.png", rc_plots[["RC3"]],
        width = 14, height = 20, units = "cm", dpi = 300)
 

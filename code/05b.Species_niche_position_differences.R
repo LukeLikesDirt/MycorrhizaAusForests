@@ -81,7 +81,7 @@ species_list <- data %>%
 
 # Read in the phylogenetic tree
 phylo_tree <- read.tree(
-  "output/generated_data/phylo_tree_mycorrhizal_types.tre"
+  "generated_data/phylo_tree_mycorrhizal_types.tre"
 ) 
 
 phylo_tree <- phylo_tree %>%
@@ -615,5 +615,5 @@ save(
   base_model_params_position, pem_model_params_position,
   phylo_auto_stats_position,
   
-  file = "output/generated_data/figure_4.RData"
+  file = "generated_data/figure_4.RData"
 )
