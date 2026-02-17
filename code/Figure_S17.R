@@ -294,7 +294,7 @@ raw_data_plot <- function(raw_data, title, position_type = "", x_lab = "", plot_
 # Combine the plots ############################################################
 
 # Figure 5
-figureS16 <- patchwork::wrap_plots(
+figureS17 <- patchwork::wrap_plots(
   raw_data_plot(data_position, "All", "RC1", "RC1", "(**a**)", x_limits = x_limits),
   raw_data_plot(data_position_tropical, "Tropical", "RC1", x_limits = x_limits),
   raw_data_plot(data_position_nontropical, "Temperate", "RC1", x_limits = x_limits),
@@ -311,25 +311,17 @@ figureS16 <- patchwork::wrap_plots(
 )
 
 # Add the legend to the alternate figure
-figureS16_final <- cowplot::plot_grid(
-  figureS16, legend_myco, rel_widths = c(1, 0.16)
+figureS17_final <- cowplot::plot_grid(
+  figureS17, legend_myco, rel_widths = c(1, 0.16)
 )
 
 # Save the plot
 ggsave(
-  "output/figureS16.png",
-  plot = figureS16_final,
+  "output/figure_S17.png",
+  plot = figureS17_final,
   width = 14.6,
   height = 24, 
   bg = "white",
   units = "cm",
   dpi = 300
-)
-ggsave(
-  "output/figureS16.tif",
-  plot = figureS16_final,
-  width = 14.6,
-  height = 24, 
-  bg = "white",
-  units = "cm",
 )
