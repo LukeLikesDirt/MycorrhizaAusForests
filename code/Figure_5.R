@@ -4,7 +4,7 @@ require(ggtext)
 require(tidyverse)
 
 # Load the data
-load('output/generated_data/figure_5.RData')
+load('generated_data/figure_5.RData')
 
 # Access effect results
 density_effect_all <- env_breadth_results[["all"]]$effect$density
@@ -196,7 +196,7 @@ raw_data_plot <- function(raw_data, title, breadth_type = "", x_lab = "", plot_t
     ) +
     # Styling
     scale_color_manual(values = myco_colours) +
-    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +
+    scale_x_continuous(limits = c(0, 0.8), breaks = seq(0, 1, by = 0.2)) +
     coord_flip() +
     common_theme +
     theme(
@@ -236,7 +236,7 @@ figure_5_final <- cowplot::plot_grid(
 
 # Save the plot
 ggsave(
-  "output/figure5.png",
+  "output/figure_5.png",
   plot = figure_5_final,
   width = 16,
   height = 9.25, 
@@ -245,10 +245,20 @@ ggsave(
   dpi = 300
 )
 ggsave(
-  "output/figure5.tif",
+  "output/figure_5.pdf",
+  plot = figure_5_final,
+  width = 16,
+  height = 9.25, 
+  bg = "white",
+  units = "cm",
+  device = cairo_pdf
+)
+ggsave(
+  "output/figure_5.tif",
   plot = figure_5_final,
   width = 16,
   height = 9.25, 
   bg = "white",
   units = "cm"
 )
+

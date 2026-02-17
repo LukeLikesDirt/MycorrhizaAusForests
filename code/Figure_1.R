@@ -20,7 +20,6 @@ myco_colors <- c(
   'ErM' = "grey40",
   'NM' = '#d470a2',
   "AM" = "#E69F00",
-  "NM-AM" = "#D55E00",
   "EcM" = "#56B4E9",
   "Dual" = "#009E73"
 )
@@ -83,8 +82,15 @@ add_family_strip <- function(plot_obj, tree, family_name, hjust_val, offset_text
 
 #### * Global tree data * ####
 
-global_trees <- fread("output/generated_data/global_tree_mycorrhizal_types.txt") %>% 
+global_trees <- fread("generated_data/global_tree_mycorrhizal_types.txt") %>% 
   mutate(
+    # Mutate eucalypts to EcM
+    mycorrhizal_type = case_when(
+      genus == "Eucalyptus" ~ "EcM",
+      genus == "Corymbia" ~ "EcM",
+      genus == "Angophora" ~ "EcM",
+      TRUE ~ mycorrhizal_type
+    ),
     # Mutate EcM-AM to Dual
     mycorrhizal_type = ifelse(mycorrhizal_type == "EcM-AM", "Dual", mycorrhizal_type)
   )
@@ -106,7 +112,7 @@ global_tree_summary <- global_trees %>%
   mutate(
     mycorrhizal_type = factor(
       mycorrhizal_type,
-      levels = c("AM", "NM-AM", "EcM", "Dual", "ErM", "NM")
+      levels = c("AM", "EcM", "Dual", "ErM", "NM")
     )
   ) %>%
   print()
@@ -114,18 +120,22 @@ global_tree_summary <- global_trees %>%
 # How many species are there in total?
 n_distinct(global_trees$scientific_name)
 
+# How many species with mycorrhizal type data are there in total?
+n_distinct(global_trees$scientific_name[global_trees$mycorrhizal_type != "uncertain"])
+
 # How many genera are there in total?
 n_distinct(global_trees$genus)
 
+# How many genera with mycorrhizal type data are there in total?
+n_distinct(global_trees$genus[global_trees$mycorrhizal_type != "uncertain"])
+
 #### * Australian tree data * ####
 
-australian_trees <- fread("output/generated_data/australian_tree_mycorrhizal_types.txt") %>% 
-  mutate(
-    # Mutate EcM-AM to Dual
-    mycorrhizal_type = ifelse(mycorrhizal_type == "EcM-AM", "Dual", mycorrhizal_type),
-    # Create species column with underscores for tree matching
-    species = gsub(" ", "_", scientific_name)
-  )
+australian_trees <- global_trees %>%
+  filter(
+    native_status == "native",
+    mycorrhizal_type != "uncertain"
+    )
 
 # Summarise Australian tree data:
 australian_tree_summary <- australian_trees %>%
@@ -143,7 +153,7 @@ australian_tree_summary <- australian_trees %>%
   mutate(
     mycorrhizal_type = factor(
       mycorrhizal_type,
-      levels = c("AM", "NM-AM", "EcM", "Dual", "ErM", "NM")
+      levels = c("AM", "EcM", "Dual", "ErM", "NM")
     )
   ) %>%
   print()
@@ -171,25 +181,6 @@ summary_table <- full_join(global_summary, australian_summary, by = "mycorrhizal
     australian_richness = coalesce(australian_richness, 0),
     proportion_in_aus = australian_richness / global_richness
   )
-
-# Add combined "AM + NM-AM" row
-am_nmam_global <- sum(global_tree_summary$abs_richness[global_tree_summary$mycorrhizal_type %in% c("AM", "NM-AM")], na.rm = TRUE)
-am_nmam_aus <- sum(australian_tree_summary$abs_richness[australian_tree_summary$mycorrhizal_type %in% c("AM", "NM-AM")], na.rm = TRUE)
-am_nmam_proportion <- am_nmam_aus / am_nmam_global
-
-am_nmam_row <- tibble(
-  mycorrhizal_type = "AM + NM-AM",
-  global_richness = am_nmam_global,
-  australian_richness = am_nmam_aus,
-  proportion_in_aus = am_nmam_proportion
-)
-
-# Combine into final table
-final_table <- bind_rows(summary_table, am_nmam_row) %>%
-  arrange(mycorrhizal_type)
-
-# Print table
-print(final_table)
 
 #### * Plot Australian trees vs global trees * ####
 
@@ -227,7 +218,6 @@ mycorrhizal_diversity_plot <- ggplot(
     values = myco_colors,
     labels = c(
       'AM' = 'Arbuscular mycorrhizal (AM)',
-      'NM-AM' = 'Weakly arbuscular\nmycorrhizal (NM–AM)',
       'EcM' = 'Ectomycorrhizal (EcM)',
       'Dual' = 'Dual-mycorrhizal',
       'ErM' = 'Ericoid mycorrhizal (ErM)',
@@ -248,14 +238,13 @@ print(mycorrhizal_diversity_plot)
 
 # Phylogenetic tree for Australian tree species ################################
 # Read in the phylogenetic tree
-phylo_tree <- read.tree("output/generated_data/phylo_tree_mycorrhizal_types.tre")
+phylo_tree <- read.tree("generated_data/phylo_tree_mycorrhizal_types.tre")
 
 # Your color palette
 myco_colors <- c(
   'ErM' = "grey40",
   'NM' = '#d470a2',
   "AM" = "#E69F00",
-  "NM-AM" = "#D55E00",
   "EcM" = "#56B4E9",
   "Dual" = "#009E73"
 )
@@ -270,7 +259,9 @@ top_families <- australian_trees %>%
 
 # Prepare species list matching tree tips
 species_list <- australian_trees %>%
-  select(species, genus, family, mycorrhizal_type) %>%
+  select(scientific_name, genus, family, mycorrhizal_type) %>%
+  # Add underscores to match tree tip labels
+  mutate(species = gsub(" ", "_", scientific_name)) %>%
   distinct(species, .keep_all = TRUE)
 
 # Match species to tree tips and drop unmatched tips
@@ -326,7 +317,7 @@ family_positions <- list(
   "Rutaceae" = list(hjust = 1, offset_text = 55),
   "Malvaceae" = list(hjust = 1, offset_text = 55),
   "Euphorbiaceae" = list(hjust = 1, offset_text = 60),
-  "Moraceae" = list(hjust = 1, offset_text = 60)
+  "Arecaceae" = list(hjust = 0, offset_text = 52)
 )
 
 # Add family strips for top families
@@ -372,7 +363,7 @@ final_plot <- plot_grid(
 
 # Save png
 ggsave(
-  "output/figure1.png",
+  "output/figure_1.png",
   final_plot,
   width = 16, 
   height = 20, 
@@ -380,14 +371,23 @@ ggsave(
   units = "cm", 
   dpi = 300
 )
-
 # Save tiff
 ggsave(
-  "output/figure1.tiff",
-  final_plot,
-  width = 16, 
-  height = 20, 
+  filename = "output/figure_1.tiff",
+  plot = final_plot,
+  width = 16,
+  height = 20,
+  units = "cm",
   bg = "white",
-  units = "cm"
+  dpi = 300
 )
-
+# Save pdf
+ggsave(
+  filename = "output/figure_1.pdf",
+  plot = final_plot,
+  width = 16,
+  height = 20,
+  units = "cm",
+  bg = "white",
+  device = cairo_pdf
+)

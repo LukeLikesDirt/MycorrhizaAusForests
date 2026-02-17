@@ -27,7 +27,7 @@ common_theme <- theme_minimal() +
 # Figure 3 #####################################################################
 
 # Load the data:
-load("output/generated_data/figure_3.RData")
+load("generated_data/figure_3.RData")
 
 # Take a glimpse of the data
 glimpse(relative_richness_data)
@@ -158,18 +158,9 @@ combined_plot <- patchwork::wrap_plots(
   nrow = 3
 )
 
-# # Use the tag label as a y-axis label
-# combined_marginal_effects_plot <- patchwork::wrap_elements(combined_plot) +
-#   labs(tag = expression("Relative richness")) +
-#   theme(
-#     plot.margin = margin(t = 0, r = 0, b = 0, l = 10, "pt"),
-#     plot.tag = element_text(size = title_size, angle = 90),
-#     plot.tag.position = "left"
-#   )
-
 # Save the plot
 ggsave(
-  filename = "output/figure3.png",
+  filename = "output/figure_3.png",
   plot = combined_plot,
   width = 16,
   height = 15.25,
@@ -177,14 +168,21 @@ ggsave(
   units = "cm",
   dpi = 300
 )
-
-# Save the plot
 ggsave(
-  filename = "output/figure3.tif",
+  filename = "output/figure_3.tif",
   plot = combined_plot,
   width = 16,
   height = 15.25,
   bg = "white",
   units = "cm"
+)
+ggsave(
+  filename = "output/figure_3.pdf",
+  plot = combined_plot,
+  width = 16,
+  height = 15.25,
+  bg = "white",
+  units = "cm",
+  device = cairo_pdf
 )
 

@@ -33,10 +33,10 @@ common_theme <- theme_minimal() +
 # Load the data:
 # Richness (log-ratio) is standardised to percentiles in figure 2a, 2c and 2d
 # Richness ratio is on the log10-scale in figure 2b
-data_figure_2a <- rast("output/generated_data/figure_2a.tif")
-load("output/generated_data/figure_2b.RData")
-load("output/generated_data/figure_2c.RData")
-load("output/generated_data/figure_2c.RData")
+data_figure_2a <- rast("generated_data/figure_2a.tif")
+load("generated_data/figure_2b.RData")
+load("generated_data/figure_2c.RData")
+load("generated_data/figure_2c.RData")
 
 #### Legend ####
 
@@ -215,7 +215,7 @@ print(figure_2_final)
 
 # Save the final plot
 ggsave(
-  filename = "output/figure2.png",
+  filename = "output/figure_2.png",
   plot = figure_2_final,
   width = 16,
   height = 13.5,
@@ -224,11 +224,19 @@ ggsave(
   dpi = 300
 )
 ggsave(
-  filename = "output/figure2.tif",
+  filename = "output/figure_2.tif",
   plot = figure_2_final,
   width = 16,
   height = 13.5,
   bg = "white",
   units = "cm"
 )
-
+ggsave(
+  filename = "output/figure_2.pdf",
+  plot = figure_2_final,
+  width = 16,
+  height = 13.5,
+  bg = "white",
+  units = "cm",
+  device = cairo_pdf
+)
