@@ -1,7 +1,8 @@
 
-# Data,and manuscript files
+# Data, output, and manuscript files
 data/
 manuscript/
+output/
 
 # Draft code
 draft_*.R
