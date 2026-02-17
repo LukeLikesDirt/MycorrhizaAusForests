@@ -57,11 +57,11 @@ contrasts(data$mycorrhizal_type)
 contrasts(data_tropical$mycorrhizal_type)
 contrasts(data_nontropical$mycorrhizal_type)
 
-# Number of species: 2,437 species
+# Number of species: 2,334 species
 unique(data$species) %>% length(.)
-# Number of tropical species: 1,293 species
+# Number of tropical species: 1,224 species
 unique(data_tropical$species) %>% length(.)
-# Number of nontropical species: 1,144 species
+# Number of nontropical species: 1,110 species
 unique(data_nontropical$species) %>% length(.)
 
 #### * Phylogenetic tree * ####
@@ -85,7 +85,7 @@ species_list <- data %>%
 
 # Read in the phylogenetic tree
 phylo_tree <- read.tree(
-  "output/generated_data/phylo_tree_mycorrhizal_types.tre"
+  "generated_data/phylo_tree_mycorrhizal_types.tre"
 ) 
 
 phylo_tree <- phylo_tree %>%
@@ -771,6 +771,29 @@ save(
   pem_model_params_breadth,
   pairwise_results_breadth,
   
-  file = "output/generated_data/figure_5.RData"
+  file = "generated_data/figure_5.RData"
 )
 
+# Save Table S3: Phylogenetic autocorrelation statistics for all models
+phylo_auto_stats_breadth %>%
+  as_tibble() %>%
+  fwrite("output/table_S3.txt", sep = "\t")
+
+# Save Table S4: Coefficients for mycorrhizal type effects on environmental niche breadth for all trees
+pem_model_params_breadth[["all"]] %>%
+  as_tibble() %>%
+  fwrite("output/table_S4.txt", sep = "\t")
+
+# Save Table S5: Coefficients for mycorrhizal type effects on environmental breadth for tropical trees
+pem_model_params_breadth[["tropical"]] %>%
+  as_tibble() %>%
+  fwrite("output/table_S5.txt", sep = "\t")
+
+# Save Table S6: Coefficients for mycorrhizal type effects on environmental breadth for temperate trees
+pem_model_params_breadth[["nontropical"]] %>%
+  as_tibble() %>%
+  fwrite("output/table_S6.txt", sep = "\t")
+
+# Save Table S7: Pairwise comparisons of marginal mean environmental niche breadths. 
+pairwise_results_breadth %>%
+  fwrite("output/table_S7.txt", sep = "\t")
