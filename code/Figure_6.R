@@ -38,7 +38,7 @@ domain_size <- lat_max - lat_min
 
 # Read in the data
 data <- data.table::fread(
-  "output/generated_data/niche_estimates.txt"
+  "generated_data/niche_estimates.txt"
 ) %>%
   filter(mycorrhizal_type != "ErM") %>%
   mutate(
@@ -443,7 +443,7 @@ ggplot() +
 
 # Save the plot
 ggsave(
-  "output/figure6.png",
+  "output/figure_6.png",
   width = 16,
   height = 5,
   units = "cm",
@@ -451,9 +451,18 @@ ggsave(
   dpi = 300
 )
 ggsave(
-  "output/figure6.tif",
+  "output/figure_6.tif",
   width = 16,
   height = 5,
   units = "cm",
   bg = "white"
+)
+ggsave(
+  "output/figure_6.pdf",
+  width = 16,
+  height = 5,
+  units = "cm",
+  bg = "white",
+  device = cairo_pdf
+  
 )

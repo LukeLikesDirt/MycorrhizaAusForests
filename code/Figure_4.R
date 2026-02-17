@@ -4,7 +4,7 @@ require(ggtext)
 require(tidyverse)
 
 # Load the data
-load('output/generated_data/figure_4.RData')
+load('generated_data/figure_4.RData')
 
 #### Theme ####
 
@@ -63,30 +63,6 @@ dummy_plot_myco <- ggplot(
 
 legend_myco <- cowplot::get_legend(dummy_plot_myco)
 
-# # Load and prepare niche data
-# data_position <- data.table::fread("data/data_position_enmeval/niche_estimates.txt") %>%
-#   filter(mycorrhizal_type != "ErM") %>%
-#   mutate(
-#     # Rename EcM-AM to Dual
-#     mycorrhizal_type = recode(mycorrhizal_type, "EcM-AM" = "Dual"),
-#     mycorrhizal_type = factor(mycorrhizal_type, levels = c("AM", "EcM", "Dual", "NM")),
-#     species = str_replace_all(species, " ", "_"),
-#     # Scale the RC variables for the full dataset
-#     RC1 = as.numeric(scale(RC1_position)),
-#     RC2 = as.numeric(scale(RC2_position)),
-#     RC3 = as.numeric(scale(RC3_position)),
-#     biome = ifelse(dominant_biome == "Tropical", "tropical", "nontropical"),
-#     biome = factor(
-#       biome,
-#       levels = c("tropical", "nontropical")
-#     )
-#   ) %>%
-#   select(
-#     family, genus, species, mycorrhizal_type, biome,
-#     RC1, RC2, RC3
-#   )
-
-
 # Figure a: Niche overlap kernel density estimates #############################
 
 # Define plot parameters
@@ -97,7 +73,7 @@ biome_titles <- c("All", "Tropical", "Temperate")
 
 # Breaks and limit density peaks:
 # !!! These need to be adjusted based visual inspection of kernel density estimates !!!
-y_limits <- list(c(0, 1.42), c(0, 0.8), c(0, 0.675))
+y_limits <- list(c(0, 1.4), c(0, 0.85), c(0, 0.7))
 y_breaks <- list(seq(0, 2, by = 0.4), seq(0, 2, by = 0.2), seq(0, 2, by = 0.2))
 
 # Function to create density plots
@@ -416,23 +392,13 @@ figure4_final <- cowplot::plot_grid(
 
 # Save the plot
 ggsave(
-  "output/figure4.png",
+  "output/figure_4_bar.png",
   plot = figure4_final,
   width = 15.5,
   height = 20.75, 
   bg = "white",
   units = "cm",
   dpi = 300
-)
-
-# Save the plot
-ggsave(
-  "output/figure4.tif",
-  plot = figure4_final,
-  width = 15.5,
-  height = 20.75, 
-  bg = "white",
-  units = "cm"
 )
 
 # Figure b: Heat map option ####################################################
@@ -567,7 +533,7 @@ figure4_final <- cowplot::plot_grid(
 
 # Save the plot
 ggsave(
-  "output/figure4_heat.png",
+  "output/figure_4_heat.png",
   plot = figure4_final,
   width = 15.5,
   height = 19,   
@@ -575,13 +541,21 @@ ggsave(
   units = "cm",
   dpi = 300
 )
-
-# Save the plot
 ggsave(
-  "output/figure4_heat.tif",
+  "output/figure_4_heat.tif",
   plot = figure4_final,
   width = 15.5,
   height = 19,   
   bg = "white",
   units = "cm"
 )
+ggsave(
+  "output/figure_4_heat.pdf",
+  plot = figure4_final,
+  width = 15.5,
+  height = 19,   
+  bg = "white",
+  units = "cm",
+  device = cairo_pdf
+)
+
