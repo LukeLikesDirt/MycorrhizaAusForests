@@ -2,10 +2,10 @@
 
 This repository holds code and data associated to the manuscript:
 
-[**Rethinking Mycorrhizal Ecology: Niche Patterns of Dual-mycorrhizal and Non-Mycorrhizal Trees**]()
+[**Uncovering Environmental Niches in Dual-mycorrhizal and Non-mycorrhizal Forest Trees**]()
 
 **Authors:**
-Luke Florence<sup>1</sup>, John W. Morgan<sup>1</sup>, Peter A. Vesk<sup>2</sup>, Jen L. Wood<sup>3</sup> Camille Truong<sup>4</sup>
+Luke Florence<sup>1</sup>, John W. Morgan<sup>1</sup>, Peter A. Vesk<sup>2</sup>, Jen L. Wood<sup>3</sup>, Camille Truong<sup>4</sup>
 
 **Affiliations:**
 1. Department of Environment and Genetics, La Trobe University, Bundoora, Victoria, Australia. 
@@ -17,10 +17,53 @@ Corresponding author: Luke Florence (L.Florence@latrobe.edu.au)
 
 ## Repository contents
 
-* `code/` — Contains all R scripts used to reproduce the analysis, including data sourcing, preparation, execution of statistical workflows, and figure generation
-* `code/Figure*.R` — Individual scripts for generating each figure presented in the manuscript
-* `output/generated_data/` — Includes all datasets required to reproduce the primary figures and results
-* `envs/` — Contains the Conda environment set-up scripts used for modelling environmental breadth. This analysis was executed on a high-performance computing cluster due to computational intensity
+* `./code/` — Contains all R scripts required to reproduce the analysis, including data sourcing, preparation, execution of statistical workflows, and figure generation
+* `./generated_data/` — Includes all datasets required to reproduce the primary and figures and results presented in the manuscript
+* `./envs/` — Contains the Conda environment set-up scripts used for modelling environmental breadth. This analysis was computationally intensive and takes around 2 days on 12 cores.
+* `./covariates.txt` — A mapping of covariate names to their sources and descriptions.
+* **Note** — Raw tree occurrence data retrieval and curation can be reproduced in script `./code/01.Harmonise_tree_data.R`
+
+## Outputs
+To reproduce the outputs of this project, see the following scripts:
+
+| Output | Script |
+|--------|--------|
+| Fig. 1 | [code/Figure_1.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_1.R) |
+| Fig. 2 | [code/Figure_2.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_2.R) |
+| Fig. 3 | [code/Figure_3.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_3.R) |
+| Fig. 4 | [code/Figure_4.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_4.R) |
+| Fig. 5 | [code/Figure_5.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_5.R) |
+| Fig. 6 | [code/Figure_6.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_6.R) |
+| Fig. S1 | [code/Figure_S1.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S1.R) |
+| Fig. S2 | [code/02b.Prepare_prediction_grids.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/02b.Prepare_prediction_grids.R) |
+| Fig. S3 | [code/02b.Prepare_prediction_grids.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/02b.Prepare_prediction_grids.R) |
+| Fig. S4 | [code/02b.Prepare_prediction_grids.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/02b.Prepare_prediction_grids.R) |
+| Fig. S5 | [code/04a.Relative_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04a.Relative_richness_analysis.R) |
+| Fig. S6 | [code/04a.Relative_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04a.Relative_richness_analysis.R) |
+| Fig. S7 | [code/Figure_S7.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S7.R) |
+| Fig. S8 | [code/Figure_S8.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S8.R) |
+| Fig. S9 | [code/04c.Absolute_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04c.Absolute_richness_analysis.R) |
+| Fig. S10 | [code/04c.Absolute_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04c.Absolute_richness_analysis.R) |
+| Fig. S11 | [code/04c.Absolute_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04c.Absolute_richness_analysis.R) |
+| Fig. S12 | [code/Figure_S12.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S12.R) |
+| Fig. S13 | [code/Figure_S13.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S13.R) |
+| Fig. S14 | [code/06a.Sensetivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensetivity_relative_richness.R) |
+| Fig. S15 | [code/06a.Sensetivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensetivity_relative_richness.R) |
+| Fig. S16 | [code/06a.Sensetivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensetivity_relative_richness.R) |
+| Fig. S17 | [code/Figure_S17.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S17.R) |
+| Fig. S18 | [code/Figure_S18.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S18.R) |
+| Fig. S19 | [code/06b.Sensitivity_niche_breadth.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06b.Sensitivity_niche_breadth.R) |
+| Fig. S20 | [code/Figure_S20.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S20.R) |
+| Table S1 | [code/02b.Prepare_prediction_grids.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/02b.Prepare_prediction_grids.R) |
+| Table S2 | [code/04a.Relative_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04a.Relative_richness_analysis.R) |
+| Table S3 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) |
+| Table S4 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) |
+| Table S5 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) |
+| Table S6 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) |
+| Table S7 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) |
+| Table S8 | [code/07a.Generate_emperical_dataset.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/07a.Generate_emperical_dataset.R) |
+| Dataset S1 | [code/01.Harmonise_tree_data.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/01.Harmonise_tree_data.R) |
+| Dataset S2 | [code/07a.Generate_emperical_dataset.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/07a.Generate_emperical_dataset.R) |
 
 ## Dependencies
 This project is conducted using R version 4.3.3 (2024-02-29) -- "Angel Food Cake" and the following packages:
@@ -59,5 +102,3 @@ This project is conducted using R version 4.3.3 (2024-02-29) -- "Angel Food Cake
 * [gtable](https://r-lib.r-universe.dev/gtable) version 0.3.6
 * [patchwork](https://github.com/thomasp85/patchwork) version 1.2.0
 * [ggpubr](https://github.com/kassambara/ggpubr) version 0.6.0
-
-
