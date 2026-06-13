@@ -2,7 +2,7 @@
 
 This repository holds code and data associated to the manuscript:
 
-[**Uncovering Environmental Niches in Dual-mycorrhizal and Non-mycorrhizal Forest Trees**]()
+[**Uncovering Environmental Niches in Dual-mycorrhizal and Non-mycorrhizal Australian Forest Trees**]()
 
 **Authors:**
 Luke Florence<sup>1</sup>, John W. Morgan<sup>1</sup>, Peter A. Vesk<sup>2</sup>, Jen L. Wood<sup>3</sup>, Camille Truong<sup>4</sup>
