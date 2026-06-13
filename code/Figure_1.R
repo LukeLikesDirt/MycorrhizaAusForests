@@ -195,7 +195,7 @@ mycorrhizal_diversity_plot <- ggplot(
   theme_void() +
   theme(
     plot.tag.location = "panel",
-    plot.tag.position = c(-0.1, 1.1),
+    plot.tag.position = c(-0.065, 1.1),
     legend.position = 'bottom',
     legend.direction = 'horizontal',
     legend.title = element_blank(),
@@ -342,7 +342,7 @@ tree_plot_final <- tree_plot2 +
   theme(
     plot.tag = element_markdown(size = 14),
     plot.tag.location = "panel",
-    plot.tag.position = c(-0.01, 0.88),
+    plot.tag.position = c(-0.02, 0.88),
     plot.margin = margin(t = -25, r = -15, b = -25, l = 0, "pt"),
     legend.position = "none",
     aspect.ratio = 1
@@ -357,7 +357,7 @@ print(tree_plot_final)
 final_plot <- plot_grid(
   tree_plot_final,
   mycorrhizal_diversity_plot,
-  rel_heights = c(2.2, 1),
+  rel_heights = c(2.15, 1),
   ncol = 1
 )
 
@@ -365,19 +365,19 @@ final_plot <- plot_grid(
 ggsave(
   "output/figure_1.png",
   final_plot,
-  width = 16, 
-  height = 20, 
+  width = 173, 
+  height = 210, 
   bg = "white",
-  units = "cm", 
+  units = "mm", 
   dpi = 300
 )
 # Save tiff
 ggsave(
   filename = "output/figure_1.tiff",
   plot = final_plot,
-  width = 16,
-  height = 20,
-  units = "cm",
+  width = 173, 
+  height = 210, 
+  units = "mm",
   bg = "white",
   dpi = 300
 )
@@ -385,9 +385,9 @@ ggsave(
 ggsave(
   filename = "output/figure_1.pdf",
   plot = final_plot,
-  width = 16,
-  height = 20,
-  units = "cm",
+  width = 173, 
+  height = 210, 
+  units = "mm",
   bg = "white",
   device = cairo_pdf
 )

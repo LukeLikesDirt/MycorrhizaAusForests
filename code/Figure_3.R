@@ -162,27 +162,28 @@ combined_plot <- patchwork::wrap_plots(
 ggsave(
   filename = "output/figure_3.png",
   plot = combined_plot,
-  width = 16,
-  height = 15.25,
+  width = 173,
+  height = 160,
   bg = "white",
-  units = "cm",
+  units = "mm",
   dpi = 300
 )
 ggsave(
   filename = "output/figure_3.tif",
   plot = combined_plot,
-  width = 16,
-  height = 15.25,
+  width = 173,
+  height = 160,
   bg = "white",
-  units = "cm"
+  units = "mm"
 )
 ggsave(
   filename = "output/figure_3.pdf",
   plot = combined_plot,
-  width = 16,
-  height = 15.25,
+  width = 173,
+  height = 160,
   bg = "white",
-  units = "cm",
+  units = "mm",
   device = cairo_pdf
 )
+
 

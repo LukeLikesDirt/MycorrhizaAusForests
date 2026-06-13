@@ -86,6 +86,7 @@ figure_2a <- aus_map +
   ) +
   facet_wrap(~ lyr, nrow = 1) +
   theme(
+    panel.grid.major = element_line(colour = "white", linewidth = 0.15),
     legend.position = "none",
     strip.text = element_text(face = "bold", size = strip_size),
     strip.background = element_blank(),
@@ -217,26 +218,26 @@ print(figure_2_final)
 ggsave(
   filename = "output/figure_2.png",
   plot = figure_2_final,
-  width = 16,
-  height = 13.5,
+  width = 173,
+  height = 144,
   bg = "white",
-  units = "cm",
+  units = "mm",
   dpi = 300
 )
 ggsave(
   filename = "output/figure_2.tif",
   plot = figure_2_final,
-  width = 16,
-  height = 13.5,
+  width = 173,
+  height = 144,
   bg = "white",
-  units = "cm"
+  units = "mm"
 )
 ggsave(
   filename = "output/figure_2.pdf",
   plot = figure_2_final,
-  width = 16,
-  height = 13.5,
+  width = 173,
+  height = 144,
   bg = "white",
-  units = "cm",
+  units = "mm",
   device = cairo_pdf
 )
