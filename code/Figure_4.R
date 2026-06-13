@@ -40,29 +40,6 @@ common_theme <- theme_minimal() +
     aspect.ratio = 1
   )
 
-# Create mycorrhizal type legend
-dummy_myco_data <- data.frame(
-  mycorrhizal_type = factor(myco_types, levels = myco_types),
-  value = 1:4
-)
-
-# Add theme if I want to use the plot as a legend
-dummy_plot_myco <- ggplot(
-  dummy_myco_data, 
-  aes(x = value, y = value, colour = mycorrhizal_type)
-) +
-  geom_point(
-    fill = alpha('lightgrey', 0.33),
-    shape = 22,
-    size = 7,
-    stroke = 1.25
-  ) +
-  scale_colour_manual(values = myco_colours, name = "Mycorrhizal\ntype") +
-  theme_void() +
-  scale_y_continuous(limits = c(0,0))
-
-legend_myco <- cowplot::get_legend(dummy_plot_myco)
-
 # Figure a: Niche overlap kernel density estimates #############################
 
 # Define plot parameters
@@ -293,147 +270,10 @@ schoeners_df_nontropical <- schoeners_env_nontropical %>%
 # Check the levels of pair_label
 print(levels(schoeners_df$pair_label))
 
-# Define thresholds
-low_thresh <- 0.2
-moderate_thresh <- 0.4
-high_thresh <- 0.6
-very_high_thresh <- 0.8
-
-# Schoener's D plot for all trees
-schoener_all <- ggplot(schoeners_df, aes(x = pair_label, y = schoeners_d, fill = type, colour = type)) +
-  geom_col(linewidth = 0.25) +
-  scale_fill_manual(values = c("Environmental" = "grey")) +
-  scale_colour_manual(values = c("Environmental" = "black")) +
-  geom_hline(yintercept = low_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = moderate_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = high_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = very_high_thresh, linetype = "dotted", color = "#de2d26") +
-  scale_y_continuous(
-    breaks = seq(0, 1, by = 0.2),
-    limits = c(0, 1)
-  ) +
-  labs(
-    x = NULL,
-    y = "Schoener's D",
-    tag = "(**b**)"
-  ) +
-  common_theme +
-  theme(
-    legend.position = "none",
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    panel.grid = element_blank()
-  )
-
-# Schoener's D plot for tropical trees
-schoener_tropical <- ggplot(schoeners_df_tropical, aes(x = pair_label, y = schoeners_d, fill = type, colour = type)) +
-  geom_col(linewidth = 0.25) +
-  scale_fill_manual(values = c("Environmental (Tropical)" = "grey")) +
-  scale_colour_manual(values = c("Environmental (Tropical)" = "black")) +
-  geom_hline(yintercept = low_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = moderate_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = high_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = very_high_thresh, linetype = "dotted", color = "#de2d26") +
-  scale_y_continuous(
-    breaks = seq(0, 1, by = 0.2),
-    limits = c(0, 1)
-  ) +
-  labs(
-    x = NULL,
-    y = NULL
-  ) +
-  common_theme +
-  theme(
-    legend.position = "none",
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    axis.title.y = element_blank(),
-    axis.text.y = element_blank(),
-    panel.grid = element_blank()
-  )
-
-# Schoener's D plot for temperate trees
-schoener_nontropical <- ggplot(schoeners_df_nontropical, aes(x = pair_label, y = schoeners_d, fill = type, colour = type)) +
-  geom_col(linewidth = 0.25) +
-  scale_fill_manual(values = c("Environmental (Nontropical)" = "grey")) +
-  scale_colour_manual(values = c("Environmental (Nontropical)" = "black")) +
-  geom_hline(yintercept = low_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = moderate_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = high_thresh, linetype = "dotted", color = "#de2d26") +
-  geom_hline(yintercept = very_high_thresh, linetype = "dotted", color = "#de2d26") +
-  scale_y_continuous(
-    breaks = seq(0, 1, by = 0.2),
-    limits = c(0, 1)
-  ) +
-  labs(
-    x = NULL,
-    y = NULL
-  ) +
-  common_theme +
-  theme(
-    legend.position = "none",
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    axis.title.y = element_blank(),
-    axis.text.y = element_blank(),
-    panel.grid = element_blank()
-  )
-
-# Join and save ################################################################
-
-figure4 <- patchwork::wrap_plots(
-  density_plots[["RC1_all_overlap"]], density_plots[["RC1_tropical_overlap"]], density_plots[["RC1_nontropical_overlap"]],
-  density_plots[["RC2_all_overlap"]], density_plots[["RC2_tropical_overlap"]], density_plots[["RC2_nontropical_overlap"]],
-  density_plots[["RC3_all_overlap"]], density_plots[["RC3_tropical_overlap"]], density_plots[["RC3_nontropical_overlap"]],
-  schoener_all, schoener_tropical, schoener_nontropical,
-  nrow = 4
-)
-
-figure4_final <- cowplot::plot_grid(
-  figure4, legend_myco, rel_widths = c(1, 0.16)
-)
-
-# Save the plot
-ggsave(
-  "output/figure_4_bar.png",
-  plot = figure4_final,
-  width = 15.5,
-  height = 20.75, 
-  bg = "white",
-  units = "cm",
-  dpi = 300
-)
-
-# Figure b: Heat map option ####################################################
+# Figure b: ####################################################################
 
 # Define the colours
 my_colors <- rev(paletteer::paletteer_c("grDevices::Spectral", 100))
-
-# Dummy data for heatmap legend
-dummy_data_schoener <- tibble(x = 1, y = 1, z = 0:1)
-
-# Create dummy plot for Schoener's D legend
-plot_schoener <- ggplot(dummy_data_schoener, aes(x, y, fill = z)) +
-  geom_tile() +
-  scale_fill_gradientn(
-    colors = my_colors,
-    name = "\nSchoener's D",
-    breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-    #labels = c("Very low", "Low", "Moderate", "High", "Very high")
-  ) +
-  theme_void() +
-  theme(
-    legend.position = "right",
-    legend.margin = margin(0, 0, 0, 0)
-  )
-
-
-# Extract legends and convert to gtables
-gt_myco <- cowplot::get_legend(dummy_plot_myco)
-gt_schoener <- ggplotGrob(plot_schoener)$grobs[[
-  which(sapply(ggplotGrob(plot_schoener)$grobs, function(x) x$name) == "guide-box")
-]]
-
-# Combine legends with controlled spacing
-legend_combined <- gridExtra::gtable_rbind(gt_myco, gt_schoener, size = "max")
-legend_combined$heights[2] <- unit(0, "pt")  # Adjust this value to control gap size
 
 # Schoener's D heatmap for all trees
 schoener_heatmap_all <- ggplot(schoeners_df, aes(x = group1, y = group2, fill = schoeners_d)) +
@@ -515,47 +355,45 @@ schoener_heatmap_nontropical <- ggplot(schoeners_df_nontropical, aes(x = group1,
   common_theme +
   theme(
     panel.grid = element_blank(),
-    legend.position = "none",
-    axis.text.y = element_blank()
+    axis.text.y = element_blank(),
+    legend.position = "none"
   )
 
 figure4 <- patchwork::wrap_plots(
   density_plots[["RC1_all_overlap"]], density_plots[["RC1_tropical_overlap"]], density_plots[["RC1_nontropical_overlap"]],
-  density_plots[["RC2_all_overlap"]], density_plots[["RC2_tropical_overlap"]], density_plots[["RC2_nontropical_overlap"]],
+  density_plots[["RC2_all_overlap"]], density_plots[["RC2_tropical_overlap"]], density_plots[["RC2_nontropical_overlap"]] + theme(legend.position = "right")+ labs(colour = "Mycorrhizal\ntype"),
   density_plots[["RC3_all_overlap"]], density_plots[["RC3_tropical_overlap"]], density_plots[["RC3_nontropical_overlap"]],
-  schoener_heatmap_all, schoener_heatmap_tropical, schoener_heatmap_nontropical,
+  schoener_heatmap_all, 
+  schoener_heatmap_tropical,
+  schoener_heatmap_nontropical + theme(legend.position = "right"),
   nrow = 4
-)
-
-figure4_final <- cowplot::plot_grid(
-  figure4, legend_combined, rel_widths = c(1, 0.18)
 )
 
 # Save the plot
 ggsave(
-  "output/figure_4_heat.png",
-  plot = figure4_final,
-  width = 15.5,
-  height = 19,   
+  "output/figure_4.png",
+  plot = figure4,
+  width = 173,
+  height = 200,   
   bg = "white",
-  units = "cm",
+  units = "mm",
   dpi = 300
 )
 ggsave(
-  "output/figure_4_heat.tif",
-  plot = figure4_final,
-  width = 15.5,
-  height = 19,   
+  "output/figure_4.tif",
+  plot = figure4,
+  width = 173,
+  height = 200,   
   bg = "white",
-  units = "cm"
+  units = "mm",
 )
 ggsave(
-  "output/figure_4_heat.pdf",
-  plot = figure4_final,
-  width = 15.5,
-  height = 19,   
+  "output/figure_4.pdf",
+  plot = figure4,
+  width = 173,
+  height = 200,   
   bg = "white",
-  units = "cm",
+  units = "mm",
   device = cairo_pdf
 )
 
