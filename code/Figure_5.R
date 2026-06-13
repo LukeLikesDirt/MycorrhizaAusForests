@@ -238,27 +238,27 @@ figure_5_final <- cowplot::plot_grid(
 ggsave(
   "output/figure_5.png",
   plot = figure_5_final,
-  width = 16,
-  height = 9.25, 
+  width = 173,
+  height = 100,
   bg = "white",
-  units = "cm",
+  units = "mm",
   dpi = 300
 )
 ggsave(
   "output/figure_5.pdf",
   plot = figure_5_final,
-  width = 16,
-  height = 9.25, 
+  width = 173,
+  height = 100,
   bg = "white",
-  units = "cm",
+  units = "mm",
   device = cairo_pdf
 )
 ggsave(
   "output/figure_5.tif",
   plot = figure_5_final,
-  width = 16,
-  height = 9.25, 
+  width = 173,
+  height = 100,
   bg = "white",
-  units = "cm"
+  units = "mm"
 )
 

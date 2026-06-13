@@ -444,24 +444,24 @@ ggplot() +
 # Save the plot
 ggsave(
   "output/figure_6.png",
-  width = 16,
-  height = 5,
-  units = "cm",
+  width = 173,
+  height = 54,
+  units = "mm",
   bg = "white",
   dpi = 300
 )
 ggsave(
   "output/figure_6.tif",
-  width = 16,
-  height = 5,
-  units = "cm",
+  width = 173,
+  height = 54,
+  units = "mm",
   bg = "white"
 )
 ggsave(
   "output/figure_6.pdf",
-  width = 16,
-  height = 5,
-  units = "cm",
+  width = 173,
+  height = 54,
+  units = "mm",
   bg = "white",
   device = cairo_pdf
   
