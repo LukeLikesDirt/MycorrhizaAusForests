@@ -103,7 +103,15 @@ figure_2a <- aus_map +
 print(figure_2a)
 
 #### 2b ####
- 
+
+# The y-axis data are log10 richness ratios, log10(focal + 1 / other + 1), which
+# is a base-10 log-odds (logit) scale. The equivalent proportion of total
+# richness is p = 10^y / (1 + 10^y), so proportions can be shown on the y-axis
+# by placing the breaks at the log-ratio positions of the desired proportions.
+# The axis stays log-scaled; only the labels change.
+proportion_to_log_ratio <- function(p) log10(p / (1 - p))
+proportion_breaks_figure_2b <- c(0.01, 0.1, 0.5, 0.9, 0.99)
+
 # Then use this in your plotting code
 figure_2b <- ggplot(
   latitude_gradient_data,
@@ -135,9 +143,9 @@ figure_2b <- ggplot(
     aes(y = relative_richness), colour = "#3366FF", linewidth = 0.5) +
   scale_y_continuous(
     limits = c(-2.25, 2),
-    breaks = c(-2, -1, 0, 1, 2),
-    # Back-transformation of the log-ratio to the original scale
-    labels = c("1:100", "1:10", "1:1", "10:1", "100:1")
+    breaks = proportion_to_log_ratio(proportion_breaks_figure_2b),
+    # Back-transformation of the log-ratio to a proportion of total richness
+    labels = scales::number(proportion_breaks_figure_2b, accuracy = 0.01)
   ) +
   # Add the coefficient annotations
   geom_text(
@@ -152,7 +160,7 @@ figure_2b <- ggplot(
   ) +
   common_theme +
   theme(strip.text = element_blank()) +
-  labs(x = "Latitude", y = "Relative richness", tag = "(**b**)") +
+  labs(x = "Latitude", y = "Relative richness (%)", tag = "(**b**)") +
   facet_wrap(~mycorrhizal_type, nrow = 1)
 
 # Display the plot

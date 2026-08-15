@@ -34,6 +34,14 @@ glimpse(relative_richness_data)
 glimpse(relative_richness_marginal_effects)
 glimpse(relative_richness_coeficients)
 
+# The y-axis data are log10 richness ratios, log10(focal + 1 / other + 1), which
+# is a base-10 log-odds (logit) scale. The equivalent proportion of total
+# richness is p = 10^y / (1 + 10^y), so proportions can be shown on the y-axis
+# by placing the breaks at the log-ratio positions of the desired proportions.
+# The axis stays log-scaled; only the labels change.
+proportion_to_log_ratio <- function(p) log10(p / (1 - p))
+proportion_breaks_figure_3 <- c(0.01, 0.1, 0.5, 0.9, 0.99)
+
 # Loop through RC1 to RC4 to create marginal effects plots
 marginal_effects_plots <- list()
 for(i in 1:3) {
@@ -113,9 +121,9 @@ for(i in 1:3) {
     ) +
     scale_y_continuous(
       limits = c(-2.25, 2),
-      breaks = c(-2, -1, 0, 1, 2),
-      # Labels on the original scale
-      labels = c("1:100", "1:10", "1:1", "10:1", "100:1")
+      breaks = proportion_to_log_ratio(proportion_breaks_figure_3),
+      # Back-transformation of the log-ratio to a proportion of total richness
+      labels = scales::number(proportion_breaks_figure_3, accuracy = 0.01)
     ) +
     scale_x_continuous(breaks = scales::pretty_breaks()) +
     labs(
@@ -153,7 +161,7 @@ for(i in 1:3) {
 # Combine the plots into a single plot
 combined_plot <- patchwork::wrap_plots(
   marginal_effects_plots[[1]],
-  marginal_effects_plots[[2]] + ylab("Relative richness"),
+  marginal_effects_plots[[2]] + ylab("Relative richness (%)"),
   marginal_effects_plots[[3]],
   nrow = 3
 )
