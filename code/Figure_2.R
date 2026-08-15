@@ -160,7 +160,7 @@ figure_2b <- ggplot(
   ) +
   common_theme +
   theme(strip.text = element_blank()) +
-  labs(x = "Latitude", y = "Relative richness (%)", tag = "(**b**)") +
+  labs(x = "Latitude", y = "Relative richness", tag = "(**b**)") +
   facet_wrap(~mycorrhizal_type, nrow = 1)
 
 # Display the plot

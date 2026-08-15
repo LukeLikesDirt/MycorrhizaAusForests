@@ -161,7 +161,7 @@ for(i in 1:3) {
 # Combine the plots into a single plot
 combined_plot <- patchwork::wrap_plots(
   marginal_effects_plots[[1]],
-  marginal_effects_plots[[2]] + ylab("Relative richness (%)"),
+  marginal_effects_plots[[2]] + ylab("Relative richness"),
   marginal_effects_plots[[3]],
   nrow = 3
 )
