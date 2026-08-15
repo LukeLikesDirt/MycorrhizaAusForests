@@ -14,7 +14,8 @@ source("code/map_australia.R")
 # Becuase the 100m x 100m raster is very big I need to mask grid cells to those
 # covered by the final 10km x 10km raster for computation efficiency.
 
-# Load the forest raster
+# Load the forest raster (downloaded in 01.Harmonise_tree_data.R, section 7a;
+# see covariates.txt: aus_for23)
 forest_rast_unmasked <- rast(
   "data/aus_forests_23/aus_for23.tif"
 )
