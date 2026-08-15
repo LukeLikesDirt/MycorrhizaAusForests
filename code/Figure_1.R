@@ -35,46 +35,22 @@ get_family_range <- function(tree_data, family_name) {
   return(range(tip_numbers))
 }
 
-# Helper function to add family strip with mycorrhizal type species distribution
+# Helper function to add the family strip and label
 add_family_strip <- function(plot_obj, tree, family_name, hjust_val, offset_text_val) {
   family_range <- get_family_range(tree, family_name)
   if(is.null(family_range) || length(family_range) != 2) return(plot_obj)
-  
-  # Get family data for mycorrhizal type breakdown
-  family_data <- data_matched[data_matched$family == family_name, ]
-  myco_counts <- table(family_data$mycorrhizal_type)
-  
+
   # Add main family label
   plot_obj <- plot_obj +
-    geom_strip(family_range[1], family_range[2], 
-               label = family_name, 
+    geom_strip(family_range[1], family_range[2],
+               label = family_name,
                color = 'black',  # Changed to black for abundance
-               hjust = hjust_val, 
-               offset.text = offset_text_val, 
-               fontsize = 4, 
-               offset = 35, 
+               hjust = hjust_val,
+               offset.text = offset_text_val,
+               fontsize = 4,
+               offset = 35,
                barsize = 0.6)
-  
-  # Add mycorrhizal type strips
-  myco_types <- names(myco_counts)[myco_counts > 0]
-  current_start <- family_range[1]
-  
-  for(myco_type in myco_types) {
-    type_count <- myco_counts[myco_type]
-    type_end <- current_start + type_count - 1
-    
-    if(type_end <= family_range[2]) {
-      plot_obj <- plot_obj +
-        geom_strip(current_start, type_end, 
-                   color = myco_colors[myco_type], 
-                   hjust = 0.5, 
-                   fontsize = 3, 
-                   barsize = 3, 
-                   offset = 70)
-    }
-    current_start <- type_end + 1
-  }
-  
+
   return(plot_obj)
 }
 
@@ -308,16 +284,16 @@ tree_plot1 <- tree_plot +
 
 # Manual positioning values with family names for easy adjustment
 family_positions <- list(
-  "Myrtaceae" = list(hjust = 1, offset_text = 60),
-  "Fabaceae" = list(hjust = 0.5, offset_text = 75),
-  "Proteaceae" = list(hjust = 0, offset_text = 55),
-  "Lauraceae" = list(hjust = 0, offset_text = 50),
-  "Sapindaceae" = list(hjust = 1, offset_text = 55),
-  "Rubiaceae" = list(hjust = 0, offset_text = 50),
-  "Rutaceae" = list(hjust = 1, offset_text = 55),
-  "Malvaceae" = list(hjust = 1, offset_text = 55),
-  "Euphorbiaceae" = list(hjust = 1, offset_text = 60),
-  "Arecaceae" = list(hjust = 0, offset_text = 52)
+  "Myrtaceae" = list(hjust = 1, offset_text = 40),
+  "Fabaceae" = list(hjust = 0.5, offset_text = 55),
+  "Proteaceae" = list(hjust = 0, offset_text = 35),
+  "Lauraceae" = list(hjust = 0, offset_text = 30),
+  "Sapindaceae" = list(hjust = 1, offset_text = 35),
+  "Rubiaceae" = list(hjust = 0, offset_text = 30),
+  "Rutaceae" = list(hjust = 1, offset_text = 35),
+  "Malvaceae" = list(hjust = 1, offset_text = 35),
+  "Euphorbiaceae" = list(hjust = 1, offset_text = 40),
+  "Arecaceae" = list(hjust = 0, offset_text = 32)
 )
 
 # Add family strips for top families
@@ -391,3 +367,4 @@ ggsave(
   bg = "white",
   device = cairo_pdf
 )
+
