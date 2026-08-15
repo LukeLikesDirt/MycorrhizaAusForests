@@ -11,9 +11,7 @@
 #       (4c) Retain most recent survey
 #       (4d) Generate abundance dataset
 #       (4e) Generate presence dataset
-#   (5) Harmonise GRIIS and the Australian Plant Census
-#       (5a) Harmonise GRIIS
-#       (5b) Harmonise the Australian Plant Census (APC)
+#   (5) Harmonise the Australian Plant Census (APC)
 #   (6) Download and harmonise GBIF
 #       (6a) Clean GBIF occurrences
 #       (6b) Harmonise GBIF tree list
@@ -960,136 +958,7 @@ harmonised_tree_list_native %>%
 rm(list = ls())
 gc()
 
-# (5) Harmonise GRIIS and the Australian Plant Census ##########################
-
-#### (5a) Harmonise the Global Register of Introduced and Invasive Species (GRIIS) ####
-
-# Read in the WFO datasets
-WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
-WFO_genus <- fread("data/WorldFloraOnline/WFO_genus.txt")
-
-# Download the GRIIS dataset:
-dir.create("data/GRIIS")
-URL = "https://cloud.gbif.org/griis/archive.do?r=griis-australia&v=1.10"
-destfile <- "data/GRIIS/dwca-griis-australia-v1.10.zip"
-download.file(URL, destfile)
-
-# Unzip the download
-unzip(destfile, exdir = "data/GRIIS/")
-
-# Remove the zip file
-file.remove(destfile)
-
-# Read in the database:
-griis_database <- fread(
-  "data/GRIIS/taxon.txt"
-) %>%
-  filter(
-    kingdom == "Plantae",
-    taxonRank %in% c("SPECIES", "SUBSPECIES", "VARIETY")
-    ) %>%
-  select(species_original = scientificName) %>%
-  mutate(
-    # Handle hybrids
-    species_original = gsub(" x ", " ×", species_original),
-    # Remove 'subspecies' and 'variety' annotations by extracting the first two
-    # words from species names
-    species_original = map_chr(
-      str_split(species_original, "\\s+"),
-      ~ paste(head(.x, 2), collapse = " ")
-    )
-  ) %>%
-  distinct(species_original, .keep_all = TRUE) %>%
-  as.data.frame() %>%
-  glimpse()
-
-# Match species
-griis_species_WFO <- WFO.one(
-  WFO.match.fuzzyjoin(
-    spec.data = griis_database,
-    WFO.data = WFO_species,
-    spec.name = "species_original"
-  ),
-  verbose = FALSE
-) %>%
-  glimpse()
-
-# Check matching
-griis_species_WFO %>%
-  filter(Matched == TRUE & Fuzzy == FALSE) %>%
-  nrow()
-griis_species_WFO %>%
-  filter(Matched == TRUE & Fuzzy == TRUE) %>%
-  select(species_original, Fuzzy.dist, scientificName, Old.name) %>%
-  as_tibble() %>%
-  print(n = Inf)
-griis_species_WFO %>%
-  filter(Matched == "FALSE") %>%
-  select(species_original) %>%
-  as_tibble() %>%
-  print(n = Inf)
-
-# Harmonised tree list
-griis_tree_list <- griis_species_WFO %>%
-  select(family, genus, scientific_name = scientificName) %>%
-  # Make amendments consistent with GlobalTreeSearch
-  # Extract species epithet from original scientific name
-  mutate(species_epithet = word(scientific_name, 2)) %>%
-  # Resolve genus names for unaccepted genera and synonym genera
-  mutate(
-    genus = case_when(
-      genus == "Afromorus" ~ "Morus",
-      genus == "Archidasyphyllum" ~ "Dasyphyllum",
-      genus == "Ceodes" ~ "Pisonia",
-      genus == "Lychnophorella" ~ "Lychnophora",
-      genus == "Macrolearia" ~ "Olearia",
-      genus == "Ardisia" & family == "Ericaceae" ~ "Leptecophylla",
-      genus == "Esenbeckia" & family == "Ptychomniaceae" ~ "Garovaglia",
-      genus == "Schizocalyx" & family == "Salvadoraceae" ~ "Dobera",
-      genus == "Spiranthera" & family == "Pittosporaceae" ~ "Billardiera",
-      genus == "Volkameria" & family == "Clethraceae" ~ "Clethra",
-      TRUE ~ genus
-    ),
-    # Reconstruct full scientific name with updated genus
-    scientific_name = paste(genus, species_epithet),
-    # Add family information for genera with missing family
-    family = case_when(
-      genus == "Morus" ~ "Moraceae",
-      genus == "Dasyphyllum" ~ "Asteraceae",
-      genus == "Hoffmannanthus" ~ "Asteraceae",
-      genus == "Lachanodes" ~ "Asteraceae",
-      genus == "Leptogonum" ~ "Polygonaceae",
-      genus == "Lundinia" ~ "Asteraceae",
-      genus == "Lychnophora" ~ "Asteraceae",
-      genus == "Niemeyera" ~ "Sapotaceae",
-      genus == "Olearia" ~ "Asteraceae",
-      genus == "Maschalostachys" ~ "Asteraceae",
-      genus == "Melanodendron" ~ "Asteraceae",
-      genus == "Nahuatlea" ~ "Asteraceae",
-      genus == "Neoarytera" ~ "Sapindaceae",
-      genus == "Nototrichium" ~ "Amaranthaceae",
-      genus == "Pladaroxylon" ~ "Asteraceae",
-      genus == "Rockia" ~ "Nyctaginaceae",
-      genus == "Scyphostegia" ~ "Salicaceae",
-      TRUE ~ family
-    )
-  ) %>%
-  unique(.) %>%
-  inner_join(
-    fread("generated_data/global_tree_mycorrhizal_types.txt") %>%
-      select("scientific_name"),
-    by = c("scientific_name")
-  )
-
-# Save the harmonised GRIIS tree list
-griis_tree_list %>%
-  fwrite("data/GRIIS/harmonised_griis_tree_list.txt", sep = "\t")
-
-# Remove all objects from the global environment and free unused memory
-rm(list = ls())
-gc()
-
-#### (5b) Harmonise the Australian Plant Census (APC) ####
+# (5) Harmonise the Australian Plant Census (APC) ##############################
 
 # The Australian Plant Census (APC) has no stable direct-download URL, so this
 # step is manual. Export the current taxon checklist from the Australian
@@ -1211,10 +1080,12 @@ apc_tree_database <- apc_database_WFO_combined %>%
   ) %>%
   select(family, genus, scientific_name) %>%
   filter(
-    # Keep tree species only
-    scientific_name %in% fread("generated_data/global_tree_mycorrhizal_types.txt")$scientific_name,
-    # Remove non-native species
-    !scientific_name %in% fread("data/GRIIS/harmonised_griis_tree_list.txt")$scientific_name
+    # Keep native Australian tree species only, according to GlobalTreeSearch
+    scientific_name %in% (
+      fread("generated_data/global_tree_mycorrhizal_types.txt") %>%
+        filter(native_status == "native") %>%
+        pull(scientific_name)
+    )
   ) %>%
   unique(.)
 
