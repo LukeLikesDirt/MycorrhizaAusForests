@@ -9,8 +9,8 @@ title_size <- 10
 text_size <- 8
 
 # Load the data
-load("output/generated_data/figure_2b.RData")
-load("output/supplimentary_absolute_richness/main_figure_b.RData")
+load("generated_data/figure_2b.RData")
+load("generated_data/figure_S8b.RData")
 
 # Compute max log10(upper richness) for log-transformed scaling for absolute richness
 absolute_max <- max(latitude_gradient_marginal_effects_abs$upper)

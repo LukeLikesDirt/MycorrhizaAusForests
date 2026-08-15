@@ -19,8 +19,8 @@ source("code/fast.phylo.eigenvector.select.R")
 
 # Load in niche data: Data prepared in "05a.Species_niche_breadth_differences.R"
 # and "05b.Species_niche_position_differences.R"
-load("output/generated_data/figure_4.RData")
-load("output/generated_data/figure_5.RData")
+load("generated_data/figure_4.RData")
+load("generated_data/figure_5.RData")
 
 # Phylogenetic lists
 pem_list <- list(

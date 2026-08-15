@@ -1,7 +1,8 @@
 require(data.table)
 require(dplyr)
 
-fread("output/generated_data/australian_tree_mycorrhizal_types.txt") %>%
+fread("generated_data/global_tree_mycorrhizal_types.txt") %>%
+  filter(native_status == "native") %>%
   filter(mycorrhizal_type == "NM") %>%
   group_by(family) %>%
   summarise(n = n())
@@ -14,7 +15,8 @@ fread("data/presence/trees_10.txt") %>%
     
 # Trees in our data ############################################################
 
-trees<-fread("output/generated_data/australian_tree_mycorrhizal_types.txt") %>%
+trees<-fread("generated_data/global_tree_mycorrhizal_types.txt") %>%
+  filter(native_status == "native") %>%
   filter(family == "Proteaceae") %>%
   filter(
     family == "Proteaceae",
@@ -76,10 +78,6 @@ trees %>%
   group_by(vegetation_type) %>%
   summarise(n = n()) %>%
   print(n = Inf)
-
-# Trees in the Australian flora ################################################
-
-trees <- fread("output/generated_data/plants_10.txt")
 
 # Plants in the Australian flora ###############################################
 
