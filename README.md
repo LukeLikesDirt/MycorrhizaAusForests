@@ -5,35 +5,37 @@ This repository holds code and data associated to the manuscript:
 [**Environmental Niches in Dual-mycorrhizal and Non-mycorrhizal Australian Forest Trees**]()
 
 **Authors:**
-Luke Florence<sup>1</sup>, John W. Morgan<sup>1</sup>, Peter A. Vesk<sup>2</sup>, Jen L. Wood<sup>3</sup>, Camille Truong<sup>4</sup>
+Luke Florence<sup>1</sup>, John W. Morgan<sup>1</sup>, Peter A. Vesk<sup>2</sup>, Jen L. Wood<sup>3</sup>, Camille Truong<sup>4,5</sup>
 
 **Affiliations:**
-1. Department of Environment and Genetics, La Trobe University, Bundoora, Victoria, Australia. 
+1. Department of Ecological, Plant and Animal Sciences, La Trobe University, Bundoora, Victoria, Australia. 
 2. School of Agriculture, Food and Ecosystem Sciences, University of Melbourne, Parkville, Victoria, Australia. 
 3. Department of Department of Microbiology, Anatomy, Physiology and Pharmacology, La Trobe University, Bundoora, Victoria, Australia. 
 4. Royal Botanic Gardens Victoria, Melbourne, Victoria, Australia.
+5. School of BioSciences, University of Melbourne, Parkville, Victoria, Australia.
 
 Corresponding author: Luke Florence (L.Florence@latrobe.edu.au) 
 
 ## Repository contents
 
-* `./code/` — All R scripts required to reproduce the analysis: raw-data acquisition, data preparation, statistical modelling, and figure/table generation.
-* `./generated_data/` — The processed datasets needed to reproduce every figure and table without acquiring or reprocessing raw data (see "Reproducing the analysis" below).
+* `./code/` — All R scripts required to reproduce the analysis: raw-data acquisition, data preparation, statistical/spatial modelling, and figure/table generation.
+* `./generated_data/` — The processed datasets needed to reproduce every figure in the main text without acquiring or reprocessing raw data (see "Reproducing the analysis" below).
 * `./envs/` — Conda environment set-up scripts for the species distribution modelling step, which is computationally intensive (approximately two days on 12 cores).
 * `./covariates.txt` — A mapping of covariate names to their sources, descriptions and access routes.
+* `./plant_data.txt` — A mapping of plant database names to their sources, descriptions and access routes.
 
 ### Raw data is not included
 
-This repository and its Figshare deposit do **not** include the raw data (occurrence records, taxonomic checklists, or covariate rasters, including georeferenced predictors such as the national forest-cover raster and bioregion boundary layers). `data/` is excluded from version control (see `.gitignore`) and is not part of the Figshare deposit. There are two reasons:
+This repository and its Figshare deposit do not include the raw data (occurrence records, taxonomic checklists, or covariate rasters, including georeferenced predictors such as the national forest-cover raster and bioregion boundary layers). `data/` is excluded from version control and is not part of the Figshare deposit due to size and in some cases terms-of-use restrictions:
 
-1. **Size.** The raw inputs total roughly 6 GB once fully acquired — the national forest-cover raster alone is close to 4 GB — versus around 130 MB for `generated_data/`. This far exceeds what is practical to version-control or host as a supplementary deposit.
-2. **Redistribution terms.** Some raw sources are openly licensed and could in principle be redistributed (e.g. the Harmonised Australian Vegetation Plot dataset and Forests of Australia (2023) are both CC BY 4.0). Others — including the GBIF occurrence download and BGCI's GlobalTreeSearch — are aggregated or terms-of-use-restricted third-party products that we have not confirmed we can redistribute in bulk, and several are living datasets that are updated over time, so re-downloading from the primary source is also how you get the current version rather than a stale mirror. Rather than apply different handling per source, no raw data is bundled; `01.Harmonise_tree_data.R` and the other raw-data scripts listed below acquire it directly from source. Licences and access routes for every covariate are listed in `covariates.txt`.
+1. **Size.** The raw inputs total over 100 GB (versus around 130 MB for `generated_data/`), exceeding what is practical to version-control or host as a supplementary deposit.
+2. **Redistribution terms.** Some raw sources are openly licensed and could in principle be redistributed (e.g. the Harmonised Australian Vegetation Plot dataset and Forests of Australia (2023) are both CC BY 4.0). Others — including the GBIF occurrence download and BGCI's GlobalTreeSearch — are aggregated or terms-of-use-restricted third-party products that we have not confirmed we can redistribute in bulk. Rather than apply different handling per source, no raw data is provided; `01.Harmonise_tree_data.R` and the other raw-data scripts listed below acquire it directly from source. Licences and access routes for every covariate are listed in `covariates.txt` and plant database in `./plant_data.txt`.
 
 ## Reproducing the analysis
 
-There are two ways to use this repository, depending on whether you need to regenerate the processed datasets or only the figures and tables built from them.
+There are two ways to use this repository, depending on whether you need to regenerate the processed datasets or only primary figures.
 
-### Path A — figures and tables from the generated data (fast, no raw data required)
+### Path A — primnary figures from the generated data
 
 Every script listed as `TRUE` in the "Generated data only" column of the Outputs table below reads exclusively from `generated_data/` (and, for context/colour scales, `covariates.txt`). Clone the repository and run the relevant script directly.
 
@@ -51,8 +53,6 @@ Reproducing `generated_data/` itself, or anything marked `FALSE` below, means ac
 8. **`05a.Species_niche_breadth_differences.R`, `05b.Species_niche_position_differences.R`** — Niche breadth and position analyses. Produce `generated_data/figure_4.RData` and `figure_5.RData`, plus Tables S3–S7.
 9. **`06a.Sensetivity_relative_richness.R`** — Sensitivity analysis run directly on raw presence data (Figs. S14–S16).
 10. **`07a.Generate_emperical_dataset.R` → `07b.Prepare_emperical_prediction_grids.R` → `07c.Relative_richness_emperical.R` → `07d.Niche_breadth_differences_emperical.R`** — The empirical pathway, using measured rather than genus-inferred mycorrhizal types. Produces Table S8 and Dataset S2.
-
-Once these have run, every script in the Outputs table — including those marked `TRUE`, which will now also work from a freshly rebuilt `generated_data/` — can be used to regenerate the figures and tables.
 
 ## Outputs
 To reproduce the outputs of this project, see the following scripts. "Generated data only" indicates whether the script reads exclusively from `generated_data/` (`TRUE`), or additionally requires raw data acquired via Path B above (`FALSE`).
