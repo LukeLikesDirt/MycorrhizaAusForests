@@ -81,6 +81,12 @@ trees %>%
 
 # Plants in the Australian flora ###############################################
 
+# Unlike `trees` above, this is not filtered to native_status == "native" --
+# harmonised_apc_flora_list.txt carries no such field (see the comment where
+# it's written in 01.Harmonise_tree_data.R). If it turns out to include
+# naturalised/introduced Proteaceae, the shrubs <- anti_join(plants, trees, ...)
+# below will count any such species as a "shrub" regardless of its actual
+# growth form, since it won't match anything in the native-only `trees` set.
 plants <- fread("data/APC/harmonised_apc_flora_list.txt") %>%
   filter(
     family == "Proteaceae",

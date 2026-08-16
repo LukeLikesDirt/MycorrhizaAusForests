@@ -542,9 +542,12 @@ fungal_root_genus %>%
 # Unique mycorrhizal types:
 unique(fungal_root_genus$mycorrhizal_type)
 
-# Read in the database for Australian trees, downloaded from:
-# https://tools.bgci.org/global_tree_search.php
-# Read in the database for Australian trees
+# Read in the database for Australian trees. Unlike the global export above,
+# GlobalTreeSearch has no direct-download URL for a country-filtered list, so
+# this is a manual step: go to https://tools.bgci.org/global_tree_search.php,
+# filter to Australia, and save the export to the path below. This file is
+# the sole source of the native_status field used throughout the rest of
+# this pipeline, so getting the current export matters.
 australian_tree_database <- fread(
   "data/GlobalTreeSearch/global_tree_search_trees_1_9_australia.csv",
   header = TRUE
@@ -1089,7 +1092,14 @@ apc_tree_database <- apc_database_WFO_combined %>%
   ) %>%
   unique(.)
 
-# Save the harmonised APC flora and tree list
+# Save the harmonised APC flora and tree list.
+# Note: harmonised_apc_flora_list.txt carries no native/naturalised status --
+# the APC csv columns kept above (family, genus, scientific_name) don't
+# include one. Figure_S20.R uses this file for its full-flora "plants" object
+# without a native filter, while its tree-only "trees" object is filtered to
+# native_status == "native" via global_tree_mycorrhizal_types.txt. If the raw
+# APC export has a status/nativeness column, add a matching filter here (or
+# in Figure_S20.R) so the two populations being compared are consistent.
 apc_database_WFO_combined %>%
   select(family, genus, scientific_name = scientificName) %>%
   unique(.) %>%
@@ -1105,7 +1115,19 @@ gc()
 
 #### (6a) Clean GBIF occurrences ####
 
-# Download the GBIF dataset used in this analysis: https://doi.org/10.15468/DL.ATKQFB
+# Two manual inputs are required here; neither is downloaded automatically:
+# - data/gbif/0071622-250525065834625.csv: the raw occurrence export for this
+#   GBIF download, cited at https://doi.org/10.15468/DL.ATKQFB. Re-download
+#   from that DOI (or run a fresh GBIF occurrence search under the same
+#   filters) to reproduce or update this file.
+# - data/gbif/normalized.csv: the Australian native tree checklist matched
+#   against the GBIF backbone taxonomy, providing the "species" column used
+#   to filter the raw download below. How the shipped copy was produced is
+#   not recorded in this script -- likely GBIF's species-match tool
+#   (https://www.gbif.org/tools/species-lookup) or the rgbif package's
+#   name_backbone_checklist() run against the native tree species list from
+#   generated_data/global_tree_mycorrhizal_types.txt, but this needs
+#   confirming rather than assumed.
 
 # Target species: Australian native tree species normalised to GBIF backbone
 aus_tree_species <- fread("data/gbif/normalized.csv")$species
