@@ -28,7 +28,7 @@ Corresponding author: Luke Florence (L.Florence@latrobe.edu.au)
 
 This repository and its Figshare deposit do not include the raw data (occurrence records, taxonomic checklists, or covariate rasters, including georeferenced predictors such as the national forest-cover raster and bioregion boundary layers). `data/` is excluded from version control and is not part of the Figshare deposit due to size and in some cases terms-of-use restrictions:
 
-1. **Size.** The raw inputs total over 100 GB (versus around 130 MB for `generated_data/`), exceeding what is practical to version-control or host as a supplementary deposit.
+1. **Size.** The raw inputs total around 84 GB (versus around 130 MB for `generated_data/`): roughly 6 GB of occurrence, taxonomic and forest-cover data acquired by `01.Harmonise_tree_data.R`, plus around 78 GB of covariate rasters at native resolution read by `02a.Upscale_predictor_rasters.R` (bioclim, soil, elevation, vegetation and habitat-condition layers), before they are masked and upscaled to the 10 km grid used in the analysis. This exceeds what is practical to version-control or host as a supplementary deposit.
 2. **Redistribution terms.** Some raw sources are openly licensed and could in principle be redistributed (e.g. the Harmonised Australian Vegetation Plot dataset and Forests of Australia (2023) are both CC BY 4.0). Others — including the GBIF occurrence download and BGCI's GlobalTreeSearch — are aggregated or terms-of-use-restricted third-party products that we have not confirmed we can redistribute in bulk. Rather than apply different handling per source, no raw data is provided; `01.Harmonise_tree_data.R` and the other raw-data scripts listed below acquire it directly from source. Licences and access routes for every covariate are listed in `covariates.txt` and plant database in `./plant_data.txt`.
 
 ## Reproducing the analysis
@@ -43,7 +43,10 @@ Every script listed as `TRUE` in the "Generated data only" column of the Outputs
 
 Reproducing `generated_data/` itself, or anything marked `FALSE` below, means acquiring the raw data first. Run the following in order; each stage's output feeds the next.
 
-1. **`01.Harmonise_tree_data.R`** — Downloads and harmonises the World Flora Online backbone, FungalRoot, GlobalTreeSearch, HAVPlot and GBIF, then builds the tree-occurrence dataset and `generated_data/global_tree_mycorrhizal_types.txt`. The Australian Plant Census (APC) step requires a manual export (see the script's inline instructions) because the APC has no stable direct-download URL.
+1. **`01.Harmonise_tree_data.R`** — Downloads and harmonises the World Flora Online backbone, FungalRoot, GlobalTreeSearch, HAVPlot, the Australian Plant Census (APC) and GBIF, then builds the tree-occurrence dataset and `generated_data/global_tree_mycorrhizal_types.txt`. Three sources have no stable direct-download URL and require a manual step (see each section's inline instructions):
+   - The APC export.
+   - GlobalTreeSearch's Australia-filtered species list (`global_tree_search_trees_1_9_australia.csv`) — the global list downloads automatically, but the Australia-only export has to be produced from BGCI's web tool. This file is the sole source of the `native_status` field used throughout the rest of the pipeline.
+   - The GBIF occurrence download itself (`data/gbif/0071622-*.csv`) and its GBIF-backbone-matched species list (`data/gbif/normalized.csv`) — the script cites the download's DOI but does not fetch it automatically.
 2. **`build_phylogenetic_tree.R`** — Builds `generated_data/phylo_tree_mycorrhizal_types.tre` from (1)'s output. Required by `05a`, `05b`, `07d` and `Figure_1.R`.
 3. **`02a.Upscale_predictor_rasters.R`** — Downloads and upscales the forest-cover raster and climate/soil covariate rasters.
 4. **`02b.Prepare_prediction_grids.R`** — Builds the 10 km prediction grid and site-level presence data. Produces Figs. S2–S4 and Table S1.
@@ -53,6 +56,7 @@ Reproducing `generated_data/` itself, or anything marked `FALSE` below, means ac
 8. **`05a.Species_niche_breadth_differences.R`, `05b.Species_niche_position_differences.R`** — Niche breadth and position analyses. Produce `generated_data/figure_4.RData` and `figure_5.RData`, plus Tables S3–S7.
 9. **`06a.Sensetivity_relative_richness.R`** — Sensitivity analysis run directly on raw presence data (Figs. S14–S16).
 10. **`07a.Generate_emperical_dataset.R` → `07b.Prepare_emperical_prediction_grids.R` → `07c.Relative_richness_emperical.R` → `07d.Niche_breadth_differences_emperical.R`** — The empirical pathway, using measured rather than genus-inferred mycorrhizal types. Produces Table S8 and Dataset S2.
+11. **`08_Mid-domain_null_models.R`** — Fits the observed latitude-breadth models and runs the 1,000-simulation mid-domain-effect null model, in parallel across mycorrhizal types. Only needs `generated_data/niche_estimates.txt` (stage 6's output), so it can run any time after that. Produces `generated_data/figure_6.RData`; `Figure_6.R` reads that directly and does not run any modelling itself.
 
 ## Outputs
 To reproduce the outputs of this project, see the following scripts. "Generated data only" indicates whether the script reads exclusively from `generated_data/` (`TRUE`), or additionally requires raw data acquired via Path B above (`FALSE`).
