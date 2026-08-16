@@ -4,7 +4,7 @@ require(ggtext)
 require(tidyverse)
 
 # Load the data
-load('generated_data/figure_5_emperical.RData')
+load('generated_data/figure_5_empirical.RData')
 
 # Access effect results
 density_effect_all <- env_breadth_results[["all"]]$effect$density

@@ -27,7 +27,7 @@ common_theme <- theme_minimal() +
 # Figure 3 #####################################################################
 
 # Load the data:
-load("generated_data/figure_3_emperical.RData")
+load("generated_data/figure_3_empirical.RData")
 
 # Take a glimpse of the data
 glimpse(relative_richness_data)

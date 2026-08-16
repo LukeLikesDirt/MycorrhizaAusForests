@@ -1,7 +1,7 @@
 
 # Build the phylogenetic tree of Australian native tree species, used for
 # phylogenetic eigenvector predictors in 05a.Species_niche_breadth_differences.R,
-# 05b.Species_niche_position_differences.R, 07d.Niche_breadth_differences_emperical.R,
+# 05b.Species_niche_position_differences.R, 07d.Niche_breadth_differences_empirical.R,
 # and to draw the tree in Figure_1.R.
 # Run this after 01.Harmonise_tree_data.R (it reads that script's output) and
 # before any of the four scripts above.

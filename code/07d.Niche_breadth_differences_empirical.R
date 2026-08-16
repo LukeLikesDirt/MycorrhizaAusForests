@@ -18,7 +18,7 @@ response_vars <- c(
 
 # Read in the data
 data <- data.table::fread(
-  "data/mycorrhizal_type_emperical/niche_estimates_emperical.txt"
+  "data/mycorrhizal_type_empirical/niche_estimates_empirical.txt"
 ) %>%
   filter(mycorrhizal_type != "ErM") %>%
   mutate(
@@ -780,6 +780,6 @@ save(
   pem_model_params_breadth,
   pairwise_results_breadth,
   
-  file = "generated_data/figure_5_emperical.RData"
+  file = "generated_data/figure_5_empirical.RData"
 )
 

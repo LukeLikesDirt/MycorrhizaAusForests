@@ -1011,12 +1011,12 @@ calculate_mycorrhiza_polygon <- function(niche_space_mycorrhizas) {
 # # # !!! With uncertany intervals !!!
 # # calculate_tree_niche <- function(variable) {
 # #   # Read in the fitted means (i.e. niche optimum)
-# #   fitted_mean <- fread(paste0("output/supplimentary_niche/coefficient_", variable, "_position.csv")) %>%
+# #   fitted_mean <- fread(paste0("output/supplementary_niche/coefficient_", variable, "_position.csv")) %>%
 # #     slice(1) %>%
 # #     select(mean, lower_ci_mean = "0.025quant", upper_ci_mean = "0.975quant")
 # #   
 # #   # Read in the fitted SD (i.e. the niche width)
-# #   fitted_sd <- fread(paste0("output/supplimentary_niche/coefficient_", variable, "_breadth.csv")) %>%
+# #   fitted_sd <- fread(paste0("output/supplementary_niche/coefficient_", variable, "_breadth.csv")) %>%
 # #     slice(1) %>%
 # #     select(sd = mean, lower_ci_sd = "0.025quant", upper_ci_sd = "0.975quant")
 # #   

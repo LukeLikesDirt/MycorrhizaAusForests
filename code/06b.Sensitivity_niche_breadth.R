@@ -623,7 +623,7 @@ for (i in 1:length(subset_names)) {
   combined_plot <- create_sensitivity_panel(subset_name)
   print(combined_plot)
   ggsave(
-    filename = paste0("output/supplimentary_niche/sensitivity_analysis_", subset_name, ".png"),
+    filename = paste0("output/supplementary_niche/sensitivity_analysis_", subset_name, ".png"),
     plot = combined_plot,
     width = 14,
     height = 21,

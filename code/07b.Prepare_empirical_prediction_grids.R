@@ -16,9 +16,9 @@ trees <- data.table::fread(
       TRUE ~ mycorrhizal_type
     )
   ) %>%
-  # Filter to trees in the emperical dataset
+  # Filter to trees in the empirical dataset
   filter(scientific_name %in% fread(
-    "generated_data/emperical_mycorrhizal_type.txt")$species
+    "generated_data/empirical_mycorrhizal_type.txt")$species
     )
 
 # Load the site data

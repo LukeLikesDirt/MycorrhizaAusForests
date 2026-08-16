@@ -1587,7 +1587,7 @@ supplementary_plots <- patchwork::wrap_plots(
 
 # Save the supplementary plots
 ggsave(
-  filename = "output/figure_S5_emperical.png",
+  filename = "output/figure_S5_empirical.png",
   plot = supplementary_plots,
   width = 22,
   height = 26,
@@ -1631,7 +1631,7 @@ writeRaster(
     `EcM-AM` = standardised_rast_EcM_AM,
     NM = standardised_rast_NM)),
   overwrite = TRUE,
-  filename = "generated_data/figure_2a_emperical.tif"
+  filename = "generated_data/figure_2a_empirical.tif"
 )
 
 # Save data for figure 2c
@@ -1640,7 +1640,7 @@ data_figure_2c_limits <- min_max_limits
 save(
   data_figure_2c,
   data_figure_2c_limits,
-  file = "generated_data/figure_2c_emperical.RData"
+  file = "generated_data/figure_2c_empirical.RData"
 )
 
 # Organise and save the data for figure 3
@@ -1695,7 +1695,7 @@ save(
   relative_richness_data,
   relative_richness_marginal_effects,
   relative_richness_coeficients,
-  file = "generated_data/figure_3_emperical.RData"
+  file = "generated_data/figure_3_empirical.RData"
 )
 
 # Save the model coefficients
@@ -1731,6 +1731,6 @@ map_dfr(model_names, function(model_name) {
     select(parameter, median, quantiles, mycorrhizal_type)
 }) %>%
   data.table::fwrite(
-    "output/table_S2_emperical.txt",
+    "output/table_S2_empirical.txt",
     sep = "\t"
   )

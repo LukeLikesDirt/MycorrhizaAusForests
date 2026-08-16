@@ -28,7 +28,7 @@ native_species <- fread("generated_data/global_tree_mycorrhizal_types.txt") %>%
 length(native_species) # Check number of native species in dataset
 
 # Load fungal root data and filter to native species only
-fungal_root_emp <- fread("generated_data/emperical_measurments.txt") %>%
+fungal_root_emp <- fread("generated_data/empirical_measurements.txt") %>%
   filter(
     # Ensure only native species
     species %in% native_species,
@@ -404,12 +404,12 @@ genus_comparison <- genus_consensus %>%
 # Save the data
 fwrite(
   fungal_root_curated, 
-  "generated_data/emperical_mycorrhizal_type.txt",
+  "generated_data/empirical_mycorrhizal_type.txt",
   sep = "\t"
 )
 fwrite(
   fungal_root_curated_env, 
-  "generated_data/emperical_niche_estimates.txt",
+  "generated_data/empirical_niche_estimates.txt",
   sep = "\t"
 )
 fwrite(
@@ -432,6 +432,6 @@ fwrite(
       consensus_mycorrhizal_type = recode(consensus_mycorrhizal_type, "EcM-AM" = "Dual"),
       fungal_root_mycorrhizal_type = recode(fungal_root_mycorrhizal_type, "EcM-AM" = "Dual")
     ),
-  "generated_data/emperical_genus_consensus.txt",
+  "generated_data/empirical_genus_consensus.txt",
   sep = "\t"
 )
