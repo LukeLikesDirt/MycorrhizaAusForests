@@ -81,14 +81,17 @@ trees %>%
 
 # Plants in the Australian flora ###############################################
 
-# Unlike `trees` above, this is not filtered to native_status == "native" --
-# harmonised_apc_flora_list.txt carries no such field (see the comment where
-# it's written in 01.Harmonise_tree_data.R). If it turns out to include
-# naturalised/introduced Proteaceae, the shrubs <- anti_join(plants, trees, ...)
-# below will count any such species as a "shrub" regardless of its actual
-# growth form, since it won't match anything in the native-only `trees` set.
+# Filtered to native_status == "native" so this matches the population `trees`
+# uses above, now that harmonised_apc_flora_list.txt carries that field
+# (derived from the APC's taxonDistribution; see 01.Harmonise_tree_data.R).
+# The manual genus exclusions below predate that field and target the same
+# problem by hand (Protea and Serruria are South African, Knightia is from
+# New Zealand, Brabejum/Embothrium/Roupala are South American, Kermadecia/
+# Finschia are New Caledonian) -- kept as a belt-and-braces check alongside
+# the systematic filter rather than removed.
 plants <- fread("data/APC/harmonised_apc_flora_list.txt") %>%
   filter(
+    native_status == "native",
     family == "Proteaceae",
     genus != "Protea",
     genus != "Knightia",
@@ -278,7 +281,7 @@ print(combined_plot)
 
 # Save the combined plot
 ggsave(
-  filename = "output/suplimentary_proteaceae/figure.png",
+  filename = "output/supplementary_proteaceae/figure.png",
   plot = combined_plot,
   width = 16,
   height = 10,

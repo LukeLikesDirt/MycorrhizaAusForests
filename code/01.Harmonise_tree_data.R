@@ -220,7 +220,7 @@ fungal_root_occurrences_WFO %>%
   fwrite("data/FungalRoot/harmonised_occurrences.txt", sep = "\t")
 
 # Fungal root measurements
-fungal_root_measurments <- inner_join(
+fungal_root_measurements <- inner_join(
   fread("data/FungalRoot/occurrences.csv") %>%
     filter(taxonRank %in% c("Variety", "Subspecies", "Species")) %>%
     select(ID, family,	genus, scientificName),
@@ -271,13 +271,13 @@ fungal_root_measurments <- inner_join(
   glimpse()
 
 # Species list
-species_list <- fungal_root_measurments %>%
+species_list <- fungal_root_measurements %>%
   select(species_original) %>%
   distinct() %>%
   glimpse()
 
 # Match the GlobalTreeSearch to WFO
-fungal_root_measurments_WFO <- WFO.one(
+fungal_root_measurements_WFO <- WFO.one(
   WFO.match.fuzzyjoin(
     spec.data = species_list,
     WFO.data = WFO_species,
@@ -287,28 +287,28 @@ fungal_root_measurments_WFO <- WFO.one(
   glimpse()
 
 # Direct matches: 13,566 out of 13,770
-fungal_root_measurments_WFO %>%
+fungal_root_measurements_WFO %>%
   filter(Matched == TRUE & Fuzzy == FALSE) %>%
   nrow()
 
 # Fuzzy matches: 192 out of 13,770
-fungal_root_measurments_WFO %>%
+fungal_root_measurements_WFO %>%
   filter(Matched == TRUE & Fuzzy == TRUE) %>%
   select(species_original, Fuzzy.dist, scientificName, Old.name) %>%
   as_tibble() %>%
   print(n = Inf)
 
 # Unmatched
-fungal_root_measurments_WFO %>%
+fungal_root_measurements_WFO %>%
   filter(Matched == "FALSE") %>%
   select(species_original)
 
 # Save the harmonised GlobalTreeSearch database
-fungal_root_measurments_WFO %>%
+fungal_root_measurements_WFO %>%
   # Remove the unmatched species
   filter(Matched == TRUE) %>%
   left_join(
-    fungal_root_measurments %>%
+    fungal_root_measurements %>%
       select(ID, species_original, mycorrhizal_type),
     by = "species_original"
   ) %>%
@@ -974,6 +974,38 @@ gc()
 WFO_species <- fread("data/WorldFloraOnline/WFO_species.txt")
 WFO_genus <- fread("data/WorldFloraOnline/WFO_genus.txt")
 
+# The APC has no clean native/naturalised column. Distribution is recorded as
+# free text in taxonDistribution, e.g. "WA (naturalised), Qld, NSW" or
+# "NSW (native and naturalised)" -- one entry per state/territory, with an
+# optional parenthetical qualifier where the species isn't simply native
+# there. taxonDistribution is only ever populated on taxonomicStatus ==
+# "accepted" rows (verified against the full export: every synonym-type row
+# is blank), so no separate status filter is needed here -- a blank string
+# already resolves to NA below. Classify a species as native to Australia if
+# it's native (or "native and ...") in at least one state/territory, and as
+# non-native only if every state/territory it's recorded in is naturalised,
+# doubtfully naturalised, or formerly naturalised. "(uncertain origin)" on
+# its own is treated as no evidence either way, since that's what it means.
+# Validated against known cases: Eucalyptus globulus, Banksia integrifolia
+# and Grevillea robusta correctly classify as native (all naturalised in
+# parts of their own range); Lantana camara, Pinus radiata and Schinus
+# terebinthifolia correctly classify as non-native.
+classify_apc_distribution <- function(dist) {
+  if (is.na(dist) || dist == "") return(NA_character_)
+  entries <- trimws(strsplit(dist, ",")[[1]])
+  native_evidence <- vapply(entries, function(entry) {
+    qualifier <- str_match(entry, "\\(([^)]*)\\)")[, 2]
+    if (is.na(qualifier)) return(TRUE)
+    if (grepl("native", qualifier, fixed = TRUE)) return(TRUE)
+    if (identical(qualifier, "uncertain origin")) return(NA)
+    if (grepl("naturalised", qualifier, fixed = TRUE)) return(FALSE)
+    return(TRUE) # e.g. "presumed extinct" alone -- was native there
+  }, logical(1))
+  if (any(native_evidence == TRUE, na.rm = TRUE)) return("native")
+  if (any(native_evidence == FALSE, na.rm = TRUE)) return("non-native")
+  NA_character_
+}
+
 # Read in the database:
 apc_database <- fread(
   "data/APC/APC-taxon-2025-03-18-0622.csv",
@@ -983,18 +1015,29 @@ apc_database <- fread(
     "[infraspecies]", "[n/a]", "[unranked]", "Forma", "Nothovarietas",
     "Species", "Subforma", "Subspecies", "Subvarietas", "Varietas"
   )) %>%
-  select(species_original = canonicalName) %>%
+  mutate(
+    apc_native_status = vapply(taxonDistribution, classify_apc_distribution, character(1))
+  ) %>%
+  select(species_original = canonicalName, apc_native_status) %>%
   mutate(
     # Handle hybrids
     species_original = gsub(" x ", " ×", species_original),
     # Remove 'subspecies' and 'variety' annotations by extracting the first two
-    # words from species names
+    # words from species names. This collapses infraspecific records (which
+    # rarely carry their own taxonDistribution) onto the same species_original
+    # as their parent species, so a plain distinct() risks arbitrarily keeping
+    # a blank-status infraspecific row over the real species-level one --
+    # aggregate to prefer whichever row has a non-NA status instead.
     species_original = map_chr(
       str_split(species_original, "\\s+"),
       ~ paste(head(.x, 2), collapse = " ")
     )
   ) %>%
-  distinct(species_original, .keep_all = TRUE) %>%
+  group_by(species_original) %>%
+  summarise(
+    apc_native_status = if (all(is.na(apc_native_status))) NA_character_ else apc_native_status[!is.na(apc_native_status)][1],
+    .groups = "drop"
+  ) %>%
   as.data.frame() %>%
   glimpse()
 
@@ -1093,16 +1136,20 @@ apc_tree_database <- apc_database_WFO_combined %>%
   unique(.)
 
 # Save the harmonised APC flora and tree list.
-# Note: harmonised_apc_flora_list.txt carries no native/naturalised status --
-# the APC csv columns kept above (family, genus, scientific_name) don't
-# include one. Figure_S20.R uses this file for its full-flora "plants" object
-# without a native filter, while its tree-only "trees" object is filtered to
-# native_status == "native" via global_tree_mycorrhizal_types.txt. If the raw
-# APC export has a status/nativeness column, add a matching filter here (or
-# in Figure_S20.R) so the two populations being compared are consistent.
+# harmonised_apc_flora_list.txt now carries native_status, derived above from
+# taxonDistribution, so Figure_S20.R's full-flora "plants" object can be
+# filtered to native_status == "native" the same way its tree-only "trees"
+# object already is via global_tree_mycorrhizal_types.txt. Where a species
+# has multiple matching rows, take whichever native_status is non-NA (there
+# should be at most one real value per resolved name, since taxonDistribution
+# is only ever populated on the accepted-status row).
 apc_database_WFO_combined %>%
-  select(family, genus, scientific_name = scientificName) %>%
-  unique(.) %>%
+  select(family, genus, scientific_name = scientificName, native_status = apc_native_status) %>%
+  group_by(family, genus, scientific_name) %>%
+  summarise(
+    native_status = if (all(is.na(native_status))) NA_character_ else native_status[!is.na(native_status)][1],
+    .groups = "drop"
+  ) %>%
   fwrite("data/APC/harmonised_apc_flora_list.txt", sep = "\t")
 apc_tree_database %>%
   fwrite("data/APC/harmonised_aus_tree_list.txt", sep = "\t")
