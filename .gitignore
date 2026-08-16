@@ -7,6 +7,9 @@ output/
 # Draft code
 draft_*.R
 
+# Broken standalone script, kept locally but not tracked
+code/get_fungal_root_sources.R
+
 # macOS folder settings
 .DS_Store
 
