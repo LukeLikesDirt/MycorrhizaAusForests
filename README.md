@@ -54,8 +54,8 @@ Reproducing `generated_data/` itself, or anything marked `FALSE` below, means ac
 6. **`03d.Niche_est_summary.R`** — Summarises the modelling output into `generated_data/niche_estimates.txt`.
 7. **`04a.Relative_richness_analysis.R`, `04b.Relative_richness_latitude.R`, `04c.Absolute_richness_analysis.R`, `04d.Absolute_richness_latitude.R`** — Richness analyses. Produce `generated_data/figure_2*`, `figure_3.RData` and `figure_S8*`, plus Figs. S5, S6, S9–S11 and Table S2.
 8. **`05a.Species_niche_breadth_differences.R`, `05b.Species_niche_position_differences.R`** — Niche breadth and position analyses. Produce `generated_data/figure_4.RData` and `figure_5.RData`, plus Tables S3–S7.
-9. **`06a.Sensetivity_relative_richness.R`** — Sensitivity analysis run directly on raw presence data (Figs. S14–S16).
-10. **`07a.Generate_emperical_dataset.R` → `07b.Prepare_emperical_prediction_grids.R` → `07c.Relative_richness_emperical.R` → `07d.Niche_breadth_differences_emperical.R`** — The empirical pathway, using measured rather than genus-inferred mycorrhizal types. Produces Table S8 and Dataset S2.
+9. **`06a.Sensitivity_relative_richness.R`** — Sensitivity analysis run directly on raw presence data (Figs. S14–S16).
+10. **`07a.Generate_empirical_dataset.R` → `07b.Prepare_empirical_prediction_grids.R` → `07c.Relative_richness_empirical.R` → `07d.Niche_breadth_differences_empirical.R`** — The empirical pathway, using measured rather than genus-inferred mycorrhizal types. Produces Table S8 and Dataset S2.
 11. **`08_Mid-domain_null_models.R`** — Fits the observed latitude-breadth models and runs the 1,000-simulation mid-domain-effect null model, in parallel across mycorrhizal types. Only needs `generated_data/niche_estimates.txt` (stage 6's output), so it can run any time after that. Produces `generated_data/figure_6.RData`; `Figure_6.R` reads that directly and does not run any modelling itself.
 
 ## Outputs
@@ -82,9 +82,9 @@ To reproduce the outputs of this project, see the following scripts. "Generated 
 | Fig. S11 | [code/04c.Absolute_richness_analysis.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/04c.Absolute_richness_analysis.R) | FALSE |
 | Fig. S12 | [code/Figure_S12.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S12.R) | FALSE |
 | Fig. S13 | [code/Figure_S13.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S13.R) | TRUE |
-| Fig. S14 | [code/06a.Sensetivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensetivity_relative_richness.R) | FALSE |
-| Fig. S15 | [code/06a.Sensetivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensetivity_relative_richness.R) | FALSE |
-| Fig. S16 | [code/06a.Sensetivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensetivity_relative_richness.R) | FALSE |
+| Fig. S14 | [code/06a.Sensitivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensitivity_relative_richness.R) | FALSE |
+| Fig. S15 | [code/06a.Sensitivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensitivity_relative_richness.R) | FALSE |
+| Fig. S16 | [code/06a.Sensitivity_relative_richness.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06a.Sensitivity_relative_richness.R) | FALSE |
 | Fig. S17 | [code/Figure_S17.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S17.R) | TRUE |
 | Fig. S18 | [code/Figure_S18.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/Figure_S18.R) | TRUE |
 | Fig. S19 | [code/06b.Sensitivity_niche_breadth.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/06b.Sensitivity_niche_breadth.R) | TRUE |
@@ -96,9 +96,64 @@ To reproduce the outputs of this project, see the following scripts. "Generated 
 | Table S5 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) | FALSE |
 | Table S6 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) | FALSE |
 | Table S7 | [code/05a.Species_niche_breadth_differences.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/05a.Species_niche_breadth_differences.R) | FALSE |
-| Table S8 | [code/07a.Generate_emperical_dataset.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/07a.Generate_emperical_dataset.R) | FALSE |
+| Table S8 | [code/07a.Generate_empirical_dataset.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/07a.Generate_empirical_dataset.R) | FALSE |
 | Dataset S1 | [code/01.Harmonise_tree_data.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/01.Harmonise_tree_data.R) | FALSE |
-| Dataset S2 | [code/07a.Generate_emperical_dataset.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/07a.Generate_emperical_dataset.R) | FALSE |
+| Dataset S2 | [code/07a.Generate_empirical_dataset.R](https://github.com/LukeLikesDirt/MycorrhizaAusForests/blob/main/code/07a.Generate_empirical_dataset.R) | FALSE |
+
+## Data dictionary for generated_data/
+
+Every file in `generated_data/`, what it is, and the script that produces it. Column lists are given for the `.txt` files; `.RData` files bundle several R objects, so their key objects and columns are summarised rather than exhaustively listed (several carry hundreds of `PEM1...PEMn` phylogenetic eigenvector map columns, one per predictor).
+
+**Base taxonomic and phylogenetic data**
+
+| File | Produced by | Contents |
+|---|---|---|
+| `global_tree_mycorrhizal_types.txt` | `01.Harmonise_tree_data.R` | One row per tree species (57,081 rows). Columns: `family`, `genus`, `scientific_name`, `native_status` (native/non-native, from GlobalTreeSearch's Australia-filtered export), `mycorrhizal_type` (from FungalRoot, genus-level). The source of truth for native status used throughout the pipeline. |
+| `phylo_tree_mycorrhizal_types.tre` | `build_phylogenetic_tree.R` | Newick-format phylogenetic tree, 3,802 tips, one per native Australian tree species with a resolved mycorrhizal type. |
+| `niche_estimates.txt` | `03d.Niche_est_summary.R` | One row per modelled species (2,334 rows). Columns: `species`, `family`, `genus`, `mycorrhizal_type`, `AOO`/`EOO` (area/extent of occurrence), `env_B2`/`env_B2_corrected` (environmental niche breadth, raw and range-corrected), `geo_B2`/`geo_B2_corrected` (geographic niche breadth), `ex_dent`, `RC1_position`/`RC2_position`/`RC3_position` (position on the three rotated climate/soil components), `lat_position`, `lat_range`, `biome`, `climate_zone`. |
+
+**Figure 2**
+
+| File | Produced by | Contents |
+|---|---|---|
+| `figure_2a.tif` | `04a.Relative_richness_analysis.R` | Raster, 4 layers (AM, EcM, EcM-AM, NM), 373 x 492 cells. Predicted relative richness surfaces. |
+| `figure_2b.RData` | `04b.Relative_richness_latitude.R` | `latitude_gradient_data` (47,120 x 3: `latitude`, `mycorrhizal_type`, `relative_richness` -- the raw latitude-richness observations), `latitude_gradient_marginal_effects` (400 x 5: model-predicted `relative_richness` with `lower`/`upper` CIs across the latitude gradient), `latitude_gradient_coeficients` (4 x 4: the fitted slope annotation per mycorrhizal type). |
+| `figure_2c.RData` | `04a.Relative_richness_analysis.R` | `data_figure_2c` (290 x 6: `RC1_bin`, `RC2_bin` and predicted richness per mycorrhizal type across the RC1-RC2 environmental grid), `data_figure_2c_limits` (1 x 6: the RC1/RC2 axis ranges used to build that grid). |
+
+**Figure 3**
+
+| File | Produced by | Contents |
+|---|---|---|
+| `figure_3.RData` | `04a.Relative_richness_analysis.R` | `relative_richness_data` (47,120 x 5: `RC1`, `RC2`, `RC3`, `mycorrhizal_type`, `response` -- observed relative richness against each rotated component), `relative_richness_marginal_effects` (1,200 x 6: fitted response curves with CIs), `relative_richness_coeficients` (12 x 5: fitted slope annotations). |
+
+**Figure 4 and 5 (niche position and breadth)**
+
+| File | Produced by | Contents |
+|---|---|---|
+| `figure_4.RData` | `05b.Species_niche_position_differences.R` | Niche-position analysis (2,334 species, split into tropical/non-tropical subsets). Key objects: `data_position*` (species-level `RC1`-`RC3` position by `mycorrhizal_type`/`biome`), `pem_position*` (phylogenetic eigenvector map predictors, one `PEM` column per eigenvector), `phylo_prox_position*` (phylogenetic proximity matrices), `RC1_results`/`RC2_results`/`RC3_results` (fitted model results per component), plus model parameter lists. |
+| `figure_5.RData` | `05a.Species_niche_breadth_differences.R` | Niche-breadth analysis, same structure as `figure_4.RData`: `data_breadth*` (species-level `env_breadth` by `mycorrhizal_type`/`biome`), `pem_breadth*`, `phylo_prox_breadth*`, `pairwise_results_breadth` (18 x 5: pairwise comparisons between mycorrhizal types), `env_breadth_results` (fitted model results). |
+| `figure_6.RData` | `08_Mid-domain_null_models.R` | `data` (2,334 x 7: the observed latitude/`env_breadth` points), `pred_combined` (13,604 x 7: fitted latitude-breadth model with CIs), `mde_combined` (13,604 x 5: the mid-domain-effect null model's predicted breadth with CIs), `prop_within_mde` and `r2_combined` (4 x 2 each: summary statistics per mycorrhizal type). |
+
+**Figure S8 (absolute richness)**
+
+| File | Produced by | Contents |
+|---|---|---|
+| `figure_S8a.tif` | `04c.Absolute_richness_analysis.R` | Raster, 4 layers (AM, EcM, EcM-AM, NM), 373 x 492 cells. Predicted absolute richness surfaces. |
+| `figure_S8b.RData` | `04d.Absolute_richness_latitude.R` | Same structure as `figure_2b.RData` but for absolute richness: `latitude_gradient_data_abs` (47,116 x 3, with `richness` in place of `relative_richness`), `latitude_gradient_marginal_effects_abs`, `latitude_gradient_coeficients_abs`. |
+| `figure_S8c.RData` | `04c.Absolute_richness_analysis.R` | Same structure as `figure_2c.RData` but for absolute richness: `data_figure_c` (290 x 6), `data_figure_c_limits` (1 x 6). |
+
+**Empirical pathway** (measured rather than genus-inferred mycorrhizal types)
+
+| File | Produced by | Contents |
+|---|---|---|
+| `empirical_measurements.txt` | Not regenerated by this pipeline | 1,436 rows, 22 columns: `fungal_root_id`, `family`, `genus`, `species`, `species_verbatim`, `mycorrhizal_type`, `replicates`, `habitat`, `host_age`, `host_age_group`, `am_evaluated`/`am_criteria`/`am_structures`, `ecm_evaluated`/`ecm_structures`, `erm_structure`, `nm_structures`, `latitude`, `longitude`, `comment`, `source`, `link`. A curated compilation of literature-sourced mycorrhizal measurements. Originally produced by `get_fungal_root_sources.R`, which is kept locally but is no longer tracked or part of this pipeline (see that script's note in the repository) -- treat this file as a fixed input rather than something reproducible from the other scripts here. |
+| `empirical_mycorrhizal_type.txt` | `07a.Generate_empirical_dataset.R` | 290 rows: `family`, `genus`, `species`, `mycorrhizal_type` -- the curated measurements above, resolved to one type per species. |
+| `empirical_genus_consensus.txt` | `07a.Generate_empirical_dataset.R` | 168 rows: `family`, `genus`, per-genus counts by type (`AM`, `EcM`, `Dual`, `NM`), `consensus_mycorrhizal_type`, `consensus_type_proportion`, plus `fungal_root_mycorrhizal_type` and `match` for comparison against FungalRoot's genus-level call. |
+| `empirical_niche_estimates.txt` | `07a.Generate_empirical_dataset.R` | 266 rows, same structure as `niche_estimates.txt` above, restricted to species with a measured (not genus-inferred) mycorrhizal type. |
+| `figure_2a_empirical.tif` | `07c.Relative_richness_empirical.R` | Same structure as `figure_2a.tif`, built from the empirical species set. |
+| `figure_2c_empirical.RData` | `07c.Relative_richness_empirical.R` | Same structure as `figure_2c.RData`, built from the empirical species set. |
+| `figure_3_empirical.RData` | `07c.Relative_richness_empirical.R` | Same structure as `figure_3.RData` (39,040 x 5 for `relative_richness_data`, reflecting the smaller empirical species set), built from the empirical species set. |
+| `figure_5_empirical.RData` | `07d.Niche_breadth_differences_empirical.R` | Same structure as `figure_5.RData` (264 species rather than 2,334), built from the empirical species set. |
 
 ## Dependencies
 This project is conducted using R version 4.3.3 (2024-02-29) -- "Angel Food Cake" and the following packages:
