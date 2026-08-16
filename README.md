@@ -134,7 +134,17 @@ This project is conducted using R version 4.3.3 (2024-02-29) -- "Angel Food Cake
 * [ggtreeExtra](https://github.com/YuLab-SMU/ggtreeExtra) version 1.19.990
 * [ggnewscale](https://eliocamp.github.io/ggnewscale/) version
 * [cowplot](https://cran.r-project.org/web/packages/cowplot/index.html) version 1.1.3
-* [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html) version 2.3
-* [gtable](https://r-lib.r-universe.dev/gtable) version 0.3.6
 * [patchwork](https://github.com/thomasp85/patchwork) version 1.2.0
 * [ggpubr](https://github.com/kassambara/ggpubr) version 0.6.0
+* [betareg](https://cran.r-project.org/web/packages/betareg/index.html) version 3.2.2
+* [performance](https://easystats.github.io/performance/) version 0.13.0
+* [ggeffects](https://strengejacke.github.io/ggeffects/) version 1.5.2
+* [ggridges](https://cran.r-project.org/web/packages/ggridges/index.html) version 0.5.6
+* [foreach](https://cran.r-project.org/web/packages/foreach/index.html) version 1.5.2
+* [doParallel](https://cran.r-project.org/web/packages/doParallel/index.html) version 1.0.17
+* [future.apply](https://future.apply.futureverse.org/) version 1.11.3
+* [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html) version 1.6.5
+* [RANN](https://cran.r-project.org/web/packages/RANN/index.html) version 2.6.2
+* [gstat](https://cran.r-project.org/web/packages/gstat/index.html) version 2.1.1
+* [sp](https://cran.r-project.org/web/packages/sp/index.html) version 2.2.0
+* [phyloMEM](https://github.com/LukeLikesDirt/phyloMEM) version 0.0.0.9000 -- not on CRAN, install with `devtools::install_github("LukeLikesDirt/phyloMEM")`
